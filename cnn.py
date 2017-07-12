@@ -58,9 +58,11 @@ with tf.Session() as sess:
         if i%10==0:
             #print inputs[30*i], labels[30*i]
 
+            test_accuracy, test_error = sess.run([accuracy, cross_entropy], feed_dict={x:inputsTst[:1000], y_:labelsTst[:1000], keep_prob:1.0})
+            print "Step "+ str(i) + " Testing accuracy = " + str(test_accuracy) + " Error " + str(test_error)
             train_accuracy, error = sess.run([accuracy, cross_entropy], feed_dict={x:inputs[bsize*i:bsize*(i+1)],
             y_:labels[bsize*i:bsize*(i+1)], keep_prob:1.0})
-            print('step %d, training accuracy %g error %f' % (i, train_accuracy, error))
+            print('step %d, training accuracy %g error %f \n' % (i, train_accuracy, error))
         train_step.run(feed_dict={x:inputs[bsize*i:bsize*(i+1)], y_:labels[bsize*i:bsize*(i+1)], keep_prob:0.5})
 
 

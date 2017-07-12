@@ -1,0 +1,9 @@
+image size = (n,n)
+
+Max_Pooling:
+
+Pooling kernel size(k) grows in exp of 2. (eg. 2,4,8.....n)
+Only square windows.
+Pooling will not be activated(function).
+Cost of pooling = number of comparisons*Cost for 1 comparison
+Number of Comparisons = (k*k*n*n)/PoolStride
