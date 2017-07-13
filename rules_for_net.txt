@@ -1,9 +1,29 @@
 image size = (n,n)
 
-Max_Pooling:
+Max_Pooling Layers:
 
-Pooling kernel size(k) grows in exp of 2. (eg. 2,4,8.....n)
-Only square windows.
-Pooling will not be activated(function).
-Cost of pooling = number of comparisons*Cost for 1 comparison
-Number of Comparisons = (k*k*n*n)/PoolStride
+1. Pooling kernel size(k) grows in exp of 2. (eg. 2,4,8.....n)
+2. Only square windows.
+3. Pooling will not be activated(function).
+4. Cost of pooling = number of comparisons*Cost for 1 comparison
+  ******Number of Comparisons = (k*k*n*n)/PoolStride
+5. Cost for 1 needs to be an agreed upon constant
+
+Convolutional Layers:
+
+1. Convolving kernels grow in exp of 2. (eg. 2,4,8.....n)
+2. Number of I/O channels grow in exp of 2.
+3. Only square windows.
+4. Convolve function, mostly followed by activation.
+   For general purposes, either relu or tanh.
+5. Cost for Activation = function_cost*n*n
+6. Cost for the convolving operation = k*k*Input_Channels*Output_Channels*n*n
+7. Cost for the Convolutional Layer = Cost for the Convolving Operation + Cost for the Activation
+
+Fully Connected Layer:
+
+1. Dimensionality grows in exp of 2, starting from 32. Apart from at the input and output layers, in which it will have the I/O dimensionality.
+2. Activated, except for output.
+   For general purposes, either relu or tanh.
+3. Cost for activation = function_cost*Number of output nodes.
+4. Cost for matrix multiplication = Input_Dimensions*Output Dimensions.
