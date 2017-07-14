@@ -6,7 +6,7 @@ Max_Pooling Layers:
 2. Only square windows.
 3. Pooling will not be activated(function).
 4. Cost of pooling = number of comparisons*Cost for 1 comparison
-  ******Number of Comparisons = (k*k*n*n)/PoolStride
+  ******Number of Comparisons = (k*k*n*n)/(PoolStrideX*PoolstrideY)
 5. Cost for 1 needs to be an agreed upon constant
 
 Convolutional Layers:
@@ -27,3 +27,6 @@ Fully Connected Layer:
    For general purposes, either relu or tanh.
 3. Cost for activation = function_cost*Number of output nodes.
 4. Cost for matrix multiplication = Input_Dimensions*Output Dimensions.
+5. Cost for fully connected layer = Cost for activation + Cost for matrix multiplication
+
+Total Cost = Cost for Pooling Layers + Cost for the Convolutional Layers + Cost for fully connected layers
