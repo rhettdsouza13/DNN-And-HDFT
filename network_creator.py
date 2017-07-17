@@ -1,14 +1,16 @@
 from treelib import *
+from math import *
 
 
-cost_br = 512
+cost_br = 5000
 inp_dim = 1024
 inp_dimx = 32
 inp_dimy = 32
 out_dim = 10
-sing_comp = 1./10
-relu_act = 1./100
-tanh_act = 1./50
+sing_comp = 1.0/50
+relu_act = 1.0/100
+tanh_act = 1.0/500
+
 
 m_tree = Tree()
 
@@ -20,25 +22,65 @@ def power_gen(start,end):
 m_tree.create_node("Root", 'r')
 counter = 0
 
-def tree_creater(parent,prev_dim,cost):
+def tree_creater(parent, prev_dim, x, y, fc_dim, cost, fl_flag):
     global counter
     counter+=1
-    if cost<=0:
-        return
     c_p=parent
-    for k in power_gen(1,4):
 
-        for output_ch in power_gen(3,10):
+    if fl_flag==0:
 
-            iD = 'c' + str(k) + '*' + str(k) + '_' + str(prev_dim) + "*" + str(output_ch) + '_n_' + str(counter)
+        for k in power_gen(1,4):
 
-            name = 'Convolution' + str(k) + '*' + str(k) + '_' + str(prev_dim) + "*" + str(output_ch) + '_n_' + str(counter)
-            m_tree.create_node(name, iD, parent=c_p, data=[k,k,prev_dim,output_ch])
+            for output_ch in power_gen(3,15):
 
-            next_cost = cost - (k*k*prev_dim*output_ch)
+                iD = 'c' + str(k) + '*' + str(k) + '_' + str(prev_dim) + "*" + str(output_ch) + '_n_' + str(counter)
 
-            tree_creater(iD,output_ch,next_cost)
+                name = 'Convolution' + str(k) + '*' + str(k) + '_' + str(prev_dim) + "*" + str(output_ch) + '_n_' + str(counter)
+
+
+                next_cost = cost - (k*k*prev_dim*output_ch*x*y) - (x*y*tanh_act*output_ch)
+
+                if next_cost-(output_ch*out_dim*x*y)> 0:
+                    m_tree.create_node(name, iD, parent=c_p, data=[k,k,prev_dim,output_ch])
+                    tree_creater(iD, output_ch, x, y, output_ch*x*y, next_cost, 0)
+
+
+        for k in power_gen(1,4):
+
+            if k<x:
+
+                iD = 'mp' + str(k) + '*' + str(k) + '_' + str(x) + "*" + str(y)+ '_' + str(x/k) + "*" + str(y/k) + '_n_' + str(counter)
+
+                name = 'Max_Pooling' + str(k) + '*' + str(k) + '_' + str(x) + "*" + str(y)+ '_' + str(x/k) + "*" + str(y/k) + '_n_' + str(counter)
+
+                next_cost = cost - ((ceil(float(x)/k)**2)*sing_comp)
+
+                if next_cost-(prev_dim*out_dim*(x/k)*(y/k))>0:
+                    m_tree.create_node(name, iD, parent=c_p, data=[k,k])
+                    tree_creater(iD, prev_dim, x/k, y/k, prev_dim*x*y/(k*k), next_cost, 0)
+
+
+    for output_ch in power_gen(5,15):
+        if fl_flag==0:
+            iD = 'fc' + '_' + str(fc_dim) + "*" + str(output_ch) + '_n_' + str(counter)
+
+            name = 'Dense' + '_' + str(fc_dim) + "*" + str(output_ch) + '_n_' + str(counter)
+
+            next_cost = cost - (fc_dim*output_ch) - (tanh_act*output_ch)
+
+            if next_cost-(output_ch*out_dim)> 0:
+                m_tree.create_node(name, iD, parent=c_p, data=[fc_dim, output_ch])
+                tree_creater(iD, output_ch, x, y, output_ch, next_cost, 1)
+
+
+
+    counter+=1
+    iD = 'o' + '_' + str(fc_dim) + "*" + str(10)+'_n_' + str(counter)
+    name = 'Out' + '_' + str(fc_dim) + "*" + str(10)+ '_n_' + str(counter)
+    m_tree.create_node(name, iD, parent=c_p)
+
+
 
 prev_dim=1
-tree_creater('r',prev_dim, cost_br)
+tree_creater('r', prev_dim, inp_dimx, inp_dimy, prev_dim*inp_dimx*inp_dimy, cost_br, 0)
 m_tree.show()
