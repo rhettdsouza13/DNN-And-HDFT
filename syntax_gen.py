@@ -1,11 +1,11 @@
 from treelib import *
 
-def syntax_generator(tree):
+def syntax_generator(tree, x, y):
     paths = tree.paths_to_leaves()
 
     for path in paths:
 
-        net = '32,32,1|'
+        net = str(x) + ',' + str(y) + ',' + str(1) + '|'
 
         for node in path:
 
@@ -27,5 +27,5 @@ def syntax_generator(tree):
                 net+='full,tanh|'
                 net+='1,1,'+str(dim[1])
                 continue
-        print ""
+
         print net

@@ -14,13 +14,13 @@ b1 = bias_initializer([32])
 x_re = tf.reshape(x, [-1,32,32,1])
 
 h_conv1 = tf.nn.relu(conv2d(x_re, W1) + b1)
-h_pool1 = max_pool_2x2(h_conv1)
+h_pool1 = max_pool_kxk(h_conv1,2)
 
 W2 = weight_initializer([5,5,32,64])
 b2 = bias_initializer([64])
 
 h_conv2 = tf.nn.relu(conv2d(h_pool1, W2) + b2)
-h_pool2 = max_pool_2x2(h_conv2)
+h_pool2 = max_pool_kxk(h_conv2,2)
 
 W3 = weight_initializer([8*8*64, 1024])
 b3 = bias_initializer([1024])

@@ -3,9 +3,9 @@ from math import *
 from syntax_gen import *
 
 cost_br = 5000
-inp_dim = 1024
-inp_dimx = 32
-inp_dimy = 32
+inp_dim = 256
+inp_dimx = 16
+inp_dimy = 16
 out_dim = 10
 sing_comp = 1.0/1000
 relu_act = 1.0/1000
@@ -23,7 +23,7 @@ def power_gen(start,end):
 m_tree.create_node("Root", 'r')
 counter = 0
 
-def tree_creater(parent, prev_dim, x, y, fc_dim, cost, fl_flag):
+def tree_creater(parent, prev_dim, x, y, fc_dim, cost, fl_flag, mp_flag):
     global counter
     counter+=1
     c_p=parent
@@ -44,23 +44,24 @@ def tree_creater(parent, prev_dim, x, y, fc_dim, cost, fl_flag):
                 if next_cost-(output_ch*out_dim*x*y*mul_cost_DN)>0:
 
                     m_tree.create_node(name, iD, parent=c_p, data=[k,k,prev_dim,output_ch,x,y])
-                    tree_creater(iD, output_ch, x, y, output_ch*x*y, next_cost, 0)
+                    tree_creater(iD, output_ch, x, y, output_ch*x*y, next_cost, 0, 0)
 
 
-        for k in power_gen(1,3):
+        if mp_flag==0:
+            for k in power_gen(1,3):
 
-            if k*4<x:
+                if k*4<x:
 
-                iD = 'mp' + str(k) + '*' + str(k) + '_' + str(x) + "*" + str(y)+ '_' + str(x/k) + "*" + str(y/k) + '_n_' + str(counter)
+                    iD = 'mp' + str(k) + '*' + str(k) + '_' + str(x) + "*" + str(y)+ '_' + str(x/k) + "*" + str(y/k) + '_n_' + str(counter)
 
-                name = 'Max_Pooling' + str(k) + '*' + str(k) + '_' + str(x) + "*" + str(y)+ '_' + str(x/k) + "*" + str(y/k) + '_n_' + str(counter)
+                    name = 'Max_Pooling' + str(k) + '*' + str(k) + '_' + str(x) + "*" + str(y)+ '_' + str(x/k) + "*" + str(y/k) + '_n_' + str(counter)
 
-                next_cost = cost - (((x/k)**2)*sing_comp*prev_dim)
+                    next_cost = cost - (((x/k)**2)*sing_comp*prev_dim)
 
-                if next_cost-(prev_dim*out_dim*(x/k)*(y/k)*mul_cost_DN)>0:
+                    if next_cost-(prev_dim*out_dim*(x/k)*(y/k)*mul_cost_DN)>0:
 
-                    m_tree.create_node(name, iD, parent=c_p, data=[k,k,(x/k),(y/k), prev_dim])
-                    tree_creater(iD, prev_dim, x/k, y/k, prev_dim*x*y/(k*k), next_cost, 0)
+                        m_tree.create_node(name, iD, parent=c_p, data=[k,k,(x/k),(y/k), prev_dim])
+                        tree_creater(iD, prev_dim, x/k, y/k, prev_dim*x*y/(k*k), next_cost, 0, 0)
 
 
     for output_ch in power_gen(8,15):
@@ -73,7 +74,7 @@ def tree_creater(parent, prev_dim, x, y, fc_dim, cost, fl_flag):
 
         if next_cost-(output_ch*out_dim*mul_cost_DN)>0:
             m_tree.create_node(name, iD, parent=c_p, data=[fc_dim, output_ch])
-            tree_creater(iD, output_ch, x, y, output_ch, next_cost, 1)
+            tree_creater(iD, output_ch, x, y, output_ch, next_cost, 1, 0)
 
 
 
@@ -85,6 +86,6 @@ def tree_creater(parent, prev_dim, x, y, fc_dim, cost, fl_flag):
 
 
 prev_dim=1
-tree_creater('r', prev_dim, inp_dimx, inp_dimy, prev_dim*inp_dimx*inp_dimy, cost_br, 0)
+tree_creater('r', prev_dim, inp_dimx, inp_dimy, prev_dim*inp_dimx*inp_dimy, cost_br, 0, 1)
 m_tree.show()
-syntax_generator(m_tree)
+syntax_generator(m_tree, inp_dimx, inp_dimy)
