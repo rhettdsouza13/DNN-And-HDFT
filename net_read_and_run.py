@@ -54,5 +54,3 @@ def set_variables(network):
             counter+=1
 
     return weights, bias, fn_list, ch_list
-
-w,b,fn,ch = set_variables('16,16,1|conv,tanh,2|16,16,16|max_pooling,identity,2|8,8,16|conv,tanh,2|8,8,8|conv,tanh,2|8,8,8|full,tanh|1,1,10')

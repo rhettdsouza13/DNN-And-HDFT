@@ -42,7 +42,7 @@ def view32x64(data):                                                            
                 # print pix[z,a]
 
             new_size = (8,8)
-            b_im = Image.new("RGB", new_size) 
+            b_im = Image.new("RGB", new_size)
             b_im.paste(im, ((new_size[0]-im.size[0])/2,
                                   (new_size[1]-im.size[1])/2))
 
@@ -75,3 +75,7 @@ def view16x16Im(data):                                                          
             else:
                 pixel[i,j]=0
     im.show()
+
+# def image_resizer(lin_im, k):
+#     lin_im_np = numpy.array(lin_im)
+#     lin_im_2d = numpy.reshape(lin_im_np,(32,32))

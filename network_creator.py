@@ -2,16 +2,16 @@ from treelib import *
 from math import *
 from syntax_gen import *
 
-cost_br = 5000
-inp_dim = 256
-inp_dimx = 16
-inp_dimy = 16
+cost_br = 20000
+inp_dim = 1024
+inp_dimx = 32
+inp_dimy = 32
 out_dim = 10
 sing_comp = 1.0/1000
 relu_act = 1.0/1000
 tanh_act = 1.0/500
 mul_cost_DN = 1.0/50
-mul_cost_CN = 1.0/25
+mul_cost_CN = 1.0/250
 
 m_tree = Tree()
 
@@ -30,9 +30,9 @@ def tree_creater(parent, prev_dim, x, y, fc_dim, cost, fl_flag, mp_flag):
 
     if fl_flag==0:
 
-        for k in power_gen(1,4):
+        for k in power_gen(2,4):
 
-            for output_ch in power_gen(3,15):
+            for output_ch in power_gen(4,15):
 
                 iD = 'conv' + str(k) + '*' + str(k) + '_' + str(prev_dim) + "*" + str(output_ch) + '_n_' + str(counter)
 
@@ -48,7 +48,7 @@ def tree_creater(parent, prev_dim, x, y, fc_dim, cost, fl_flag, mp_flag):
 
 
         if mp_flag==0:
-            for k in power_gen(1,3):
+            for k in power_gen(1,2):
 
                 if k*4<x:
 

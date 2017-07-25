@@ -4,7 +4,7 @@ def syntax_generator(tree, x, y):
     paths = tree.paths_to_leaves()
 
     with open('nets_list.txt', 'w') as netfile:
-        netfile.write('1\n')
+    
         for path in paths:
 
             net = str(x) + ',' + str(y) + ',' + str(1) + '|'
@@ -31,6 +31,5 @@ def syntax_generator(tree, x, y):
                     continue
 
             print net
-
 
             netfile.write(net + '\n')
