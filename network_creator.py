@@ -2,7 +2,7 @@ from treelib import *
 from math import *
 from syntax_gen import *
 
-cost_br = 20000
+cost_br = 5000
 inp_dim = 1024
 inp_dimx = 32
 inp_dimy = 32

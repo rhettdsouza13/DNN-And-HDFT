@@ -8,7 +8,7 @@ from net_read_and_run import *
 
 net_syn = sys.argv[1]
 
-
+net_num = sys.argv[2]
 
 x = tf.placeholder(tf.float32, shape=[None, 1024], name='x_input')
 y_ = tf.placeholder(tf.float32, shape=[None, 10], name='labels')
@@ -67,7 +67,7 @@ y = H[h_out_key]
 
 cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(labels=y_, logits=y))
 
-train_step = tf.train.AdamOptimizer(1e-3).minimize(cross_entropy)
+train_step = tf.train.GradientDescentOptimizer(1e-2).minimize(cross_entropy)
 
 correct_prediction = tf.equal(tf.argmax(y,1), tf.argmax(y_,1))
 
@@ -84,17 +84,28 @@ with tf.Session() as sess:
 
     sess.run(tf.global_variables_initializer())
 
+    filname = '/home/hdft/Documents/DNN-Data/DATA_NETS_2017_' + str(net_num) + '.npy'
+
+    data = numpy.array([[1,2,3,4]])
 
     for i in xrange(1200):
+
+        test_accuracy, test_error = sess.run([accuracy, cross_entropy], feed_dict={x:inputsTst[:2500], y_:labelsTst[:2500]})
+
+        train_accuracy, error = sess.run([accuracy, cross_entropy], feed_dict={x:inputs[bsize*i:bsize*(i+1)], y_:labels[bsize*i:bsize*(i+1)]})
+
+        data = numpy.concatenate((data, [[test_accuracy, test_error, train_accuracy, error]]), axis=0)
+
+
+
         if i%10==0:
             #print inputs[30*i], labels[30*i]
-
-            test_accuracy, test_error = sess.run([accuracy, cross_entropy], feed_dict={x:inputsTst[:1000], y_:labelsTst[:1000]})
             print "Step "+ str(i) + " Testing accuracy = " + str(test_accuracy) + " Error " + str(test_error)
-            train_accuracy, error = sess.run([accuracy, cross_entropy], feed_dict={x:inputs[bsize*i:bsize*(i+1)],
-            y_:labels[bsize*i:bsize*(i+1)]})
             print('step %d, training accuracy %g error %f \n' % (i, train_accuracy, error))
+
         train_step.run(feed_dict={x:inputs[bsize*i:bsize*(i+1)], y_:labels[bsize*i:bsize*(i+1)]})
+
+    numpy.save(filname, data)
 
 
 
