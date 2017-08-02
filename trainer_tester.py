@@ -89,17 +89,23 @@ with tf.Session() as sess:
     data = numpy.array([[1,2,3,4]])
 
     for i in xrange(1200):
+        #
+        # test_accuracy, test_error = sess.run([accuracy, cross_entropy], feed_dict={x:inputsTst[:2500], y_:labelsTst[:2500]})
+        #
+        # train_accuracy, error = sess.run([accuracy, cross_entropy], feed_dict={x:inputs[bsize*i:bsize*(i+1)], y_:labels[bsize*i:bsize*(i+1)]})
+        #
+        # data = numpy.concatenate((data, [[test_accuracy, test_error, train_accuracy, error]]), axis=0)
 
-        test_accuracy, test_error = sess.run([accuracy, cross_entropy], feed_dict={x:inputsTst[:2500], y_:labelsTst[:2500]})
-
-        train_accuracy, error = sess.run([accuracy, cross_entropy], feed_dict={x:inputs[bsize*i:bsize*(i+1)], y_:labels[bsize*i:bsize*(i+1)]})
-
-        data = numpy.concatenate((data, [[test_accuracy, test_error, train_accuracy, error]]), axis=0)
 
 
-
-        if i%10==0:
+        if i%10==0 and i>0:
             #print inputs[30*i], labels[30*i]
+
+            test_accuracy, test_error = sess.run([accuracy, cross_entropy], feed_dict={x:inputsTst[:2500], y_:labelsTst[:2500]})
+
+            train_accuracy, error = sess.run([accuracy, cross_entropy], feed_dict={x:inputs[bsize*(i-9):bsize*(i+1)], y_:labels[bsize*(i-9):bsize*(i+1)]})
+
+            data = numpy.concatenate((data, [[test_accuracy, test_error, train_accuracy, error]]), axis=0)
             print "Step "+ str(i) + " Testing accuracy = " + str(test_accuracy) + " Error " + str(test_error)
             print('step %d, training accuracy %g error %f \n' % (i, train_accuracy, error))
 

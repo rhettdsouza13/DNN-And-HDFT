@@ -14,6 +14,6 @@ for data_file in os.listdir(data_dir):
 
     pl.plot(range(len(test_error)),test_error)
     pl.plot(range(len(train_error)),train_error)
-
+	
     
 pl.show()

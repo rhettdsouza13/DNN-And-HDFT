@@ -2,7 +2,7 @@ from treelib import *
 from math import *
 from syntax_gen import *
 
-cost_br = 5000
+cost_br = 23500
 inp_dim = 1024
 inp_dimx = 32
 inp_dimy = 32
@@ -39,7 +39,7 @@ def tree_creater(parent, prev_dim, x, y, fc_dim, cost, fl_flag, mp_flag):
                 name = 'Convolution' + str(k) + '*' + str(k) + '_' + str(prev_dim) + "*" + str(output_ch) + '_n_' + str(counter)
 
 
-                next_cost = cost - (float(k*k*prev_dim*output_ch*x*y)*mul_cost_CN) - (x*y*tanh_act*output_ch)
+                next_cost = cost - (float(k*k*prev_dim*output_ch*x*y)*mul_cost_CN) - (x*y*relu_act*output_ch)
 
                 if next_cost-(output_ch*out_dim*x*y*mul_cost_DN)>0:
 
@@ -61,7 +61,7 @@ def tree_creater(parent, prev_dim, x, y, fc_dim, cost, fl_flag, mp_flag):
                     if next_cost-(prev_dim*out_dim*(x/k)*(y/k)*mul_cost_DN)>0:
 
                         m_tree.create_node(name, iD, parent=c_p, data=[k,k,(x/k),(y/k), prev_dim])
-                        tree_creater(iD, prev_dim, x/k, y/k, prev_dim*x*y/(k*k), next_cost, 0, 0)
+                        tree_creater(iD, prev_dim, x/k, y/k, prev_dim*x*y/(k*k), next_cost, 0, 1)
 
 
     for output_ch in power_gen(8,15):
@@ -70,7 +70,7 @@ def tree_creater(parent, prev_dim, x, y, fc_dim, cost, fl_flag, mp_flag):
 
         name = 'Dense' + '_' + str(fc_dim) + "*" + str(output_ch) + '_n_' + str(counter)
 
-        next_cost = cost - (fc_dim*output_ch*mul_cost_DN) - (tanh_act*output_ch)
+        next_cost = cost - (fc_dim*output_ch*mul_cost_DN) - (relu_act*output_ch)
 
         if next_cost-(output_ch*out_dim*mul_cost_DN)>0:
             m_tree.create_node(name, iD, parent=c_p, data=[fc_dim, output_ch])
