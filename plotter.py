@@ -7,7 +7,7 @@ from sklearn.kernel_ridge import KernelRidge
 data_dir = '/home/hdft/Documents/DNN-Data/'
 
 def apply_regression(y):
-    clf = KernelRidge(alpha=0.075, kernel='rbf', degree=3, gamma=0.1)
+    clf = KernelRidge(alpha=10.0, kernel='rbf', degree=3, gamma=0.1)
     iters = numpy.reshape(range(len(y)), (-1,1))
     ys = numpy.reshape(y, (-1,1))
     clf.fit(iters, ys)
@@ -62,3 +62,5 @@ with open('nets_list.txt', 'r') as netfile:
         print nets[bad_ind]
 
 pl.show()
+
+#DATA_NETS_2017_3302.npy check network????
