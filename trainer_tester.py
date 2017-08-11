@@ -74,14 +74,15 @@ correct_prediction = tf.equal(tf.argmax(y,1), tf.argmax(y_,1))
 accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 
 
-epochs = 5
+epochs = 50
 inputs, labels = input_inject()
-for i in xrange(epochs):
-    inputs.extend(inputs[:])
-    labels.extend(labels[:])
+# for i in xrange(epochs):
+#     inputs.extend(inputs[:])
+#     labels.extend(labels[:])
 inputsTst, labelsTst = test_inject()
+stopping = epochs
 bsize=100
-n_iters = (60000/bsize)*epochs
+n_iters = (50000/bsize)
 with tf.Session() as sess:
 
     # writer = tf.summary.FileWriter('output', graph=tf.get_default_graph())
@@ -90,41 +91,45 @@ with tf.Session() as sess:
 
     filname = '/home/hdft/Documents/DNN-Data/DATA_NETS_2017_' + str(net_num) + '.npy'
 
-    data = numpy.array([[1,2,3,4,5]])
-
-    upperlim = 5
+    data = numpy.array([[1,2,3,4]])
 
 
-    for i in xrange(n_iters):
-        #
-        # test_accuracy, test_error = sess.run([accuracy, cross_entropy], feed_dict={x:inputsTst[:2500], y_:labelsTst[:2500]})
-        #
-        # train_accuracy, error = sess.run([accuracy, cross_entropy], feed_dict={x:inputs[bsize*i:bsize*(i+1)], y_:labels[bsize*i:bsize*(i+1)]})
-        #
-        # data = numpy.concatenate((data, [[test_accuracy, test_error, train_accuracy, error]]), axis=0)
-        if i == upperlim or i == n_iters :
-            #print inputs[30*i], labels[30*i]
-            test_accuracy, test_error = sess.run([accuracy, cross_entropy], feed_dict={x:inputsTst[:], y_:labelsTst[:]})
+    for j in xrange(epochs):
+        print "Epoch: " + str(j)
+        val_accuracy, val_error = sess.run([accuracy, cross_entropy], feed_dict={x:inputs[bsize*500:bsize*600], y_:labels[bsize*500:bsize*600]})
+        print('Validation accuracy %g Error %f \n' % (val_accuracy, val_error))
+        if val_accuracy >= 0.98:
+            stopping = j
+            break
 
-            train_accuracy, error = sess.run([accuracy, cross_entropy], feed_dict={x:inputs[bsize*(i-5):bsize*(i)], y_:labels[bsize*(i-5):bsize*(i)]})
+        for i in xrange(n_iters):
+            #
+            # test_accuracy, test_error = sess.run([accuracy, cross_entropy], feed_dict={x:inputsTst[:2500], y_:labelsTst[:2500]})
+            #
+            # train_accuracy, error = sess.run([accuracy, cross_entropy], feed_dict={x:inputs[bsize*i:bsize*(i+1)], y_:labels[bsize*i:bsize*(i+1)]})
+            #
+            # data = numpy.concatenate((data, [[test_accuracy, test_error, train_accuracy, error]]), axis=0)
+            if i%50 == 0:
 
-            data = numpy.concatenate((data, [[test_accuracy, test_error, train_accuracy, error, i]]), axis=0)
+                train_accuracy, error = sess.run([accuracy, cross_entropy], feed_dict={x:inputs[bsize*(i):bsize*(i+1)], y_:labels[bsize*(i):bsize*(i+1)]})
 
-            print "Step "+ str(i) + " Testing accuracy = " + str(test_accuracy) + " Error " + str(test_error)
-            print('Step %d, Training accuracy %g Error %f \n' % (i, train_accuracy, error))
+                data = numpy.concatenate((data, [[train_accuracy, error, (n_iters*j)+i, 0]]), axis=0)
 
-            upperlim *= 2
-
+                print('Step %d, Training accuracy %g Error %f \n' % (i, train_accuracy, error))
 
 
-        train_step.run(feed_dict={x:inputs[bsize*(i):bsize*((i+1))], y_:labels[bsize*(i):bsize*((i+1))]})
+            train_step.run(feed_dict={x:inputs[bsize*(i):bsize*(i+1)], y_:labels[bsize*(i):bsize*(i+1)]})
+
+
+
+
+
+    print "\nTest\n"
+    test_accuracy = sess.run(accuracy, feed_dict={x:inputsTst[:], y_:labelsTst[:]})
+    print "Accuracy = " + str(test_accuracy)
+
+    data = numpy.concatenate((data, [[val_accuracy, val_error, test_accuracy, stopping]]), axis=0)
 
     numpy.save(filname, data)
-
-
-    #
-    # print "\nTest\n"
-    # test_accuracy = sess.run(accuracy, feed_dict={x:inputsTst[:], y_:labelsTst[:]})
-    # print "accuracy = " + str(test_accuracy)
 
     #writer.close()
