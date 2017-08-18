@@ -64,17 +64,20 @@ print Bias
 
 h_out_key = 'h' + str(len(fn_list))
 y = H[h_out_key]
+lR = tf.placeholder(tf.float32, shape=[])
+
 
 cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(labels=y_, logits=y))
 
-train_step = tf.train.GradientDescentOptimizer(0.01).minimize(cross_entropy)
-
+train_step = tf.train.MomentumOptimizer(learning_rate=lR, momentum=0.99).minimize(cross_entropy)
+#
+#GradientDescentOptimizer(0.001)
 correct_prediction = tf.equal(tf.argmax(y,1), tf.argmax(y_,1))
 
 accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 
-
-epochs = 50
+lR_val = 0.001
+epochs = 100
 inputs, labels = input_inject()
 # for i in xrange(epochs):
 #     inputs.extend(inputs[:])
@@ -96,11 +99,11 @@ with tf.Session() as sess:
 
     for j in xrange(epochs):
         print "Epoch: " + str(j)
-        val_accuracy, val_error = sess.run([accuracy, cross_entropy], feed_dict={x:inputs[bsize*500:bsize*600], y_:labels[bsize*500:bsize*600]})
+        val_accuracy, val_error = sess.run([accuracy, cross_entropy], feed_dict={x:inputs[bsize*500:bsize*600], y_:labels[bsize*500:bsize*600], lR:lR_val})
         print('Validation accuracy %g Error %f \n' % (val_accuracy, val_error))
-        if val_accuracy >= 0.98:
-            stopping = j
-            break
+        # if val_accuracy >= 0.98:
+        #     stopping = j
+        #     break
 
         for i in xrange(n_iters):
             #
@@ -111,21 +114,21 @@ with tf.Session() as sess:
             # data = numpy.concatenate((data, [[test_accuracy, test_error, train_accuracy, error]]), axis=0)
             if i%50 == 0:
 
-                train_accuracy, error = sess.run([accuracy, cross_entropy], feed_dict={x:inputs[bsize*(i):bsize*(i+1)], y_:labels[bsize*(i):bsize*(i+1)]})
+                train_accuracy, error, learn = sess.run([accuracy, cross_entropy, lR], feed_dict={x:inputs[bsize*(i):bsize*(i+1)], y_:labels[bsize*(i):bsize*(i+1)], lR:lR_val})
 
                 data = numpy.concatenate((data, [[train_accuracy, error, (n_iters*j)+i, 0]]), axis=0)
 
-                print('Step %d, Training accuracy %g Error %f \n' % (i, train_accuracy, error))
+                print('Step %d, Training accuracy %g Error %f Learning Rate %f \n' % (i, train_accuracy, error, learn))
 
 
-            train_step.run(feed_dict={x:inputs[bsize*(i):bsize*(i+1)], y_:labels[bsize*(i):bsize*(i+1)]})
-
+            train_step.run(feed_dict={x:inputs[bsize*(i):bsize*(i+1)], y_:labels[bsize*(i):bsize*(i+1)], lR:lR_val})
+        lR_val *= 0.95
 
 
 
 
     print "\nTest\n"
-    test_accuracy = sess.run(accuracy, feed_dict={x:inputsTst[:], y_:labelsTst[:]})
+    test_accuracy = sess.run(accuracy, feed_dict={x:inputsTst[:], y_:labelsTst[:], lR:lR_val})
     print "Accuracy = " + str(test_accuracy)
 
     data = numpy.concatenate((data, [[val_accuracy, val_error, test_accuracy, stopping]]), axis=0)
