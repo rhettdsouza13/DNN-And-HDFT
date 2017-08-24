@@ -52,7 +52,7 @@ bsize=100
 with tf.Session() as sess:
     sess.run(tf.global_variables_initializer())
     saver = tf.train.Saver()
-    view32x32Im(h_conv1.eval(feed_dict={x:[inputsTst[0]], y_:[labelsTst[0]], keep_prob:1.0}))
+    #view32x32Im(h_conv1.eval(feed_dict={x:[inputsTst[0]], y_:[labelsTst[0]], keep_prob:1.0}))
 
     for i in xrange(600):
         if i%10==0:
@@ -73,13 +73,13 @@ with tf.Session() as sess:
 
     weight= W2.eval()
 
-    view32x64(weight)
+    #view32x64(weight)
 
 
     # print labelsTst[0]
     # print conv1st
     #print weight
-    view32x32Im(x_re.eval(feed_dict={x:[inputsTst[0]], y_:[labelsTst[0]], keep_prob:1.0}))
-    # conv2nd = h_conv2.eval(feed_dict={x:[inputsTst[0]], y_:[labelsTst[0]], keep_prob:1.0})
+    #view32x32Im(x_re.eval(feed_dict={x:[inputsTst[0]], y_:[labelsTst[0]], keep_prob:1.0}))
+    conv2nd = h_conv2.eval(feed_dict={x:[inputsTst[0]], y_:[labelsTst[0]], keep_prob:1.0})
     # view16x16Im(conv2nd)
     # view1x32(weight)
