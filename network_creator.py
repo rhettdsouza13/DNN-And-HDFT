@@ -2,7 +2,7 @@ from treelib import *
 from math import *
 from syntax_gen import *
 
-cost_br = 1900000
+cost_br = 4260000
 inp_dim = 1024
 inp_dimx = 32
 inp_dimy = 32
@@ -59,7 +59,7 @@ def tree_creater(parent, prev_dim, x, y, fc_dim, cost, fl_flag, mp_flag):
 
                     name = 'Max_Pooling' + str(k) + '*' + str(k) + '_' + str(x) + "*" + str(y)+ '_' + str(x/k) + "*" + str(y/k) + '_n_' + str(counter)
 
-                    next_cost = cost - (((x/k)**2)*sing_comp*prev_dim)
+                    next_cost = cost - (((x/k)**2)*sing_comp*prev_dim) - ((x/k)*(y/k)*prev_dim)
 
                     if next_cost-(prev_dim*out_dim*(x/k)*(y/k)*mul_cost_DN + out_dim)>0:
                         m_tree.create_node(name, iD, parent=c_p, data=[k,k,(x/k),(y/k), prev_dim])
