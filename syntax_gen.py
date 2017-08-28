@@ -3,7 +3,7 @@ from treelib import *
 def syntax_generator(tree, x, y):
     paths = tree.paths_to_leaves()
 
-    with open('nets_list3.txt', 'w') as netfile:
+    with open('nets_list4.txt', 'w') as netfile:
 
         for path in paths:
 

@@ -86,6 +86,8 @@ inputsTst, labelsTst = test_inject()
 stopping = epochs
 bsize=100
 n_iters = (50000/bsize)
+error_val=100000
+step_cnt=0
 with tf.Session() as sess:
 
     # writer = tf.summary.FileWriter('output', graph=tf.get_default_graph())
@@ -104,6 +106,18 @@ with tf.Session() as sess:
         # if val_accuracy >= 0.98:
         #     stopping = j
         #     break
+        if val_error >= error_val:
+            step_cnt += 1
+        else:
+            step_cnt = 0
+
+        if error_val > val_error:
+            error_val = val_error
+
+        print step_cnt
+
+        if step_cnt == 8 :
+                break
 
         for i in xrange(n_iters):
             #

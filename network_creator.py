@@ -2,7 +2,7 @@ from treelib import *
 from math import *
 from syntax_gen import *
 
-cost_br = 4260000
+cost_br = 900600
 inp_dim = 1024
 inp_dimx = 32
 inp_dimy = 32
@@ -32,14 +32,14 @@ def tree_creater(parent, prev_dim, x, y, fc_dim, cost, fl_flag, mp_flag):
 
         for k in power_gen(2,4):
 
-            for output_ch in power_gen(4,15):
+            for output_ch in power_gen(6,15):
 
                 iD = 'conv' + str(k) + '*' + str(k) + '_' + str(prev_dim) + "*" + str(output_ch) + '_n_' + str(counter)
 
                 name = 'Convolution' + str(k) + '*' + str(k) + '_' + str(prev_dim) + "*" + str(output_ch) + '_n_' + str(counter)
 
 
-                next_cost = cost - ((k*k*prev_dim*output_ch*mul_cost_CN*x*y))
+                next_cost = cost - (k*k*prev_dim*output_ch*mul_cost_CN) - (output_ch*x*y)
 
                 #(x*y*relu_act*output_ch)
 
@@ -67,7 +67,7 @@ def tree_creater(parent, prev_dim, x, y, fc_dim, cost, fl_flag, mp_flag):
                         tree_creater(iD, prev_dim, x/k, y/k, prev_dim*x*y/(k*k), next_cost, 0, 1)
 
 
-    for output_ch in power_gen(9,15):
+    for output_ch in power_gen(8,15):
 
         iD = 'fc' + '_' + str(fc_dim) + "*" + str(output_ch) + '_n_' + str(counter)
 
