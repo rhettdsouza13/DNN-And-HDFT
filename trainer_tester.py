@@ -86,8 +86,8 @@ inputsTst, labelsTst = test_inject()
 stopping = epochs
 bsize=100
 n_iters = (50000/bsize)
-error_val=100000
-step_cnt=0
+error_val = 100000
+step_cnt = 0
 with tf.Session() as sess:
 
     # writer = tf.summary.FileWriter('output', graph=tf.get_default_graph())
@@ -116,7 +116,7 @@ with tf.Session() as sess:
 
         print step_cnt
 
-        if step_cnt == 8 :
+        if step_cnt == 5:
                 break
 
         for i in xrange(n_iters):
