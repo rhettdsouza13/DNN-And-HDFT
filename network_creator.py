@@ -2,7 +2,7 @@ from treelib import *
 from math import *
 from syntax_gen import *
 
-cost_br = 3000
+cost_br = 1500000
 inp_dim = 1024
 inp_dimx = 32
 inp_dimy = 32
@@ -19,6 +19,9 @@ def power_gen(start,end):
     l_2_exp = [2**x for x in xrange(start,end)]
     return l_2_exp
 
+def power_gen4(start,end):
+    l_4_exp = [4**x for x in xrange(start,end)]
+    return l_4_exp
 
 m_tree.create_node("Root", 'r')
 counter = 0
@@ -32,7 +35,7 @@ def tree_creater(parent, prev_dim, x, y, fc_dim, cost, fl_flag, mp_flag):
 
         for k in [3,5,7]:
 
-            for output_ch in power_gen(0,15):
+            for output_ch in power_gen(7,15):
 
                 iD = 'conv' + str(k) + '*' + str(k) + '_' + str(prev_dim) + "*" + str(output_ch) + '_n_' + str(counter)
 
@@ -45,8 +48,8 @@ def tree_creater(parent, prev_dim, x, y, fc_dim, cost, fl_flag, mp_flag):
 
                 if next_cost-(output_ch*out_dim*x*y*mul_cost_DN + out_dim) > 0:
                     m_tree.create_node(name, iD, parent=c_p, data=[k,k,prev_dim,output_ch,x,y])
-                    print "Conv"
-                    print next_cost
+                    # print "Conv"
+                    # print next_cost
                     tree_creater(iD, output_ch, x, y, output_ch*x*y, next_cost, 0, 0)
 
 
@@ -63,11 +66,11 @@ def tree_creater(parent, prev_dim, x, y, fc_dim, cost, fl_flag, mp_flag):
 
                     if next_cost-(prev_dim*out_dim*(x/k)*(y/k)*mul_cost_DN + out_dim)>0:
                         m_tree.create_node(name, iD, parent=c_p, data=[k,k,(x/k),(y/k), prev_dim])
-                        print "Pool"
+                        # print "Pool"
                         tree_creater(iD, prev_dim, x/k, y/k, prev_dim*x*y/(k*k), next_cost, 0, 1)
 
 
-    for output_ch in power_gen(1,15):
+    for output_ch in power_gen4(4,15):
 
         iD = 'fc' + '_' + str(fc_dim) + "*" + str(output_ch) + '_n_' + str(counter)
 
@@ -77,7 +80,7 @@ def tree_creater(parent, prev_dim, x, y, fc_dim, cost, fl_flag, mp_flag):
 
         if next_cost-(output_ch*out_dim*mul_cost_DN + out_dim) > 0:
             m_tree.create_node(name, iD, parent=c_p, data=[fc_dim, output_ch])
-            print "Dense"
+            # print "Dense"
             tree_creater(iD, output_ch, x, y, output_ch, next_cost, 1, 0)
 
 
