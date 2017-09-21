@@ -3,7 +3,9 @@ from math import *
 from syntax_gen import *
 
 
-cost_br = 1800000
+#cost_br = 722610
+cost_br = 362000
+# cost_br = 181000
 inp_dim = 1024
 inp_dimx = 32
 inp_dimy = 32
@@ -37,9 +39,9 @@ def tree_creater(parent, prev_dim, x, y, fc_dim, cost, fl_flag, mp_flag, layer_n
 
     if fl_flag==0:
 
-        for k in [3,5,7]:
+        for k in [5,7]:
 
-            for output_ch in power_gen(7,10):
+            for output_ch in power_gen(5,15):
 
                 iD = 'conv' + str(k) + '*' + str(k) + '_' + str(prev_dim) + "*" + str(output_ch) + '_n_' + str(counter)
 
@@ -74,7 +76,7 @@ def tree_creater(parent, prev_dim, x, y, fc_dim, cost, fl_flag, mp_flag, layer_n
                         tree_creater(iD, prev_dim, x/k, y/k, prev_dim*x*y/(k*k), next_cost, 0, 1, layer_num+1)
 
 
-    for output_ch in power_gen(8,15):
+    for output_ch in power_gen(7,15):
 
         iD = 'fc' + '_' + str(fc_dim) + "*" + str(output_ch) + '_n_' + str(counter)
 
@@ -98,5 +100,5 @@ def tree_creater(parent, prev_dim, x, y, fc_dim, cost, fl_flag, mp_flag, layer_n
 
 prev_dim=1
 tree_creater('r', prev_dim, inp_dimx, inp_dimy, prev_dim*inp_dimx*inp_dimy, cost_br, 0, 1, 0)
-m_tree.show()
+m_tree.show(line_type='ascii-emv')
 syntax_generator(m_tree, inp_dimx, inp_dimy)

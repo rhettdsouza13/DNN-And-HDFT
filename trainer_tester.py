@@ -69,7 +69,9 @@ lR = tf.placeholder(tf.float32, shape=[])
 
 cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(labels=y_, logits=y))
 
-train_step = tf.train.MomentumOptimizer(learning_rate=lR, momentum=0.99).minimize(cross_entropy)
+#train_step = tf.train.MomentumOptimizer(learning_rate=lR, momentum=0.99).minimize(cross_entropy)
+
+train_step = tf.train.AdamOptimizer(learning_rate=lR).minimize(cross_entropy)
 #
 #GradientDescentOptimizer(0.001)
 correct_prediction = tf.equal(tf.argmax(y,1), tf.argmax(y_,1))
@@ -88,13 +90,14 @@ bsize=100
 n_iters = (50000/bsize)
 error_val = 100000
 step_cnt = 0
+val_data=[]
 with tf.Session() as sess:
 
     # writer = tf.summary.FileWriter('output', graph=tf.get_default_graph())
 
     sess.run(tf.global_variables_initializer())
 
-    filname = '/home/hdft/Documents/DNN-Data/DATA_NETS_2017_' + str(net_num) + '.npy'
+    filname = '/home/hdft/Documents/DNN-Data-Run-2/DATA_NETS_2017_' + str(net_num) + '.npy'
 
     data = numpy.array([[1,2,3,4]])
 
@@ -103,10 +106,13 @@ with tf.Session() as sess:
         print "Epoch: " + str(j)
         val_accuracy, val_error = sess.run([accuracy, cross_entropy], feed_dict={x:inputs[bsize*500:bsize*600], y_:labels[bsize*500:bsize*600], lR:lR_val})
         print('Validation accuracy %g Error %f \n' % (val_accuracy, val_error))
+
+        val_data.append([val_accuracy, val_error, j, 1])
         # if val_accuracy >= 0.98:
         #     stopping = j
         #     break
-        if val_error >= error_val:
+
+        if val_error > error_val:
             step_cnt += 1
         else:
             step_cnt = 0
@@ -114,10 +120,15 @@ with tf.Session() as sess:
         if error_val > val_error:
             error_val = val_error
 
+        # error_val = val_error
+
         print step_cnt
 
         if step_cnt == 5:
-                break
+            break
+
+
+
 
         for i in xrange(n_iters):
             #
@@ -136,16 +147,17 @@ with tf.Session() as sess:
 
 
             train_step.run(feed_dict={x:inputs[bsize*(i):bsize*(i+1)], y_:labels[bsize*(i):bsize*(i+1)], lR:lR_val})
-        lR_val *= 0.95
+        #lR_val *= 0.95
 
 
 
 
     print "\nTest\n"
-    test_accuracy = sess.run(accuracy, feed_dict={x:inputsTst[:], y_:labelsTst[:], lR:lR_val})
+    test_accuracy, test_error = sess.run([accuracy, cross_entropy], feed_dict={x:inputsTst[:], y_:labelsTst[:], lR:lR_val})
     print "Accuracy = " + str(test_accuracy)
-
-    data = numpy.concatenate((data, [[val_accuracy, val_error, test_accuracy, stopping]]), axis=0)
+    print "Error = " + str(test_error)
+    data = numpy.concatenate((data, [[test_accuracy, test_error, 0, 0]]), axis=0)
+    data = numpy.concatenate((data, val_data), axis=0)
 
     numpy.save(filname, data)
 
