@@ -2,7 +2,7 @@ import matplotlib.pyplot as pl
 import os
 import numpy
 from sklearn.kernel_ridge import KernelRidge
-
+from fitter import *
 
 data_dir = '/home/hdft/Documents/DNN-Data/'
 data_dir_r2 = '/home/hdft/Documents/DNN-Data-Run-2/'
@@ -97,7 +97,7 @@ if run == 2:
 
     pl.figure(1)
     for plots in val_err_plot:
-        line, = pl.plot(plots)
+        line, = pl.plot(plots[1:])
 
     pl.figure(2)
     for plots in train_err_plot:
@@ -106,10 +106,19 @@ if run == 2:
 
     pl.figure(3)
     for plots in val_acc_plot:
-        line, = pl.plot(range(len(plots)), plots)
+        line, = pl.plot(range(len(plots)-1), plots[1:])
 
     pl.figure(4)
     for plots in train_acc_plot:
         line, = pl.plot(range(len(plots)), plots)
+
+    pl.figure(5)
+    opt, cov = fitter([float(i) for i in range(len(val_acc_plot[0][1:]))], val_acc_plot[0][1:])
+    pl.plot(val_acc_plot[0][1:])
+    val_fit=[func(i,opt[0],opt[1]) for i in val_acc_plot[0][1:]]
+
+    pl.plot(val_fit)
+    print val_fit
+    print opt, cov
 
     pl.show()
