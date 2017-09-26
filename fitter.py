@@ -1,10 +1,10 @@
 from scipy.optimize import curve_fit
 import numpy
 
-def func(x,a,b):
-    return (1-(numpy.exp(-a*(x))) - b)
+def func(x,a,b,c):
+    return -(c*numpy.exp(-a*(x))) + b
 
 def fitter(x_in,y):
-    popt, pcov = curve_fit(func, x_in, y, p0 = [2.5, -0.03])
+    popt, pcov = curve_fit(func, x_in, y, p0=[1.0,0,1.0])
 
     return popt, pcov

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 count=0
-st_point=500
+st_point=2609
 while read net; do
   if [ $count -ge $st_point ]
     then

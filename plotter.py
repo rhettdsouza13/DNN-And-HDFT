@@ -68,7 +68,10 @@ if run == 1:
 
     #DATA_NETS_2017_3302.npy check network????
 
-
+dirs = os.listdir(data_dir_r2)
+fils_list = []
+nets_file = open("nets_list6.txt",'r')
+nets_list = netfile.readlines()
 if run == 2:
     train_acc_plot = []
     train_err_plot = []
@@ -94,31 +97,38 @@ if run == 2:
         train_err_plot.append(train_error)
         val_acc_plot.append(val_accuracy)
         val_err_plot.append(val_error)
+        fils_list.append(d_file)
 
-    pl.figure(1)
-    for plots in val_err_plot:
-        line, = pl.plot(plots[1:])
 
-    pl.figure(2)
-    for plots in train_err_plot:
-        line, = pl.plot(plots)
+    # pl.figure(1)
+    # for plots in val_err_plot:
+    #     line, = pl.plot(plots[1:])
+
+    # pl.figure(2)
+    # for plots in train_err_plot:
+    #     line, = pl.plot(plots)
 
 
     pl.figure(3)
     for plots in val_acc_plot:
         line, = pl.plot(range(len(plots)-1), plots[1:])
 
-    pl.figure(4)
-    for plots in train_acc_plot:
-        line, = pl.plot(range(len(plots)), plots)
+    # pl.figure(4)
+    # for plots in train_acc_plot:
+    #     line, = pl.plot(range(len(plots)), plots)
+
+    # plot100 = [(i-0.95)*100 for i in val_acc_plot[0][1:]]
 
     pl.figure(5)
-    opt, cov = fitter([float(i) for i in range(len(val_acc_plot[0][1:]))], val_acc_plot[0][1:])
-    pl.plot(val_acc_plot[0][1:])
-    val_fit=[func(i,opt[0],opt[1]) for i in val_acc_plot[0][1:]]
+    for plots in val_acc_plot:
+        opt, cov = fitter([float(i) for i in range(len(plots[1:]))], plots[1:])
 
-    pl.plot(val_fit)
-    print val_fit
-    print opt, cov
+        #pl.plot(plots[1:])
+        val_fit=[func(i,opt[0],opt[1],opt[2]) for i in range(len(plots[1:]))]
+
+        # pl.plot(func(val_acc_plot[0][1:], *opt), 'r-', label="Fitted Curve")
+        pl.plot(val_fit)
+
+        print opt[2]
 
     pl.show()
