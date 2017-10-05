@@ -28,6 +28,7 @@ def syntax_generator(tree, x, y):
                     dim = tree.get_node(node).data
                     net+='full,relu|'
                     net+='1,1,'+str(dim[1])
+                    net+='  ' + str(dim[2])
                     continue
 
             print net

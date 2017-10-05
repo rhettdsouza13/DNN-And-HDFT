@@ -70,8 +70,8 @@ if run == 1:
 
 dirs = os.listdir(data_dir_r2)
 fils_list = []
-nets_file = open("nets_list6.txt",'r')
-nets_list = netfile.readlines()
+# nets_file = open("nets_list6.txt",'r')
+# nets_list = netfile.readlines()
 if run == 2:
     train_acc_plot = []
     train_err_plot = []
@@ -93,6 +93,10 @@ if run == 2:
             if tup[3] == 1:
                 val_accuracy.append(tup[0])
                 val_error.append(tup[1])
+
+        if  len(val_accuracy)>=40:
+            if val_accuracy[40]<92.50:
+                print d_file
         train_acc_plot.append(train_accuracy)
         train_err_plot.append(train_error)
         val_acc_plot.append(val_accuracy)
