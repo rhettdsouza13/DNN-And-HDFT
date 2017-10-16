@@ -87,7 +87,7 @@ inputs, labels = input_inject()
 inputsTst, labelsTst = test_inject()
 stopping = epochs
 bsize=100
-n_iters = (50000/bsize)
+n_iters = (800/bsize)
 error_val = 100000
 step_cnt = 0
 val_data=[]
@@ -97,14 +97,14 @@ with tf.Session() as sess:
 
     sess.run(tf.global_variables_initializer())
 
-    filname = '/home/hdft/Documents/DNN-Data-Run-2/DATA_NETS_2017_' + str(net_num) + '.npy'
+    filname = '/home/hdft/Documents/DNN-Data-Run-5-800-200/DATA_NETS_2017_' + str(net_num) + '.npy'
 
     data = numpy.array([[1,2,3,4]])
 
 
     for j in xrange(epochs):
         print "Epoch: " + str(j)
-        val_accuracy, val_error = sess.run([accuracy, cross_entropy], feed_dict={x:inputs[bsize*500:bsize*600], y_:labels[bsize*500:bsize*600], lR:lR_val})
+        val_accuracy, val_error = sess.run([accuracy, cross_entropy], feed_dict={x:inputs[bsize*8:bsize*10], y_:labels[bsize*8:bsize*10], lR:lR_val})
         print('Validation accuracy %g Error %f \n' % (val_accuracy, val_error))
 
         val_data.append([val_accuracy, val_error, j, 1])
@@ -137,13 +137,13 @@ with tf.Session() as sess:
             # train_accuracy, error = sess.run([accuracy, cross_entropy], feed_dict={x:inputs[bsize*i:bsize*(i+1)], y_:labels[bsize*i:bsize*(i+1)]})
             #
             # data = numpy.concatenate((data, [[test_accuracy, test_error, train_accuracy, error]]), axis=0)
-            if i%50 == 0:
+            if i%1 == 0:
 
                 train_accuracy, error, learn = sess.run([accuracy, cross_entropy, lR], feed_dict={x:inputs[bsize*(i):bsize*(i+1)], y_:labels[bsize*(i):bsize*(i+1)], lR:lR_val})
 
                 data = numpy.concatenate((data, [[train_accuracy, error, (n_iters*j)+i, 0]]), axis=0)
 
-                print('Step %d, Training accuracy %g Error %f Learning Rate %f \n' % (i, train_accuracy, error, learn))
+                #print('Step %d, Training accuracy %g Error %f Learning Rate %f \n' % (i, train_accuracy, error, learn))
 
 
             train_step.run(feed_dict={x:inputs[bsize*(i):bsize*(i+1)], y_:labels[bsize*(i):bsize*(i+1)], lR:lR_val})

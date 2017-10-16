@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 count=0
-st_point=3139
+st_point=0
 while read net; do
   if [ $count -ge $st_point ]
     then
@@ -10,4 +10,4 @@ while read net; do
   fi
   count=$(($count+1))
   echo $count
-done <nets_list6.txt
+done <nets_list7.txt

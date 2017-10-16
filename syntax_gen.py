@@ -1,9 +1,15 @@
 from treelib import *
+import numpy
+import matplotlib.pyplot as pl
+
+def power_gen(start,end):
+    l_2_exp = [2**x for x in xrange(start,end)]
+    return l_2_exp
 
 def syntax_generator(tree, x, y):
     paths = tree.paths_to_leaves()
-
-    with open('nets_list6.txt', 'w') as netfile:
+    vcs = []
+    with open('nets_list7.txt', 'w') as netfile:
 
         for path in paths:
 
@@ -28,10 +34,86 @@ def syntax_generator(tree, x, y):
                     dim = tree.get_node(node).data
                     net+='full,relu|'
                     net+='1,1,'+str(dim[1])
-                    net+='  ' + str(dim[2])
+                    #net+='  ' + str(dim[2])
+                    vcs.append(dim[2])
                     continue
 
             print net
-
             netfile.write(net + '\n')
-    print len(paths)
+#        print vcs
+        vcs.sort()
+        pl.scatter(range(len(vcs)), vcs)
+        numpy.save("VCS", vcs)
+        print len(paths)
+        pl.show()
+        print len(paths)
+
+counter = 0
+p_tree = Tree()
+p_tree.create_node("Root", 'r')
+
+def create_param_tree(parent, net_len):
+
+    global counter
+    c_p=parent
+    counter += 1
+    for output_ch in power_gen(5,9):
+        if net_len > 0:
+            name = str(output_ch) + '_net_len ' + str(net_len)
+            iD = str(output_ch) + '_net_len ' + str(net_len) + '_' + str(counter)
+            p_tree.create_node(name, iD, parent=c_p, data=[output_ch,1])
+            create_param_tree(iD, net_len-1)
+
+
+def param_iter(net):
+    parts = net.split('|')
+    print parts
+    # xrange(((len(parts)-1)/2) - 1)
+    iter=0
+    func_ind = []
+    m_flag = 0
+    for func in parts:
+        if iter==0 or iter==(len(parts)-1):
+            iter+=1
+            continue
+        if 'max' in func:
+            iter+=1
+            m_flag=1
+            continue
+        if 'relu' in func:
+            iter+=1
+            continue
+        if m_flag == 1:
+            m_flag = 0
+            iter+=1
+            continue
+        func_ind.append(iter)
+        iter+=1
+
+    create_param_tree('r', len(func_ind))
+    p_tree.show()
+    combos = p_tree.paths_to_leaves()
+    # print combos
+    print len(combos)
+    print func_ind
+
+    for path in combos:
+        pos = 1
+        cur = parts
+        for ind in func_ind:
+            dim = p_tree.get_node(path[pos]).data
+            sec = cur[ind].split(',')
+            sec[2] = str(dim[0])
+            cur[ind] = ','.join(sec)
+            pos+=1
+            if 'max' in cur[ind+1]:
+                sec = cur[ind+2].split(',')
+                sec[2] = str(dim[0])
+                cur[ind+2] = ','.join(sec)
+
+        cur = '|'.join(cur)
+        print cur
+
+
+
+param_iter("32,32,1|conv,relu,5|32,32,10|max_pooling,identity,2|16,16,10|conv,relu,5|16,16,10|conv,relu,5|16,16,10|max_pooling,identity,2|8,8,10|conv,relu,7|8,8,10|conv,relu,7|8,8,10|conv,relu,5|8,8,10|full,relu|1,1,10")
