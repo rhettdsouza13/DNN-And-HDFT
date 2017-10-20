@@ -57,7 +57,7 @@ def create_param_tree(parent, net_len):
     global counter
     c_p=parent
     counter += 1
-    for output_ch in power_gen(5,9):
+    for output_ch in power_gen(5,8):
         if net_len > 0:
             name = str(output_ch) + '_net_len ' + str(net_len)
             iD = str(output_ch) + '_net_len ' + str(net_len) + '_' + str(counter)
@@ -94,26 +94,27 @@ def param_iter(net):
     p_tree.show()
     combos = p_tree.paths_to_leaves()
     # print combos
+
+    with open("param_list1.txt", 'a+') as p_file:
+        for path in combos:
+            pos = 1
+            cur = parts
+            for ind in func_ind:
+                dim = p_tree.get_node(path[pos]).data
+                sec = cur[ind].split(',')
+                sec[2] = str(dim[0])
+                cur[ind] = ','.join(sec)
+                pos+=1
+                if 'max' in cur[ind+1]:
+                    sec = cur[ind+2].split(',')
+                    sec[2] = str(dim[0])
+                    cur[ind+2] = ','.join(sec)
+
+            cur = '|'.join(cur)
+            print cur
+            p_file.write(cur + "\n")
     print len(combos)
     print func_ind
 
-    for path in combos:
-        pos = 1
-        cur = parts
-        for ind in func_ind:
-            dim = p_tree.get_node(path[pos]).data
-            sec = cur[ind].split(',')
-            sec[2] = str(dim[0])
-            cur[ind] = ','.join(sec)
-            pos+=1
-            if 'max' in cur[ind+1]:
-                sec = cur[ind+2].split(',')
-                sec[2] = str(dim[0])
-                cur[ind+2] = ','.join(sec)
 
-        cur = '|'.join(cur)
-        print cur
-
-
-
-param_iter("32,32,1|conv,relu,5|32,32,10|max_pooling,identity,2|16,16,10|conv,relu,5|16,16,10|conv,relu,5|16,16,10|max_pooling,identity,2|8,8,10|conv,relu,7|8,8,10|conv,relu,7|8,8,10|conv,relu,5|8,8,10|full,relu|1,1,10")
+param_iter("32,32,1|max_pooling,identity,2|16,16,1|conv,relu,5|16,16,10|conv,relu,7|16,16,10|conv,relu,7|16,16,10|max_pooling,identity,2|8,8,10|conv,relu,5|8,8,10|conv,relu,7|8,8,10|full,relu|1,1,10|full,relu|1,1,10|full,relu|1,1,10|full,relu|1,1,10")

@@ -5,7 +5,7 @@ from sklearn.kernel_ridge import KernelRidge
 from fitter import *
 
 data_dir = '/home/hdft/Documents/DNN-Data/'
-data_dir_r2 = '/home/hdft/Documents/DNN-Data-Run-5-800-200/'
+data_dir_r2 = '/home/hdft/Documents/DNN-Data-Run-6-400-100/'
 
 run=2
 
@@ -72,6 +72,9 @@ dirs = os.listdir(data_dir_r2)
 fils_list = []
 # nets_file = open("nets_list6.txt",'r')
 # nets_list = netfile.readlines()
+netfile_7 = open("nets_list7.txt", 'r')
+nets_7 = netfile_7.readlines()
+good_nets = open("good_nets.txt", "w+")
 if run == 2:
     train_acc_plot = []
     train_err_plot = []
@@ -98,28 +101,42 @@ if run == 2:
             if tup[3] == 1:
                 val_accuracy.append(tup[0])
                 val_error.append(tup[1])
-                if tup[2]>=0 and tup[0] >= 0.97:
-                    print tup[2]
-                    print tup[0]
-                    print d_file
+                if tup[2]>=0 and tup[0] >= 0.92 :
+                    # print tup[2]
+                    # print tup[0]
+                    # print d_file
                     of_flag = 1
             iterat+=1
 
         if of_flag == 1:
+            # print tup[2]
+            # print tup[0]
+            print d_file
             of_plot.append(val_accuracy)
             of_plot_error.append(val_error)
+            net_name = nets_7[int(d_file.split('_')[3].split('.')[0])]
+            print net_name
+            good_nets.write(net_name + str(max(val_accuracy)) + "\n")
             of_flag = 0
-
+        if train_accuracy[-1] > 0.88 :
+            print "\n"
+            print d_file
+            print "Test Flag"
+            net_name = nets_7[int(d_file.split('_')[3].split('.')[0])]
+            print net_name
+            good_nets.write("TEST_" + net_name + str(train_accuracy[-1]) + "\n")
+            print "\n"
         train_acc_plot.append(train_accuracy)
         train_err_plot.append(train_error)
         val_acc_plot.append(val_accuracy)
         val_err_plot.append(val_error)
         fils_list.append(d_file)
+    good_nets.close()
 
 
     pl.figure(1)
-    for plots in val_err_plot:
-        line, = pl.plot(plots[1:])
+    # for plots in val_err_plot:
+    #     line, = pl.plot(plots[1:])
 
     # pl.figure(2)
     # for plots in train_err_plot:
@@ -134,23 +151,44 @@ if run == 2:
     # for plots in train_acc_plot:
     #     line, = pl.plot(range(len(plots)), plots)
 
+    test_scatter = []
+    for plots in train_acc_plot:
+        test_scatter.append(plots[len(plots)-1])
+
+
+    pl.figure(8)
+    pl.scatter(range(len(test_scatter)), test_scatter)
+    # for i in xrange(len(test_scatter)):
+        # if test_scatter[i] > 0.75:
+        #     print i
     # plot100 = [(i-0.95)*100 for i in val_acc_plot[0][1:]]
 
-    # pl.figure(5)
-    # for plots in val_acc_plot:
-    #     opt, cov = fitter([float(i) for i in range(len(plots[1:]))], plots[1:])
-    #
-    #     #pl.plot(plots[1:])
-    #     val_fit=[func(i,opt[0],opt[1],opt[2]) for i in range(len(plots[1:]))]
-    #
-    #     # pl.plot(func(val_acc_plot[0][1:], *opt), 'r-', label="Fitted Curve")
-    #     pl.plot(val_fit)
+    pl_ind = 0
+    pl.figure(5)
+    for plots in val_acc_plot:
+        try:
+            opt, cov = fitter([float(i) for i in range(len(plots[1:]))], plots[1:])
+        except:
+            # print "Issue, Moving On"
+            # print pl_ind
+            continue
 
-        #print opt[2]
-    pl.figure(6)
-    for plots in of_plot:
-        line, = pl.plot(range(len(plots)-1), plots[1:])
-    pl.figure(7)
-    for plots in of_plot_error:
-        line, = pl.plot(range(len(plots)-1), plots[1:])
+
+        #pl.plot(plots[1:])
+        val_fit=[func(i,opt[0],opt[1],opt[2]) for i in range(len(plots[1:]))]
+
+        # pl.plot(func(val_acc_plot[0][1:], *opt), 'r-', label="Fitted Curve")
+        pl.plot(val_fit)
+        #print pl_ind
+        pl_ind+=1
+        # print opt
+    # pl.figure(6)
+    # for plots in of_plot:
+    #     line, = pl.plot(range(len(plots)-1), plots[1:])
+    # pl.figure(7)
+    # for plots in of_plot_error:
+    #     line, = pl.plot(range(len(plots)-1), plots[1:])
+
+
+
     pl.show()
