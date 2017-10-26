@@ -9,7 +9,7 @@ def power_gen(start,end):
 def syntax_generator(tree, x, y):
     paths = tree.paths_to_leaves()
     vcs = []
-    with open('nets_list7.txt', 'w') as netfile:
+    with open('nets_list8.txt', 'w') as netfile:
 
         for path in paths:
 
@@ -116,5 +116,51 @@ def param_iter(net):
     print len(combos)
     print func_ind
 
+param_iter("32,32,1|conv,relu,5|32,32,20|max_pooling,identity,2|16,16,20|conv,relu,5|16,16,20|max_pooling,identity,2|8,8,20|conv,relu,7|8,8,20|conv,relu,5|8,8,20|full,relu|1,1,20|full,relu|1,1,20|full,relu|1,1,10")
 
-param_iter("32,32,1|max_pooling,identity,2|16,16,1|conv,relu,5|16,16,10|conv,relu,7|16,16,10|conv,relu,7|16,16,10|max_pooling,identity,2|8,8,10|conv,relu,5|8,8,10|conv,relu,7|8,8,10|full,relu|1,1,10|full,relu|1,1,10|full,relu|1,1,10|full,relu|1,1,10")
+def replace(net):
+
+    parts = net.split('|')
+    iter=0
+    func_ind = []
+    m_flag = 0
+    for func in parts:
+        if iter==0 or iter==(len(parts)-1):
+            iter+=1
+            continue
+        if 'max' in func:
+            iter+=1
+            m_flag=1
+            continue
+        if 'relu' in func:
+            iter+=1
+            continue
+        if m_flag == 1:
+            m_flag = 0
+            iter+=1
+            continue
+        func_ind.append(iter)
+        iter+=1
+
+
+    cur = parts
+    for ind in func_ind:
+        dim = 20
+        sec = cur[ind].split(',')
+        sec[2] = str(dim)
+        cur[ind] = ','.join(sec)
+
+        if 'max' in cur[ind+1]:
+            sec = cur[ind+2].split(',')
+            sec[2] = str(dim)
+            cur[ind+2] = ','.join(sec)
+
+    cur = '|'.join(cur)
+    print cur
+    return cur
+
+
+# with open("nets_list7.txt", "r") as n_file, open("nets_list20_7.txt", "w+") as out_file:
+#     for prop in n_file.readlines():
+#         out_net = replace(prop)
+#         out_file.write(str(out_net))

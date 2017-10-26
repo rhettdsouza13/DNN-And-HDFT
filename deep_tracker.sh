@@ -10,4 +10,4 @@ while read net; do
   fi
   count=$(($count+1))
   echo $count
-done <nets_list20_7.txt
+done <nets_list7.txt

@@ -4,7 +4,7 @@ from syntax_gen import *
 import numpy
 
 #cost_br = 722610
-vc_max = 3500000
+vc_max = 7000000
 max_layer = 500
 # vc_max = 30852000
 #vc_max = 32*32*100
@@ -52,7 +52,7 @@ def tree_creater(parent, prev_dim, x, y, fc_dim, fl_flag, mp_flag, layer_num, we
 
         for k in [5,7]:
 
-            for output_ch in fact_val(1,2):
+            for output_ch in fact_val(2,3):
 
                 iD = 'conv' + str(k) + '*' + str(k) + '_' + str(prev_dim) + "*" + str(output_ch) + '_n_' + str(counter)
 
@@ -82,7 +82,7 @@ def tree_creater(parent, prev_dim, x, y, fc_dim, fl_flag, mp_flag, layer_num, we
                         tree_creater(iD, prev_dim, x/k, y/k, prev_dim*x*y/(k*k), 0, 1, layer_num, weights)
 
 
-    for output_ch in fact_val(1,2):
+    for output_ch in fact_val(2,3):
 
         iD = 'fc' + '_' + str(fc_dim) + "*" + str(output_ch) + '_n_' + str(counter)
 

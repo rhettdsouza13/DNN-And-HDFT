@@ -5,7 +5,7 @@ from sklearn.kernel_ridge import KernelRidge
 from fitter import *
 
 data_dir = '/home/hdft/Documents/DNN-Data/'
-data_dir_r2 = '/home/hdft/Documents/DNN-Data-Run-6-400-100/'
+data_dir_r2 = '/home/hdft/Documents/DNN-Data-Run-9-800-200-drop/'
 
 run=2
 
@@ -94,18 +94,19 @@ if run == 2:
         test_accuracy = []
         test_error = []
         iterat = 0
-        for tup in data:
-            if tup[3] == 0:
-                train_accuracy.append(tup[0])
-                train_error.append(tup[1])
-            if tup[3] == 1:
-                val_accuracy.append(tup[0])
-                val_error.append(tup[1])
-                if tup[2]>=0 and tup[0] >= 0.92 :
-                    # print tup[2]
-                    # print tup[0]
-                    # print d_file
-                    of_flag = 1
+        if 1:
+            for tup in data:
+                if tup[3] == 0:
+                    train_accuracy.append(tup[0])
+                    train_error.append(tup[1])
+                if tup[3] == 1:
+                    val_accuracy.append(tup[0])
+                    val_error.append(tup[1])
+                    if tup[2]>=0 and tup[0] >= 0.98 :
+                        # print tup[2]
+                        # print tup[0]
+                        # print d_file
+                        of_flag = 1
             iterat+=1
 
         if of_flag == 1:
@@ -115,17 +116,19 @@ if run == 2:
             of_plot.append(val_accuracy)
             of_plot_error.append(val_error)
             net_name = nets_7[int(d_file.split('_')[3].split('.')[0])]
-            print net_name
+            print net_name,
             good_nets.write(net_name + str(max(val_accuracy)) + "\n")
+            print str(max(val_accuracy))
             of_flag = 0
-        if train_accuracy[-1] > 0.88 :
-            print "\n"
-            print d_file
-            print "Test Flag"
-            net_name = nets_7[int(d_file.split('_')[3].split('.')[0])]
-            print net_name
-            good_nets.write("TEST_" + net_name + str(train_accuracy[-1]) + "\n")
-            print "\n"
+        # if train_accuracy[-1] > 0.97 :
+        #     # print "\n"
+        #     print d_file
+        #     print "Test Flag"
+        #     net_name = nets_7[int(d_file.split('_')[3].split('.')[0])]
+        #     print net_name,
+        #     good_nets.write("TEST_" + net_name + str(train_accuracy[-1]) + "\n")
+        #     print str(train_accuracy[-1])
+        # print "\n"
         train_acc_plot.append(train_accuracy)
         train_err_plot.append(train_error)
         val_acc_plot.append(val_accuracy)
@@ -153,7 +156,8 @@ if run == 2:
 
     test_scatter = []
     for plots in train_acc_plot:
-        test_scatter.append(plots[len(plots)-1])
+        if len(plots) >= 1:
+            test_scatter.append(plots[len(plots)-1])
 
 
     pl.figure(8)
