@@ -2,15 +2,18 @@ import os
 import sys
 import numpy
 import pipes
+import time
 
-file_list = '/home/hdft/Documents/DNN-Data-Run-9-800-200-drop/'
+print time.localtime()
+
+file_list = '/home/hdft/Documents/DNN-Data-Run-10-800-200-drop/'
 
 #data_dic = {}
 flagged = []
 net_file = open("nets_list7.txt", 'r')
 nets = net_file.readlines()
 iterator_e = 0
-frac = [10,5,2]
+frac = [10,5,2,1,1,1,1,1,1]
 for epoch_pnt in [i*5 for i in [1,3,5,20]]:
 
     net_num = 0
@@ -41,16 +44,17 @@ for epoch_pnt in [i*5 for i in [1,3,5,20]]:
             if tup[3] == 1:
                 val_accuracy.append(tup[0])
                 val_error.append(tup[1])
-        print len(val_error)
+
         if len(val_error) == epoch_pnt:
-            val_error[epoch_pnt-1]
             data_dic[val_error[epoch_pnt-1]] = int(d_file.split('_')[3].split('.')[0])
 
     flagged = []
-    print data_dic
+
     for key in sorted(data_dic.iterkeys()):
         #print data_dic[key], key
         flagged.append(data_dic[key])
 
     print flagged[len(flagged)/frac[iterator_e]:]
     iterator_e += 1
+
+print time.localtime()

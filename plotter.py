@@ -5,7 +5,7 @@ from sklearn.kernel_ridge import KernelRidge
 from fitter import *
 
 data_dir = '/home/hdft/Documents/DNN-Data/'
-data_dir_r2 = '/home/hdft/Documents/DNN-Data-Run-9-800-200-drop/'
+data_dir_r2 = '/home/hdft/Documents/DNN-Data-Run-14-20-60-40/'
 
 run=2
 
@@ -72,9 +72,12 @@ dirs = os.listdir(data_dir_r2)
 fils_list = []
 # nets_file = open("nets_list6.txt",'r')
 # nets_list = netfile.readlines()
-netfile_7 = open("nets_list7.txt", 'r')
+com_file = open("common.txt", 'r')
+common_list = com_file.readlines()
+print common_list
+netfile_7 = open("nets_list20_7.txt", 'r')
 nets_7 = netfile_7.readlines()
-good_nets = open("good_nets.txt", "w+")
+good_nets = open("good_nets_ol.txt", "w+")
 if run == 2:
     train_acc_plot = []
     train_err_plot = []
@@ -102,7 +105,7 @@ if run == 2:
                 if tup[3] == 1:
                     val_accuracy.append(tup[0])
                     val_error.append(tup[1])
-                    if tup[2]>=0 and tup[0] >= 0.98 :
+                    if tup[2]>=0 and tup[0] >= 0.92:
                         # print tup[2]
                         # print tup[0]
                         # print d_file
@@ -113,12 +116,15 @@ if run == 2:
             # print tup[2]
             # print tup[0]
             print d_file
+            print len(val_accuracy)
             of_plot.append(val_accuracy)
             of_plot_error.append(val_error)
             net_name = nets_7[int(d_file.split('_')[3].split('.')[0])]
             print net_name,
-            good_nets.write(net_name + str(max(val_accuracy)) + "\n")
+            #good_nets.write(net_name + str(max(val_accuracy)) + "\n")
+            #good_nets.write(d_file + "\n")
             print str(max(val_accuracy))
+            print str(min(val_error))
             of_flag = 0
         # if train_accuracy[-1] > 0.97 :
         #     # print "\n"
@@ -138,8 +144,8 @@ if run == 2:
 
 
     pl.figure(1)
-    # for plots in val_err_plot:
-    #     line, = pl.plot(plots[1:])
+    for plots in val_err_plot:
+        line, = pl.plot(plots[1:])
 
     # pl.figure(2)
     # for plots in train_err_plot:

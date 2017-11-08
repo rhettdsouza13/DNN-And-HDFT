@@ -116,7 +116,7 @@ def param_iter(net):
     print len(combos)
     print func_ind
 
-param_iter("32,32,1|conv,relu,5|32,32,20|max_pooling,identity,2|16,16,20|conv,relu,5|16,16,20|max_pooling,identity,2|8,8,20|conv,relu,7|8,8,20|conv,relu,5|8,8,20|full,relu|1,1,20|full,relu|1,1,20|full,relu|1,1,10")
+#param_iter("32,32,1|conv,relu,5|32,32,20|max_pooling,identity,2|16,16,20|conv,relu,5|16,16,20|max_pooling,identity,2|8,8,20|conv,relu,7|8,8,20|conv,relu,5|8,8,20|full,relu|1,1,20|full,relu|1,1,20|full,relu|1,1,10")
 
 def replace(net):
 
@@ -145,7 +145,7 @@ def replace(net):
 
     cur = parts
     for ind in func_ind:
-        dim = 20
+        dim = 80
         sec = cur[ind].split(',')
         sec[2] = str(dim)
         cur[ind] = ','.join(sec)
@@ -160,7 +160,7 @@ def replace(net):
     return cur
 
 
-# with open("nets_list7.txt", "r") as n_file, open("nets_list20_7.txt", "w+") as out_file:
-#     for prop in n_file.readlines():
-#         out_net = replace(prop)
-#         out_file.write(str(out_net))
+with open("nets_list7.txt", "r") as n_file, open("nets_list80_7.txt", "w+") as out_file:
+    for prop in n_file.readlines():
+        out_net = replace(prop)
+        out_file.write(str(out_net))

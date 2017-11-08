@@ -7,8 +7,9 @@ from visualizer import *
 from net_read_and_run import *
 
 net_syn = sys.argv[1]
-
 net_num = sys.argv[2]
+run_num = int(sys.argv[3])
+dim_size = int(sys.argv[4])
 
 x = tf.placeholder(tf.float32, shape=[None, 1024], name='x_input')
 y_ = tf.placeholder(tf.float32, shape=[None, 10], name='labels')
@@ -80,6 +81,7 @@ accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 
 lR_val = 0.001
 epochs = 100
+
 inputs, labels = input_inject()
 # for i in xrange(epochs):
 #     inputs.extend(inputs[:])
@@ -97,7 +99,7 @@ with tf.Session() as sess:
 
     sess.run(tf.global_variables_initializer())
 
-    filname = '/home/hdft/Documents/DNN-Data-Run-8-20-4500-500/DATA_NETS_2017_' + str(net_num) + '.npy'
+    filname = '/home/hdft/Documents/DNN-Data-Run-' + str(run_num) + '-' + str(dim_size) + '-400-100/DATA_NETS_2017_' + str(net_num) + '.npy'
 
     data = numpy.array([[1,2,3,4]])
 
