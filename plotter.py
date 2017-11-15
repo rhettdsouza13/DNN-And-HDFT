@@ -5,7 +5,7 @@ from sklearn.kernel_ridge import KernelRidge
 from fitter import *
 
 data_dir = '/home/hdft/Documents/DNN-Data/'
-data_dir_r2 = '/home/hdft/Documents/DNN-Data-Run-14-20-60-40/'
+data_dir_r2 = '/home/hdft/Documents/DNN-Data-Run-100-param-60-40/'
 
 run=2
 
@@ -75,7 +75,7 @@ fils_list = []
 com_file = open("common.txt", 'r')
 common_list = com_file.readlines()
 print common_list
-netfile_7 = open("nets_list20_7.txt", 'r')
+netfile_7 = open("param_list100run.txt", 'r')
 nets_7 = netfile_7.readlines()
 good_nets = open("good_nets_ol.txt", "w+")
 if run == 2:
@@ -105,7 +105,7 @@ if run == 2:
                 if tup[3] == 1:
                     val_accuracy.append(tup[0])
                     val_error.append(tup[1])
-                    if tup[2]>=0 and tup[0] >= 0.92:
+                    if tup[2]>=0 and tup[0] >= 1.0:
                         # print tup[2]
                         # print tup[0]
                         # print d_file

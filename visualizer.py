@@ -53,13 +53,26 @@ def view32x64(data):                                                            
             else:
                 pastex+=5
     new_im.show()
+# 
+# def view32x32Im(data):
+#     data = [[numpy.reshape(data, (32,32)), 1]                                         #visualize 32x32 Image Data
+#     im = Image.new('RGB', (32,32))
+#     pixel = im.load()
+#     for i in xrange(im.size[0]):
+#         for j in xrange(im.size[1]):
+#             if data[0][j][i][0]>0.0:
+#                 pixel[i,j]=(255,0,0)
+#             else:
+#                 pixel[i,j]=(0,0,255)
+#     im.show()
 
-def view32x32Im(data):                                                          #visualize 32x32 Image Data
+def view32x32Im(data):
+    data = numpy.reshape(data, (32,32) )                                            #visualize 32x32 Image Data
     im = Image.new('RGB', (32,32))
     pixel = im.load()
     for i in xrange(im.size[0]):
         for j in xrange(im.size[1]):
-            if data[0][j][i][0]>0.0:
+            if data[j][i]>0.0:
                 pixel[i,j]=(255,0,0)
             else:
                 pixel[i,j]=(0,0,255)

@@ -2,6 +2,8 @@ import struct
 import numpy
 from PIL import Image
 
+
+
 with open("/home/hdft/Documents/Data_ML/2017_07_03 CNN_BIN/MINST.train.bin", "rb") as bfile:
     num = bfile.read(4)
     xdim = struct.unpack('i', num)[0]

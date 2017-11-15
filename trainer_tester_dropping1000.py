@@ -99,7 +99,7 @@ with tf.Session() as sess:
 
     sess.run(tf.global_variables_initializer())
 
-    filname = '/home/hdft/Documents/DNN-Data-Run-' + str(run_num) + '-' + str(dim_size) + '-800-200/DATA_NETS_2017_' + str(net_num) + '.npy'
+    filname = '/home/hdft/Documents/DNN-Data-Run-' + str(run_num) + '-' + 'param' + '-800-200/DATA_NETS_2017_' + str(net_num) + '.npy'
 
     data = numpy.array([[1,2,3,4]])
 

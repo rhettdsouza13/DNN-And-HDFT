@@ -92,14 +92,17 @@ def param_iter(net):
 
     create_param_tree('r', len(func_ind))
     p_tree.show()
+    print len(func_ind)
     combos = p_tree.paths_to_leaves()
     # print combos
 
-    with open("param_list1.txt", 'a+') as p_file:
+    with open("param_list1000run.txt", 'a+') as p_file:
         for path in combos:
             pos = 1
             cur = parts
             for ind in func_ind:
+                # print path
+                # print pos , ind
                 dim = p_tree.get_node(path[pos]).data
                 sec = cur[ind].split(',')
                 sec[2] = str(dim[0])
@@ -112,11 +115,21 @@ def param_iter(net):
 
             cur = '|'.join(cur)
             print cur
-            p_file.write(cur + "\n")
+            p_file.write(cur)
     print len(combos)
     print func_ind
 
-#param_iter("32,32,1|conv,relu,5|32,32,20|max_pooling,identity,2|16,16,20|conv,relu,5|16,16,20|max_pooling,identity,2|8,8,20|conv,relu,7|8,8,20|conv,relu,5|8,8,20|full,relu|1,1,20|full,relu|1,1,20|full,relu|1,1,10")
+# param_iter("32,32,1|conv,relu,7|32,32,128|max_pooling,identity,4|8,8,128|conv,relu,7|8,8,64|conv,relu,5|8,8,128|full,relu|1,1,32|full,relu|1,1,32|full,relu|1,1,10")
+
+with open("opt_list_1000run.txt", 'r') as opt_file:
+    nets_list_opt = opt_file.readlines()
+    print nets_list_opt
+    for net in nets_list_opt:
+        counter = 0
+        p_tree = Tree()
+        p_tree.create_node("Root", 'r')
+        print net
+        param_iter(net)
 
 def replace(net):
 
@@ -159,8 +172,8 @@ def replace(net):
     print cur
     return cur
 
-
-with open("nets_list7.txt", "r") as n_file, open("nets_list80_7.txt", "w+") as out_file:
-    for prop in n_file.readlines():
-        out_net = replace(prop)
-        out_file.write(str(out_net))
+#
+# with open("nets_list7.txt", "r") as n_file, open("nets_list80_7.txt", "w+") as out_file:
+#     for prop in n_file.readlines():
+#         out_net = replace(prop)
+#         out_file.write(str(out_net))
