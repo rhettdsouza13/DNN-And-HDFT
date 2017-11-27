@@ -83,13 +83,14 @@ lR_val = 0.001
 epochs = 100
 
 inputs, labels = input_inject()
+
 # for i in xrange(epochs):
 #     inputs.extend(inputs[:])
 #     labels.extend(labels[:])
 inputsTst, labelsTst = test_inject()
 stopping = epochs
-bsize=100
-n_iters = (400/bsize)
+bsize=10
+n_iters = (100/bsize)
 error_val = 100000
 step_cnt = 0
 val_data=[]
@@ -99,14 +100,16 @@ with tf.Session() as sess:
 
     sess.run(tf.global_variables_initializer())
 
-    filname = '/home/hdft/Documents/DNN-Data-Run-' + str(run_num) + '-' + 'param' + '-400-100/DATA_NETS_2017_' + str(net_num) + '.npy'
+    # filname = '/home/hdft/Documents/DNN-Data-Run-' + str(run_num) + '-' + 'tester' + '-400-100/DATA_NETS_2017_' + str(net_num) + '.npy'
+
+    filname = '/home/hdft/Documents/DNN-Data-Run-tester/DATA_NETS_2017_100' + str(net_num) + '.npy'
 
     data = numpy.array([[1,2,3,4]])
 
 
     for j in xrange(epochs):
         print "Epoch: " + str(j)
-        val_accuracy, val_error = sess.run([accuracy, cross_entropy], feed_dict={x:inputs[bsize*4:bsize*5], y_:labels[bsize*4:bsize*5], lR:lR_val})
+        val_accuracy, val_error = sess.run([accuracy, cross_entropy], feed_dict={x:inputs[bsize*6:bsize*10], y_:labels[bsize*6:bsize*10], lR:lR_val})
         print('Validation accuracy %g Error %f \n' % (val_accuracy, val_error))
 
         val_data.append([val_accuracy, val_error, j, 1])

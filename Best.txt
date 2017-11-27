@@ -1,0 +1,5 @@
+100 : 32,32,1|conv,relu,5|32,32,64|max_pooling,identity,4|8,8,64|conv,relu,5|8,8,128|conv,relu,5|8,8,64|conv,relu,5|8,8,64|conv,relu,7|8,8,32|conv,relu,5|8,8,128|full,relu|1,1,32|full,relu|1,1,32|full,relu|1,1,10 = 68.33%
+
+500 : 32,32,1|conv,relu,7|32,32,64|max_pooling,identity,4|8,8,64|conv,relu,7|8,8,128|conv,relu,5|8,8,64|full,relu|1,1,128|full,relu|1,1,128|full,relu|1,1,128|full,relu|1,1,32|full,relu|1,1,10 = 91.13%
+
+1000 : 32,32,1|conv,relu,5|32,32,32|max_pooling,identity,2|16,16,32|conv,relu,5|16,16,32|max_pooling,identity,2|8,8,32|conv,relu,5|8,8,128|conv,relu,7|8,8,32|full,relu|1,1,64|full,relu|1,1,64|full,relu|1,1,32|full,relu|1,1,10 = 93.66%

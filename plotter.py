@@ -105,7 +105,7 @@ if run == 2:
                 if tup[3] == 1:
                     val_accuracy.append(tup[0])
                     val_error.append(tup[1])
-                    if tup[2]>=0 and tup[0] >= 1.0:
+                    if tup[2]>=0 and tup[1] <= 0.08:
                         # print tup[2]
                         # print tup[0]
                         # print d_file
@@ -125,6 +125,7 @@ if run == 2:
             #good_nets.write(d_file + "\n")
             print str(max(val_accuracy))
             print str(min(val_error))
+            print train_accuracy[-1]
             of_flag = 0
         # if train_accuracy[-1] > 0.97 :
         #     # print "\n"
@@ -192,12 +193,12 @@ if run == 2:
         #print pl_ind
         pl_ind+=1
         # print opt
-    # pl.figure(6)
-    # for plots in of_plot:
-    #     line, = pl.plot(range(len(plots)-1), plots[1:])
-    # pl.figure(7)
-    # for plots in of_plot_error:
-    #     line, = pl.plot(range(len(plots)-1), plots[1:])
+    pl.figure(6)
+    for plots in of_plot:
+        line, = pl.plot(range(len(plots)-1), plots[1:])
+    pl.figure(7)
+    for plots in of_plot_error:
+        line, = pl.plot(range(len(plots)-1), plots[1:])
 
 
 

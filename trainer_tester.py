@@ -5,6 +5,7 @@ from parser import *
 from PIL import Image
 from visualizer import *
 from net_read_and_run import *
+from set_downsizer import *
 
 net_syn = sys.argv[1]
 
@@ -80,14 +81,16 @@ accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 
 lR_val = 0.001
 epochs = 100
-inputs, labels = input_inject()
+
+inputs_t, labels_t = input_inject()
+inputs, labels = downsize_me(inputs_t, labels_t)
 # for i in xrange(epochs):
 #     inputs.extend(inputs[:])
 #     labels.extend(labels[:])
 inputsTst, labelsTst = test_inject()
 stopping = epochs
-bsize=100
-n_iters = (400/bsize)
+bsize=10
+n_iters = (100/bsize)
 error_val = 100000
 step_cnt = 0
 val_data=[]
@@ -97,14 +100,15 @@ with tf.Session() as sess:
 
     sess.run(tf.global_variables_initializer())
 
-    filname = '/home/hdft/Documents/DNN-Data-Run-8-20-4500-500/DATA_NETS_2017_' + str(net_num) + '.npy'
+    filname = '/home/hdft/Documents/DNN-Data-Run-tester/DATA_NETS_2017_' + str(net_num) + '.npy'
 
     data = numpy.array([[1,2,3,4]])
 
+    print len(inputs)
 
     for j in xrange(epochs):
         print "Epoch: " + str(j)
-        val_accuracy, val_error = sess.run([accuracy, cross_entropy], feed_dict={x:inputs[bsize*4:bsize*5], y_:labels[bsize*4:bsize*5], lR:lR_val})
+        val_accuracy, val_error = sess.run([accuracy, cross_entropy], feed_dict={x:inputs[bsize*6:], y_:labels[bsize*6:], lR:lR_val})
         print('Validation accuracy %g Error %f \n' % (val_accuracy, val_error))
 
         val_data.append([val_accuracy, val_error, j, 1])

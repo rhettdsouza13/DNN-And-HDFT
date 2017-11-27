@@ -177,3 +177,6 @@ def replace(net):
 #     for prop in n_file.readlines():
 #         out_net = replace(prop)
 #         out_file.write(str(out_net))
+
+
+# 32,32,1|max_pooling,identity,2|16,16,1|conv,relu,7|16,16,10|conv,relu,5|16,16,10|full,relu|1,1,10|full,relu|1,1,10
