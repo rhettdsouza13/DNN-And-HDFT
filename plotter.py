@@ -5,7 +5,7 @@ from sklearn.kernel_ridge import KernelRidge
 from fitter import *
 
 data_dir = '/home/hdft/Documents/DNN-Data/'
-data_dir_r2 = '/home/hdft/Documents/DNN-Data-Run-100-param-60-40/'
+data_dir_r2 = '/home/hdft/Documents/DNN-Data-Run-102-param-800-200/'
 
 run=2
 
@@ -75,7 +75,7 @@ fils_list = []
 com_file = open("common.txt", 'r')
 common_list = com_file.readlines()
 print common_list
-netfile_7 = open("param_list100run.txt", 'r')
+netfile_7 = open("param_list1000run.txt", 'r')
 nets_7 = netfile_7.readlines()
 good_nets = open("good_nets_ol.txt", "w+")
 if run == 2:
@@ -105,7 +105,7 @@ if run == 2:
                 if tup[3] == 1:
                     val_accuracy.append(tup[0])
                     val_error.append(tup[1])
-                    if tup[2]>=0 and tup[1] <= 0.08:
+                    if tup[2]>=0 and tup[1] <= 0.22:
                         # print tup[2]
                         # print tup[0]
                         # print d_file
@@ -193,10 +193,15 @@ if run == 2:
         #print pl_ind
         pl_ind+=1
         # print opt
+
     pl.figure(6)
+    pl.xlabel("Epoch Number")
+    pl.ylabel("Validation Accuracy")
     for plots in of_plot:
         line, = pl.plot(range(len(plots)-1), plots[1:])
     pl.figure(7)
+    pl.xlabel("Epoch Number")
+    pl.ylabel("Validation Error")
     for plots in of_plot_error:
         line, = pl.plot(range(len(plots)-1), plots[1:])
 

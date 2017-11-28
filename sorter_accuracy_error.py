@@ -55,6 +55,8 @@ for run in [archive100, archive500, archive1000]:
     #print global_sorted_list[:opt]
     list_file_name = "opt_test_" + run.split('/')[-2] + ".txt"
     pl.figure(run)
+    pl.xlabel("Epoch Number")
+    pl.ylabel("Validation Accuracy")
     with open(list_file_name, 'w+') as pam_file:
         for ind in global_sorted_list[:opt]:
             pl.plot(ind[0][2])
