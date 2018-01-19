@@ -11,11 +11,11 @@ net_syn = sys.argv[1]
 
 net_num = sys.argv[2]
 
-x = tf.placeholder(tf.float32, shape=[None, 1024], name='x_input')
+x = tf.placeholder(tf.float32, shape=[None, 3072], name='x_input')
 y_ = tf.placeholder(tf.float32, shape=[None, 10], name='labels')
 # x_im = tf.reshape(x, [-1, 32, 32, 1])
 
-H = {'h0': tf.reshape(x, [-1, 32, 32, 1]),}
+H = {'h0': tf.reshape(x, [-1, 32, 32, 3]),}
 
 #H['h0'] = max_pool_kxk(x_im, 2)
 
@@ -82,15 +82,16 @@ accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 lR_val = 0.001
 epochs = 100
 
-inputs_t, labels_t = input_inject()
-inputs, labels = downsize_me(inputs_t, labels_t)
+inputs, labels = input_inject_CIFAR()
+# inputs, labels = downsize_me(inputs_t, labels_t)
 # for i in xrange(epochs):
 #     inputs.extend(inputs[:])
 #     labels.extend(labels[:])
-inputsTst, labelsTst = test_inject()
+print inputs[40000]
+inputsTst, labelsTst = test_inject_CIFAR()
 stopping = epochs
-bsize=10
-n_iters = (100/bsize)
+bsize=100
+n_iters = (40000/bsize)
 error_val = 100000
 step_cnt = 0
 val_data=[]
@@ -108,7 +109,7 @@ with tf.Session() as sess:
 
     for j in xrange(epochs):
         print "Epoch: " + str(j)
-        val_accuracy, val_error = sess.run([accuracy, cross_entropy], feed_dict={x:inputs[bsize*6:], y_:labels[bsize*6:], lR:lR_val})
+        val_accuracy, val_error = sess.run([accuracy, cross_entropy], feed_dict={x:inputs[bsize*400:], y_:labels[bsize*400:], lR:lR_val})
         print('Validation accuracy %g Error %f \n' % (val_accuracy, val_error))
 
         val_data.append([val_accuracy, val_error, j, 1])

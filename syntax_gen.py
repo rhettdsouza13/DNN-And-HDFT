@@ -120,16 +120,16 @@ def param_iter(net):
     print func_ind
 
 # param_iter("32,32,1|conv,relu,7|32,32,128|max_pooling,identity,4|8,8,128|conv,relu,7|8,8,64|conv,relu,5|8,8,128|full,relu|1,1,32|full,relu|1,1,32|full,relu|1,1,10")
-
-with open("opt_list_1000run.txt", 'r') as opt_file:
-    nets_list_opt = opt_file.readlines()
-    print nets_list_opt
-    for net in nets_list_opt:
-        counter = 0
-        p_tree = Tree()
-        p_tree.create_node("Root", 'r')
-        print net
-        param_iter(net)
+#
+# with open("opt_list_1000run.txt", 'r') as opt_file:
+#     nets_list_opt = opt_file.readlines()
+#     print nets_list_opt
+#     for net in nets_list_opt:
+#         counter = 0
+#         p_tree = Tree()
+#         p_tree.create_node("Root", 'r')
+#         print net
+#         param_iter(net)
 
 def replace(net):
 
@@ -157,8 +157,15 @@ def replace(net):
 
 
     cur = parts
+    sec = cur[0].split(',')
+    sec[2] = str(3)
+    cur[0] = ','.join(sec)
+    if 'max' in cur[1]:
+        sec = cur[2].split(',')
+        sec[2] = str(3)
+        cur[2] = ','.join(sec)
     for ind in func_ind:
-        dim = 80
+        dim = 10
         sec = cur[ind].split(',')
         sec[2] = str(dim)
         cur[ind] = ','.join(sec)
@@ -172,11 +179,11 @@ def replace(net):
     print cur
     return cur
 
-#
-# with open("nets_list7.txt", "r") as n_file, open("nets_list80_7.txt", "w+") as out_file:
-#     for prop in n_file.readlines():
-#         out_net = replace(prop)
-#         out_file.write(str(out_net))
 
+with open("nets_list7.txt", "r") as n_file, open("nets_list_CIFAR_7.txt", "w+") as out_file:
+    for prop in n_file.readlines():
+        out_net = replace(prop)
+        out_file.write(str(out_net))
 
+#replace("32,32,1|max_pooling,identity,2|16,16,1|conv,relu,7|16,16,10|conv,relu,5|16,16,10|full,relu|1,1,10|full,relu|1,1,10")
 # 32,32,1|max_pooling,identity,2|16,16,1|conv,relu,7|16,16,10|conv,relu,5|16,16,10|full,relu|1,1,10|full,relu|1,1,10
