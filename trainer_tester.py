@@ -84,14 +84,16 @@ epochs = 100
 
 inputs, labels = input_inject_CIFAR()
 # inputs, labels = downsize_me(inputs_t, labels_t)
+print len(inputs)
+print len(labels)
 # for i in xrange(epochs):
 #     inputs.extend(inputs[:])
 #     labels.extend(labels[:])
-print inputs[40000]
+#print inputs[40000]
 inputsTst, labelsTst = test_inject_CIFAR()
 stopping = epochs
 bsize=100
-n_iters = (40000/bsize)
+n_iters = (6000/bsize)
 error_val = 100000
 step_cnt = 0
 val_data=[]
@@ -109,7 +111,7 @@ with tf.Session() as sess:
 
     for j in xrange(epochs):
         print "Epoch: " + str(j)
-        val_accuracy, val_error = sess.run([accuracy, cross_entropy], feed_dict={x:inputs[bsize*400:], y_:labels[bsize*400:], lR:lR_val})
+        val_accuracy, val_error = sess.run([accuracy, cross_entropy], feed_dict={x:inputs[bsize*60:bsize*62], y_:labels[bsize*60:bsize*62], lR:lR_val})
         print('Validation accuracy %g Error %f \n' % (val_accuracy, val_error))
 
         val_data.append([val_accuracy, val_error, j, 1])
