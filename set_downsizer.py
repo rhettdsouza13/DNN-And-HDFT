@@ -78,23 +78,29 @@ def downsize_me_kmeans(inputs,labels):
         print len(num)
     iters = 0
     for num in comp_coll:
+        data_dic = {}
         estimator = KMeans(n_clusters=sub_set_size)
         estimator.fit(num)
-        data_dic = {i: np.where(estimator.labels_ == i)[0] for i in range(estimator.n_clusters)}
+        data_dic = {i: numpy.where(estimator.labels_ == i)[0] for i in range(estimator.n_clusters)}
+        print len(data_dic[0])
+        print estimator.labels_
         class_fin = []
+        print data_dic
+        print "Class done"
         for i in xrange(sub_set_size):
-            class_rep = data_dic[i][randrange(len(data_dic[i]))]
+            class_rep = num[data_dic[i][randrange(len(data_dic[i]))]]
             class_fin.append(class_rep)
+        # print class_fin[0]
         label_o = [0 for i in xrange(10)]
         label_o[iters] = 1
-        for i in class_fin:
-            out_nums.append([i, label_o])
+        for sample in class_fin:
+            out_nums.append([sample, label_o])
     iters += 1
     print out_nums[0]
     numpy.random.shuffle(out_nums)
     numpy.array(out_nums)
-
+    numpy.save("downsized_CIFAR.npy", out_nums)
     return [inp[0] for inp in out_nums], [inp[1] for inp in out_nums]
 
 ins, outs = downsize_me_kmeans(inputs_t, labels_t)
-# print ins[0], outs[0]
+print ins[0], outs[0]

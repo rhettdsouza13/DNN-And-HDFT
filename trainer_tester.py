@@ -1,11 +1,16 @@
 import tensorflow as tf
 import numpy
 from functions import *
+print "here"
 from parser import *
+print "here"
 from PIL import Image
 from visualizer import *
+print "here"
 from net_read_and_run import *
-from set_downsizer import *
+print "here"
+# from set_downsizer import *
+print "here"
 
 net_syn = sys.argv[1]
 
@@ -84,8 +89,14 @@ epochs = 100
 
 inputs, labels = input_inject_CIFAR()
 # inputs, labels = downsize_me(inputs_t, labels_t)
-print len(inputs)
-print len(labels)
+# inputs_total = numpy.load("/home/hdft/Documents/DNN-And-HDFT/downsized_CIFAR.npy")
+# numpy.random.shuffle(inputs_total)
+# inputs = [inp[0] for inp in inputs_total]
+# labels = [inp[1] for inp in inputs_total]
+# print len(inputs)
+# print len(labels)
+# print inputs[0]
+# print inputs[1]
 # for i in xrange(epochs):
 #     inputs.extend(inputs[:])
 #     labels.extend(labels[:])
@@ -93,7 +104,7 @@ print len(labels)
 inputsTst, labelsTst = test_inject_CIFAR()
 stopping = epochs
 bsize=100
-n_iters = (6000/bsize)
+n_iters = (40000/bsize)
 error_val = 100000
 step_cnt = 0
 val_data=[]
@@ -111,7 +122,7 @@ with tf.Session() as sess:
 
     for j in xrange(epochs):
         print "Epoch: " + str(j)
-        val_accuracy, val_error = sess.run([accuracy, cross_entropy], feed_dict={x:inputs[bsize*60:bsize*62], y_:labels[bsize*60:bsize*62], lR:lR_val})
+        val_accuracy, val_error = sess.run([accuracy, cross_entropy], feed_dict={x:inputs[bsize*400:bsize*500], y_:labels[bsize*400:bsize*500], lR:lR_val})
         print('Validation accuracy %g Error %f \n' % (val_accuracy, val_error))
 
         val_data.append([val_accuracy, val_error, j, 1])
@@ -150,7 +161,7 @@ with tf.Session() as sess:
 
                 data = numpy.concatenate((data, [[train_accuracy, error, (n_iters*j)+i, 0]]), axis=0)
 
-                #print('Step %d, Training accuracy %g Error %f Learning Rate %f \n' % (i, train_accuracy, error, learn))
+                # print('Step %d, Training accuracy %g Error %f Learning Rate %f \n' % (i, train_accuracy, error, learn))
 
 
             train_step.run(feed_dict={x:inputs[bsize*(i):bsize*(i+1)], y_:labels[bsize*(i):bsize*(i+1)], lR:lR_val})

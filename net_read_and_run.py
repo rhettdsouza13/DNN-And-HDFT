@@ -1,7 +1,7 @@
 import tensorflow as tf
 import numpy
 from functions import *
-from parser import *
+# from parser import *
 import sys
 from operator import mul
 
