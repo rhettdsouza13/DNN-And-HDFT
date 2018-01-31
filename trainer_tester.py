@@ -1,20 +1,21 @@
 import tensorflow as tf
 import numpy
 from functions import *
-print "here"
+# print "here"
 from parser import *
-print "here"
+# print "here"
 from PIL import Image
 from visualizer import *
-print "here"
+# print "here"
 from net_read_and_run import *
-print "here"
+# print "here"
 # from set_downsizer import *
-print "here"
+# print "here"
 
 net_syn = sys.argv[1]
-
 net_num = sys.argv[2]
+run_num = int(sys.argv[3])
+dim_size = int(sys.argv[4])
 
 x = tf.placeholder(tf.float32, shape=[None, 3072], name='x_input')
 y_ = tf.placeholder(tf.float32, shape=[None, 10], name='labels')
@@ -104,7 +105,7 @@ inputs, labels = input_inject_CIFAR()
 inputsTst, labelsTst = test_inject_CIFAR()
 stopping = epochs
 bsize=100
-n_iters = (40000/bsize)
+n_iters = (8000/bsize)
 error_val = 100000
 step_cnt = 0
 val_data=[]
@@ -114,7 +115,9 @@ with tf.Session() as sess:
 
     sess.run(tf.global_variables_initializer())
 
-    filname = '/home/hdft/Documents/DNN-Data-Run-tester/DATA_NETS_2017_' + str(net_num) + '.npy'
+    filname = '/home/hdft/Documents/DNN-Data-Run-' + str(run_num) + '-' + str(dim_size) + '-CIFAR-8000-2000/DATA_NETS_2017_' + str(net_num) + '.npy'
+
+    #filname = '/home/hdft/Documents/DNN-Data-Run-201-CIFAR-8000-2000/DATA_NETS_2017_' + str(net_num) + '.npy'
 
     data = numpy.array([[1,2,3,4]])
 
@@ -122,7 +125,7 @@ with tf.Session() as sess:
 
     for j in xrange(epochs):
         print "Epoch: " + str(j)
-        val_accuracy, val_error = sess.run([accuracy, cross_entropy], feed_dict={x:inputs[bsize*400:bsize*500], y_:labels[bsize*400:bsize*500], lR:lR_val})
+        val_accuracy, val_error = sess.run([accuracy, cross_entropy], feed_dict={x:inputs[bsize*80:bsize*100], y_:labels[bsize*80:bsize*100], lR:lR_val})
         print('Validation accuracy %g Error %f \n' % (val_accuracy, val_error))
 
         val_data.append([val_accuracy, val_error, j, 1])

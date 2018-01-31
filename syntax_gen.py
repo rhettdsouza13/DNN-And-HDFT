@@ -165,7 +165,7 @@ def replace(net):
         sec[2] = str(3)
         cur[2] = ','.join(sec)
     for ind in func_ind:
-        dim = 10
+        dim = 80
         sec = cur[ind].split(',')
         sec[2] = str(dim)
         cur[ind] = ','.join(sec)
@@ -180,7 +180,7 @@ def replace(net):
     return cur
 
 
-with open("nets_list7.txt", "r") as n_file, open("nets_list_CIFAR_7.txt", "w+") as out_file:
+with open("nets_list80_7.txt", "r") as n_file, open("nets_list_CIFAR_80_7.txt", "w+") as out_file:
     for prop in n_file.readlines():
         out_net = replace(prop)
         out_file.write(str(out_net))
