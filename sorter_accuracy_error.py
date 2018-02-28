@@ -3,14 +3,14 @@ import numpy
 import matplotlib.pyplot as pl
 
 opt = 5
-archive500 = '/home/hdft/Documents/DNN-Complete/500run/'
-archive100 = '/home/hdft/Documents/DNN-Complete/100Run/'
-archive1000 = '/home/hdft/Documents/DNN-Complete/1000run/'
+archive5000 = '/home/hdft/Documents/DNN-Complete/5000-CIFAR-Run/'
+# archive100 = '/home/hdft/Documents/DNN-Complete/100Run/'
+# archive1000 = '/home/hdft/Documents/DNN-Complete/1000run/'
 
-nets_list7 = open("nets_list7.txt", 'r')
+nets_list7 = open("nets_list_CIFAR_7.txt", 'r')
 nets = nets_list7.readlines()
 
-for run in [archive100, archive500, archive1000]:
+for run in [archive5000]:
     global_dic = {}
     global_plotters = {}
     for file_list in os.listdir(run):
@@ -35,7 +35,12 @@ for run in [archive100, archive500, archive1000]:
             #global_plotters[file_list + "+" + d_file.split('_')[3].split('.')[0]] = val_error
             data_dic[min(val_error)] = [file_list + "+" + d_file.split('_')[3].split('.')[0] , val_error, val_accuracy]
             global_dic[min(val_error)] = [file_list + "+" + d_file.split('_')[3].split('.')[0] , val_error, val_accuracy]
-
+    n_bins = [i/100.0 for i in range(0,800,2)]
+    acc_bins = [i/100.0 for i in range(0,60, 2)]
+    pl.figure("Accuracy Hist")
+    pl.hist([max(val[2]) for val in global_dic.values()], bins = acc_bins)
+    pl.figure("Error Hist")
+    pl.hist(global_dic.keys(), bins=n_bins)
     #sorted_list = []
     global_sorted_list = []
 
@@ -52,8 +57,8 @@ for run in [archive100, archive500, archive1000]:
         # for ind in sorted_list[:opt]:
         #     print nets[int(ind.split('+')[1])]
 
-    #print global_sorted_list[:opt]
-    list_file_name = "opt_test_" + run.split('/')[-2] + ".txt"
+    print global_sorted_list[:opt]
+    list_file_name = "DUMP" + run.split('/')[-2] + ".txt"
     pl.figure(run)
     pl.xlabel("Epoch Number")
     pl.ylabel("Validation Accuracy")
@@ -63,5 +68,6 @@ for run in [archive100, archive500, archive1000]:
             print ind[0][0]
             print nets[int(ind[0][0].split('+')[1])]
             print ind[1]
-            # pam_file.write(nets[int(ind.split('+')[1])])
+
+            # pam_file.write(nets[int(ind[0][0].split('+')[1])])
 pl.show()
