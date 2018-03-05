@@ -30,20 +30,21 @@ net_80 = net_f_80.readlines()
 #     print net_num
 #     os.system("python trainer_tester_dropping100.py %s %d %d %d" % (pipes.quote(net), net_num, 16, 80))
 #     net_num += 1
-net_num = 0
-for net in net_10:
-    print net_num
-    os.system("python trainer_tester.py %s %d %d %d" % (pipes.quote(net), net_num, 201, 10))
-    net_num += 1
 
-net_num = 0
-for net in net_20:
-    print net_num
-    os.system("python trainer_tester.py %s %d %d %d" % (pipes.quote(net), net_num, 202, 20))
-    net_num += 1
+# net_num = 0
+# for net in net_10:
+#     print net_num
+#     os.system("python trainer_tester.py %s %d %d %d" % (pipes.quote(net), net_num, 201, 10))
+#     net_num += 1
+#
+# net_num = 0
+# for net in net_20:
+#     print net_num
+#     os.system("python trainer_tester.py %s %d %d %d" % (pipes.quote(net), net_num, 202, 20))
+#     net_num += 1
 
 
-net_num = 0
+net_num = 1800
 for net in net_40:
     print net_num
     os.system("python trainer_tester.py %s %d %d %d" % (pipes.quote(net), net_num, 203, 40))

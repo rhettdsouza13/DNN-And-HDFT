@@ -57,7 +57,7 @@ def create_param_tree(parent, net_len):
     global counter
     c_p=parent
     counter += 1
-    for output_ch in power_gen(5,8):
+    for output_ch in power_gen(5,9):
         if net_len > 0:
             name = str(output_ch) + '_net_len ' + str(net_len)
             iD = str(output_ch) + '_net_len ' + str(net_len) + '_' + str(counter)
@@ -96,7 +96,7 @@ def param_iter(net):
     combos = p_tree.paths_to_leaves()
     # print combos
 
-    with open("param_list1000run.txt", 'a+') as p_file:
+    with open("param_list_CIFAR_5000run.txt", 'a+') as p_file:
         for path in combos:
             pos = 1
             cur = parts
@@ -119,9 +119,9 @@ def param_iter(net):
     print len(combos)
     print func_ind
 
-# param_iter("32,32,1|conv,relu,7|32,32,128|max_pooling,identity,4|8,8,128|conv,relu,7|8,8,64|conv,relu,5|8,8,128|full,relu|1,1,32|full,relu|1,1,32|full,relu|1,1,10")
-#
-# with open("opt_list_1000run.txt", 'r') as opt_file:
+# param_iter("32,32,3|conv,relu,5|32,32,10|max_pooling,identity,4|8,8,10|full,relu|1,1,10|full,relu|1,1,10|full,relu|1,1,10|full,relu|1,1,10|full,relu|1,1,10|full,relu|1,1,10")
+
+# with open("opt_test_CIFAR_5000-CIFAR-Run.txt", 'r') as opt_file:
 #     nets_list_opt = opt_file.readlines()
 #     print nets_list_opt
 #     for net in nets_list_opt:
@@ -180,10 +180,10 @@ def replace(net):
     return cur
 
 
-with open("nets_list80_7.txt", "r") as n_file, open("nets_list_CIFAR_80_7.txt", "w+") as out_file:
-    for prop in n_file.readlines():
-        out_net = replace(prop)
-        out_file.write(str(out_net))
+# with open("nets_list80_7.txt", "r") as n_file, open("nets_list_CIFAR_80_7.txt", "w+") as out_file:
+#     for prop in n_file.readlines():
+#         out_net = replace(prop)
+#         out_file.write(str(out_net))
 
 #replace("32,32,1|max_pooling,identity,2|16,16,1|conv,relu,7|16,16,10|conv,relu,5|16,16,10|full,relu|1,1,10|full,relu|1,1,10")
 # 32,32,1|max_pooling,identity,2|16,16,1|conv,relu,7|16,16,10|conv,relu,5|16,16,10|full,relu|1,1,10|full,relu|1,1,10

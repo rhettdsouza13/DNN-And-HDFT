@@ -2,12 +2,12 @@ import os
 import numpy
 import matplotlib.pyplot as pl
 
-opt = 5
-archive5000 = '/home/hdft/Documents/DNN-Complete/5000-CIFAR-Run/'
+opt = 1
+archive5000 = '/home/hdft/Documents/DNN-Complete/5000-CIFAR-Param-Run/'
 # archive100 = '/home/hdft/Documents/DNN-Complete/100Run/'
 # archive1000 = '/home/hdft/Documents/DNN-Complete/1000run/'
 
-nets_list7 = open("nets_list_CIFAR_7.txt", 'r')
+nets_list7 = open("param_list_CIFAR_5000run.txt", 'r')
 nets = nets_list7.readlines()
 
 for run in [archive5000]:
@@ -66,6 +66,7 @@ for run in [archive5000]:
         for ind in global_sorted_list[:opt]:
             pl.plot(ind[0][2])
             print ind[0][0]
+            print max(ind[0][2])
             print nets[int(ind[0][0].split('+')[1])]
             print ind[1]
 

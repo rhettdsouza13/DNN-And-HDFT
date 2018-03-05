@@ -5,7 +5,7 @@ from sklearn.kernel_ridge import KernelRidge
 from fitter import *
 
 data_dir = '/home/hdft/Documents/DNN-Data/'
-data_dir_r2 = '/home/hdft/Documents/DNN-Data-Run-102-param-800-200/'
+data_dir_r2 = '/home/hdft/Documents/DNN-Data-Run-205-param-CIFAR-4000-1000/'
 
 run=2
 
@@ -88,6 +88,7 @@ if run == 2:
     file_list = os.listdir(data_dir_r2)
     of_flag = 0
     for d_file in os.listdir(data_dir_r2):
+        print d_file
         data = numpy.load(data_dir_r2 + d_file)
 
         train_accuracy = []
