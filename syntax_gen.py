@@ -9,11 +9,11 @@ def power_gen(start,end):
 def syntax_generator(tree, x, y):
     paths = tree.paths_to_leaves()
     vcs = []
-    with open('nets_list8.txt', 'w') as netfile:
+    with open('nets_list_PATH.txt', 'w+') as netfile:
 
         for path in paths:
 
-            net = str(x) + ',' + str(y) + ',' + str(1) + '|'
+            net = str(x) + ',' + str(y) + ',' + str(3) + '|'
 
             for node in path:
 
@@ -96,7 +96,7 @@ def param_iter(net):
     combos = p_tree.paths_to_leaves()
     # print combos
 
-    with open("param_list_CIFAR_5000run.txt", 'a+') as p_file:
+    with open("DUMP.txt", 'a+') as p_file:
         for path in combos:
             pos = 1
             cur = parts

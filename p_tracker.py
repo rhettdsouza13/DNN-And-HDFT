@@ -2,7 +2,7 @@ import os
 import numpy
 import pipes
 
-p_f_list = open("param_list_CIFAR_5000run.txt", 'r')
+p_f_list = open("nets_list_PATH.txt", 'r')
 p_list = p_f_list.readlines()
 # p_f_list500 = open("param_list500run.txt", 'r')
 # p_500 = p_f_list500.readlines()
@@ -12,7 +12,7 @@ p_list = p_f_list.readlines()
 net_num = 0
 for net in p_list:
     print net_num
-    os.system("python trainer_tester.py %s %d %d %d" % (pipes.quote(net), net_num, 205, 20))
+    os.system("python trainer_tester.py %s %d %d %d" % (pipes.quote(net), net_num, 206, 10))
     net_num += 1
 
 #

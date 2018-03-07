@@ -12,16 +12,17 @@ from net_read_and_run import *
 # from set_downsizer import *
 # print "here"
 
+
 net_syn = sys.argv[1]
 net_num = sys.argv[2]
 run_num = int(sys.argv[3])
 dim_size = int(sys.argv[4])
 
-x = tf.placeholder(tf.float32, shape=[None, 3072], name='x_input')
-y_ = tf.placeholder(tf.float32, shape=[None, 10], name='labels')
+x = tf.placeholder(tf.float32, shape=[None, 12288], name='x_input')
+y_ = tf.placeholder(tf.float32, shape=[None, 2], name='labels')
 # x_im = tf.reshape(x, [-1, 32, 32, 1])
 
-H = {'h0': tf.reshape(x, [-1, 32, 32, 3]),}
+H = {'h0': tf.reshape(x, [-1, 64, 64, 3]),}
 
 #H['h0'] = max_pool_kxk(x_im, 2)
 
@@ -82,30 +83,30 @@ train_step = tf.train.AdamOptimizer(learning_rate=lR).minimize(cross_entropy)
 #
 #GradientDescentOptimizer(0.001)
 correct_prediction = tf.equal(tf.argmax(y,1), tf.argmax(y_,1))
-
-accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
+casted = tf.cast(correct_prediction, tf.float32)
+accuracy = tf.reduce_mean(casted)
 
 lR_val = 0.001
 epochs = 100
-
-inputs, labels = input_inject_CIFAR()
-# inputs, labels = downsize_me(inputs_t, labels_t)
-# inputs_total = numpy.load("/home/hdft/Documents/DNN-And-HDFT/downsized_CIFAR.npy")
-# numpy.random.shuffle(inputs_total)
-# inputs = [inp[0] for inp in inputs_total]
-# labels = [inp[1] for inp in inputs_total]
-# print len(inputs)
-# print len(labels)
-# print inputs[0]
-# print inputs[1]
-# for i in xrange(epochs):
-#     inputs.extend(inputs[:])
-#     labels.extend(labels[:])
-#print inputs[40000]
-inputsTst, labelsTst = test_inject_CIFAR()
+with tf.device('/cpu:0'):
+    inputs, labels = input_inject_PATH()
+    # inputs, labels = downsize_me(inputs_t, labels_t)
+    # inputs_total = numpy.load("/home/hdft/Documents/DNN-And-HDFT/downsized_CIFAR.npy")
+    # numpy.random.shuffle(inputs_total)
+    # inputs = [inp[0] for inp in inputs_total]
+    # labels = [inp[1] for inp in inputs_total]
+    # print len(inputs)
+    # print len(labels)
+    # print inputs[0]
+    # print inputs[1]
+    # for i in xrange(epochs):
+    #     inputs.extend(inputs[:])
+    #     labels.extend(labels[:])
+    #print inputs[40000]
+    # inputsTst, labelsTst = test_inject_CIFAR()
 stopping = epochs
 bsize=100
-n_iters = (8000/bsize)
+n_iters = (600/bsize)
 error_val = 100000
 step_cnt = 0
 val_data=[]
@@ -115,7 +116,7 @@ with tf.Session() as sess:
 
     sess.run(tf.global_variables_initializer())
 
-    filname = '/home/hdft/Documents/DNN-Data-Run-' + str(run_num) + '-' + str(dim_size) + '-CIFAR-8000-2000/DATA_NETS_2017_' + str(net_num) + '.npy'
+    filname = '/home/hdft/Documents/DNN-Data-Run-' + str(run_num) + '-' + str(dim_size) + '-PATH/DATA_NETS_2018_' + str(net_num) + '.npy'
 
     #filname = '/home/hdft/Documents/DNN-Data-Run-201-CIFAR-8000-2000/DATA_NETS_2017_' + str(net_num) + '.npy'
 
@@ -125,7 +126,7 @@ with tf.Session() as sess:
 
     for j in xrange(epochs):
         print "Epoch: " + str(j)
-        val_accuracy, val_error = sess.run([accuracy, cross_entropy], feed_dict={x:inputs[bsize*80:bsize*100], y_:labels[bsize*80:bsize*100], lR:lR_val})
+        val_accuracy, val_error = sess.run([accuracy, cross_entropy], feed_dict={x:inputs[bsize*6:], y_:labels[bsize*6:], lR:lR_val})
         print('Validation accuracy %g Error %f \n' % (val_accuracy, val_error))
 
         val_data.append([val_accuracy, val_error, j, 1])
@@ -145,7 +146,7 @@ with tf.Session() as sess:
 
         print step_cnt
 
-        if step_cnt == 5:
+        if step_cnt == 100:
             break
 
 
@@ -172,14 +173,25 @@ with tf.Session() as sess:
 
 
 
+    # print "\nTest\n"
+    # ta_1, te_1 = sess.run([accuracy, cross_entropy], feed_dict={x:inputsTst[:2500], y_:labelsTst[:2500], lR:lR_val})
+    # ta_2, te_2 = sess.run([accuracy, cross_entropy], feed_dict={x:inputsTst[2500:5000], y_:labelsTst[2500:5000], lR:lR_val})
+    # ta_3, te_3 = sess.run([accuracy, cross_entropy], feed_dict={x:inputsTst[5000:7500], y_:labelsTst[5000:7500], lR:lR_val})
+    # ta_4, te_4 = sess.run([accuracy, cross_entropy], feed_dict={x:inputsTst[7500:], y_:labelsTst[7500:], lR:lR_val})
+    # test_accuracy = (ta_4+ta_3+ta_2+ta_1)*0.25
+    # test_error = (te_4+te_3+te_2+te_1)*0.25
+    # print "Accuracy = " + str(test_accuracy)
+    # print "Error = " + str(test_error)
+    # data = numpy.concatenate((data, [[test_accuracy, test_error, 0, 0]]), axis=0)
+    # data = numpy.concatenate((data, val_data), axis=0)
 
-    print "\nTest\n"
-    test_accuracy, test_error = sess.run([accuracy, cross_entropy], feed_dict={x:inputsTst[:], y_:labelsTst[:], lR:lR_val})
-    print "Accuracy = " + str(test_accuracy)
-    print "Error = " + str(test_error)
-    data = numpy.concatenate((data, [[test_accuracy, test_error, 0, 0]]), axis=0)
-    data = numpy.concatenate((data, val_data), axis=0)
-
-    numpy.save(filname, data)
+    # print "\nTest\n"
+    # test_accuracy, test_error = sess.run([accuracy, cross_entropy], feed_dict={x:inputsTst[:], y_:labelsTst[:], lR:lR_val})
+    # print "Accuracy = " + str(test_accuracy)
+    # print "Error = " + str(test_error)
+    # data = numpy.concatenate((data, [[test_accuracy, test_error, 0, 0]]), axis=0)
+    # data = numpy.concatenate((data, val_data), axis=0)
+    #
+    # numpy.save(filname, data)
 
     #writer.close()
