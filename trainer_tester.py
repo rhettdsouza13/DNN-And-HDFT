@@ -106,7 +106,7 @@ with tf.device('/cpu:0'):
     # inputsTst, labelsTst = test_inject_CIFAR()
 stopping = epochs
 bsize=100
-n_iters = (600/bsize)
+n_iters = (500/bsize)
 error_val = 100000
 step_cnt = 0
 val_data=[]
@@ -116,7 +116,7 @@ with tf.Session() as sess:
 
     sess.run(tf.global_variables_initializer())
 
-    filname = '/home/hdft/Documents/DNN-Data-Run-' + str(run_num) + '-' + str(dim_size) + '-PATH/DATA_NETS_2018_' + str(net_num) + '.npy'
+    filname = '/home/hdft/Documents/DNN-Data-Run-' + str(run_num) + '-' + str(dim_size) + '-PATH-600-200-311/DATA_NETS_2018_' + str(net_num) + '.npy'
 
     #filname = '/home/hdft/Documents/DNN-Data-Run-201-CIFAR-8000-2000/DATA_NETS_2017_' + str(net_num) + '.npy'
 
@@ -126,7 +126,7 @@ with tf.Session() as sess:
 
     for j in xrange(epochs):
         print "Epoch: " + str(j)
-        val_accuracy, val_error = sess.run([accuracy, cross_entropy], feed_dict={x:inputs[bsize*6:], y_:labels[bsize*6:], lR:lR_val})
+        val_accuracy, val_error = sess.run([accuracy, cross_entropy], feed_dict={x:inputs[bsize*6:bsize*8], y_:labels[bsize*6:bsize*8], lR:lR_val})
         print('Validation accuracy %g Error %f \n' % (val_accuracy, val_error))
 
         val_data.append([val_accuracy, val_error, j, 1])
@@ -146,7 +146,7 @@ with tf.Session() as sess:
 
         print step_cnt
 
-        if step_cnt == 100:
+        if step_cnt == 5:
             break
 
 
@@ -185,13 +185,13 @@ with tf.Session() as sess:
     # data = numpy.concatenate((data, [[test_accuracy, test_error, 0, 0]]), axis=0)
     # data = numpy.concatenate((data, val_data), axis=0)
 
-    # print "\nTest\n"
-    # test_accuracy, test_error = sess.run([accuracy, cross_entropy], feed_dict={x:inputsTst[:], y_:labelsTst[:], lR:lR_val})
-    # print "Accuracy = " + str(test_accuracy)
-    # print "Error = " + str(test_error)
-    # data = numpy.concatenate((data, [[test_accuracy, test_error, 0, 0]]), axis=0)
-    # data = numpy.concatenate((data, val_data), axis=0)
-    #
-    # numpy.save(filname, data)
+    print "\nTest\n"
+    test_accuracy, test_error = sess.run([accuracy, cross_entropy], feed_dict={x:inputs[bsize*8:], y_:labels[bsize*8:], lR:lR_val})
+    print "Accuracy = " + str(test_accuracy)
+    print "Error = " + str(test_error)
+    data = numpy.concatenate((data, [[test_accuracy, test_error, 0, 0]]), axis=0)
+    data = numpy.concatenate((data, val_data), axis=0)
+
+    numpy.save(filname, data)
 
     #writer.close()

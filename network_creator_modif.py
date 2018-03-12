@@ -2,22 +2,42 @@ from treelib import *
 from math import *
 from syntax_gen import *
 import numpy
+#MNIST PARAMETERS:::::
+# #cost_br = 722610
+# vc_max = 3500000
+# max_layer = 500
+# # vc_max = 30852000
+# #vc_max = 32*32*100
+# # cost_br = 181000
+# inp_dim = 1024
+# inp_dimx = 32
+# inp_dimy = 32
+# out_dim = 10
+# sing_comp = 0
+# relu_act = 0
+# tanh_act = 0
+# mul_cost_DN = 1.0
+# mul_cost_CN = 1.0
+#MNIST PARAMETERS END::::
 
+#PATHOLOGY PARAMETERS:::::
 #cost_br = 722610
-vc_max = 3500000
+# vc_max = 2630000
+vc_max = 2960000
 max_layer = 500
 # vc_max = 30852000
 #vc_max = 32*32*100
 # cost_br = 181000
-inp_dim = 1024
-inp_dimx = 32
-inp_dimy = 32
-out_dim = 10
+inp_dim = 4096
+inp_dimx = 64
+inp_dimy = 64
+out_dim = 2
 sing_comp = 0
 relu_act = 0
 tanh_act = 0
 mul_cost_DN = 1.0
 mul_cost_CN = 1.0
+#PATHOLOGY PARAMETERS:::::
 
 m_tree = Tree()
 
@@ -108,7 +128,7 @@ def tree_creater(parent, prev_dim, x, y, fc_dim, fl_flag, mp_flag, layer_num, we
 
 
 
-prev_dim=1
-tree_creater('r', prev_dim, inp_dimx, inp_dimy, prev_dim*inp_dimx*inp_dimy, 0, 0, 0, 0)
+prev_dim=3
+tree_creater('r', prev_dim, inp_dimx, inp_dimy, prev_dim*inp_dimx*inp_dimy, 0, 1, 0, 0)
 m_tree.show(line_type='ascii-emv')
 syntax_generator(m_tree, inp_dimx, inp_dimy)

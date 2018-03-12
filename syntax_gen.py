@@ -179,11 +179,11 @@ def replace(net):
     print cur
     return cur
 
-
-# with open("nets_list80_7.txt", "r") as n_file, open("nets_list_CIFAR_80_7.txt", "w+") as out_file:
-#     for prop in n_file.readlines():
-#         out_net = replace(prop)
-#         out_file.write(str(out_net))
+#
+with open("nets_list_PATH.txt", "r") as n_file, open("nets_list_PATH_80.txt", "w+") as out_file:
+    for prop in n_file.readlines():
+        out_net = replace(prop)
+        out_file.write(str(out_net))
 
 #replace("32,32,1|max_pooling,identity,2|16,16,1|conv,relu,7|16,16,10|conv,relu,5|16,16,10|full,relu|1,1,10|full,relu|1,1,10")
 # 32,32,1|max_pooling,identity,2|16,16,1|conv,relu,7|16,16,10|conv,relu,5|16,16,10|full,relu|1,1,10|full,relu|1,1,10
