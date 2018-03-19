@@ -35,11 +35,16 @@ for run in [archive5000]:
             #global_plotters[file_list + "+" + d_file.split('_')[3].split('.')[0]] = val_error
             data_dic[min(val_error)] = [file_list + "+" + d_file.split('_')[3].split('.')[0] , val_error, val_accuracy]
             global_dic[min(val_error)] = [file_list + "+" + d_file.split('_')[3].split('.')[0] , val_error, val_accuracy]
+            
     n_bins = [i/100.0 for i in range(0,800,2)]
     acc_bins = [i/100.0 for i in range(0,60, 2)]
     pl.figure("Accuracy Hist")
+    pl.xlabel("Accuracy Range")
+    pl.ylabel("Number Of Networks")
     pl.hist([max(val[2]) for val in global_dic.values()], bins = acc_bins)
     pl.figure("Error Hist")
+    pl.xlabel("Error Range")
+    pl.ylabel("Number Of Networks")
     pl.hist(global_dic.keys(), bins=n_bins)
     #sorted_list = []
     global_sorted_list = []
