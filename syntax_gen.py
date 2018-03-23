@@ -57,7 +57,7 @@ def create_param_tree(parent, net_len):
     global counter
     c_p=parent
     counter += 1
-    for output_ch in power_gen(5,9):
+    for output_ch in power_gen(5,7):
         if net_len > 0:
             name = str(output_ch) + '_net_len ' + str(net_len)
             iD = str(output_ch) + '_net_len ' + str(net_len) + '_' + str(counter)
@@ -96,7 +96,7 @@ def param_iter(net):
     combos = p_tree.paths_to_leaves()
     # print combos
 
-    with open("DUMP.txt", 'a+') as p_file:
+    with open("param_list_PATH_1111.txt", 'a+') as p_file:
         for path in combos:
             pos = 1
             cur = parts
@@ -121,15 +121,15 @@ def param_iter(net):
 
 # param_iter("32,32,3|conv,relu,5|32,32,10|max_pooling,identity,4|8,8,10|full,relu|1,1,10|full,relu|1,1,10|full,relu|1,1,10|full,relu|1,1,10|full,relu|1,1,10|full,relu|1,1,10")
 
-# with open("opt_test_CIFAR_5000-CIFAR-Run.txt", 'r') as opt_file:
-#     nets_list_opt = opt_file.readlines()
-#     print nets_list_opt
-#     for net in nets_list_opt:
-#         counter = 0
-#         p_tree = Tree()
-#         p_tree.create_node("Root", 'r')
-#         print net
-#         param_iter(net)
+with open("opt_list_1111-PATH-Run.txt", 'r') as opt_file:
+    nets_list_opt = opt_file.readlines()
+    print nets_list_opt
+    for net in nets_list_opt:
+        counter = 0
+        p_tree = Tree()
+        p_tree.create_node("Root", 'r')
+        print net
+        param_iter(net)
 
 def replace(net):
 
@@ -179,11 +179,11 @@ def replace(net):
     print cur
     return cur
 
-#
-with open("nets_list_PATH.txt", "r") as n_file, open("nets_list_PATH_80.txt", "w+") as out_file:
-    for prop in n_file.readlines():
-        out_net = replace(prop)
-        out_file.write(str(out_net))
+# #
+# with open("nets_list_PATH.txt", "r") as n_file, open("nets_list_PATH_80.txt", "w+") as out_file:
+#     for prop in n_file.readlines():
+#         out_net = replace(prop)
+#         out_file.write(str(out_net))
 
 #replace("32,32,1|max_pooling,identity,2|16,16,1|conv,relu,7|16,16,10|conv,relu,5|16,16,10|full,relu|1,1,10|full,relu|1,1,10")
 # 32,32,1|max_pooling,identity,2|16,16,1|conv,relu,7|16,16,10|conv,relu,5|16,16,10|full,relu|1,1,10|full,relu|1,1,10
