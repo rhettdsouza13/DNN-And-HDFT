@@ -2,12 +2,12 @@ import os
 import numpy
 import matplotlib.pyplot as pl
 
-opt = 1
-archive5000 = '/home/hdft/Documents/DNN-Complete/5000-CIFAR-Param-Run/'
+opt = 5
+archive5000 = '/home/hdft/Documents/DNN-Complete/1111-PATH-Run/'
 # archive100 = '/home/hdft/Documents/DNN-Complete/100Run/'
 # archive1000 = '/home/hdft/Documents/DNN-Complete/1000run/'
 
-nets_list7 = open("param_list_CIFAR_5000run.txt", 'r')
+nets_list7 = open("nets_list_PATH_10.txt", 'r')
 nets = nets_list7.readlines()
 
 for run in [archive5000]:
@@ -16,28 +16,28 @@ for run in [archive5000]:
     for file_list in os.listdir(run):
         data_dic = {}
         for d_file in os.listdir(run + file_list + '/'):
+            if not d_file.startswith('.'):
+                data = numpy.load(run + file_list + '/' + d_file)
+                train_accuracy = []
+                train_error = []
+                val_accuracy = []
+                val_error = []
+                test_accuracy = []
+                test_error = []
 
-            data = numpy.load(run + file_list + '/' + d_file)
-            train_accuracy = []
-            train_error = []
-            val_accuracy = []
-            val_error = []
-            test_accuracy = []
-            test_error = []
+                for tup in data:
+                    if tup[3] == 0:
+                        train_accuracy.append(tup[0])
+                        train_error.append(tup[1])
+                    if tup[3] == 1:
+                        val_accuracy.append(tup[0])
+                        val_error.append(tup[1])
+                #global_plotters[file_list + "+" + d_file.split('_')[3].split('.')[0]] = val_error
+                data_dic[min(val_error)] = [file_list + "+" + d_file.split('_')[3].split('.')[0] , val_error, val_accuracy]
+                global_dic[min(val_error)] = [file_list + "+" + d_file.split('_')[3].split('.')[0] , val_error, val_accuracy]
 
-            for tup in data:
-                if tup[3] == 0:
-                    train_accuracy.append(tup[0])
-                    train_error.append(tup[1])
-                if tup[3] == 1:
-                    val_accuracy.append(tup[0])
-                    val_error.append(tup[1])
-            #global_plotters[file_list + "+" + d_file.split('_')[3].split('.')[0]] = val_error
-            data_dic[min(val_error)] = [file_list + "+" + d_file.split('_')[3].split('.')[0] , val_error, val_accuracy]
-            global_dic[min(val_error)] = [file_list + "+" + d_file.split('_')[3].split('.')[0] , val_error, val_accuracy]
-            
     n_bins = [i/100.0 for i in range(0,800,2)]
-    acc_bins = [i/100.0 for i in range(0,60, 2)]
+    acc_bins = [i/100.0 for i in range(0,100, 2)]
     pl.figure("Accuracy Hist")
     pl.xlabel("Accuracy Range")
     pl.ylabel("Number Of Networks")

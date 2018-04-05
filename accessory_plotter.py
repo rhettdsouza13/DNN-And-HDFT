@@ -1,7 +1,7 @@
 import os
 import numpy
 import matplotlib.pyplot as pl
-
+from vc_calculator import *
 
 archive5000 = '/home/hdft/Documents/DNN-Complete/5000-CIFAR-Run/'
 
@@ -14,6 +14,7 @@ plotX_conv = []
 plotX_fc = []
 #plotY_fc = []
 plotX_mp = []
+plotX_vc = []
 plotY_er = []
 plotY_acc = []
 
@@ -70,7 +71,8 @@ for run in [archive5000]:
             net_parts = network.split('|')
             depth = 0
             depth = len(net_parts) - 2
-
+            vc = 0
+            vc = calc_vc(network)
             conv = 0
             full = 0
             mp = 0
@@ -85,10 +87,18 @@ for run in [archive5000]:
             plotY_er.append(min(data_dic[key][0]))
             plotY_acc.append(max(data_dic[key][1]))
 
+            plotX_vc.append(vc)
             plotX_mp.append(mp)
             plotX_depth.append(depth)
             plotX_conv.append(conv)
             plotX_fc.append(full)
+
+
+N = 20
+bins, pos = binner(plotX_vc, plotY_er, N)
+
+pl.figure("VC_BOX")
+pl.boxplot(bins)
 
 pl.figure("Depth")
 pl.scatter(plotX_depth, plotY_er)
@@ -113,5 +123,14 @@ pl.scatter(plotX_fc, plotY_acc)
 
 pl.figure("Max PoolingACC")
 pl.scatter(plotX_mp, plotY_acc)
+
+pl.figure("VCACC")
+pl.scatter(plotX_vc, plotY_acc)
+
+pl.figure("VC")
+pl.scatter(plotX_vc, plotY_er)
+
+# pl.figure("VC_BOX")
+# pl.boxplot(plotX_vc, plotY_er)
 
 pl.show()
