@@ -96,39 +96,61 @@ for run in [archive5000]:
 
 N = 20
 bins, pos = binner(plotX_vc, plotY_er, N)
-
+print bins[len(bins) - 1]
 pl.figure("VC_BOX")
-pl.boxplot(bins)
+pl.boxplot(bins, labels=pos)
+print plotX_vc
 
-pl.figure("Depth")
-pl.scatter(plotX_depth, plotY_er)
+N=20
+bins, pos = binner(plotX_depth, plotY_er, N)
+pl.figure("DEPTH_BOX")
+pl.boxplot(bins, labels=pos)
 
-pl.figure("Conv")
-pl.scatter(plotX_conv, plotY_er)
+N=max(plotX_conv) - min(plotX_conv)
+bins, pos = binner(plotX_conv, plotY_er, N)
+pl.figure("CONV_BOX")
+pl.boxplot(bins, labels=pos)
 
-pl.figure("Fully Connected")
-pl.scatter(plotX_fc, plotY_er)
+N=max(plotX_mp) - min(plotX_mp)
+bins, pos = binner(plotX_mp, plotY_er, N)
+pl.figure("MP_BOX")
+pl.boxplot(bins, labels=pos)
+print plotX_mp
 
-pl.figure("Max Pooling")
-pl.scatter(plotX_mp, plotY_er)
+N=max(plotX_fc) - min(plotX_fc)
+bins, pos = binner(plotX_fc, plotY_er, N)
+pl.figure("FC_BOX")
+pl.boxplot(bins, labels=pos)
 
-pl.figure("DepthACC")
-pl.scatter(plotX_depth, plotY_acc)
-
-pl.figure("ConvACC")
-pl.scatter(plotX_conv, plotY_acc)
-
-pl.figure("Fully ConnectedACC")
-pl.scatter(plotX_fc, plotY_acc)
-
-pl.figure("Max PoolingACC")
-pl.scatter(plotX_mp, plotY_acc)
-
-pl.figure("VCACC")
-pl.scatter(plotX_vc, plotY_acc)
-
-pl.figure("VC")
-pl.scatter(plotX_vc, plotY_er)
+# pl.figure("Depth")
+# pl.scatter(plotX_depth, plotY_er)
+#
+# pl.figure("Conv")
+# pl.scatter(plotX_conv, plotY_er)
+#
+# pl.figure("Fully Connected")
+# pl.scatter(plotX_fc, plotY_er)
+#
+# pl.figure("Max Pooling")
+# pl.scatter(plotX_mp, plotY_er)
+#
+# pl.figure("DepthACC")
+# pl.scatter(plotX_depth, plotY_acc)
+#
+# pl.figure("ConvACC")
+# pl.scatter(plotX_conv, plotY_acc)
+#
+# pl.figure("Fully ConnectedACC")
+# pl.scatter(plotX_fc, plotY_acc)
+#
+# pl.figure("Max PoolingACC")
+# pl.scatter(plotX_mp, plotY_acc)
+#
+# pl.figure("VCACC")
+# pl.scatter(plotX_vc, plotY_acc)
+#
+# pl.figure("VC")
+# pl.scatter(plotX_vc, plotY_er)
 
 # pl.figure("VC_BOX")
 # pl.boxplot(plotX_vc, plotY_er)
