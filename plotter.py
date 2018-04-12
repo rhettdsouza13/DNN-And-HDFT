@@ -69,16 +69,16 @@ if run == 1:
 
     #DATA_NETS_2017_3302.npy check network????
 
-dirs = os.listdir(data_dir_r2)
-fils_list = []
+# dirs = os.listdir(data_dir_r2)
+# fils_list = []
 # nets_file = open("nets_list6.txt",'r')
 # nets_list = netfile.readlines()
-com_file = open("common.txt", 'r')
-common_list = com_file.readlines()
-print common_list
-netfile_7 = open("param_list1000run.txt", 'r')
-nets_7 = netfile_7.readlines()
-good_nets = open("good_nets_ol.txt", "w+")
+# com_file = open("common.txt", 'r')
+# common_list = com_file.readlines()
+# print common_list
+# netfile_7 = open("param_list1000run.txt", 'r')
+# nets_7 = netfile_7.readlines()
+# good_nets = open("good_nets_ol.txt", "w+")
 if run == 2:
     train_acc_plot = []
     train_err_plot = []
@@ -134,12 +134,12 @@ if run == 3:
     val_err_plot = []
     of_plot = []
     of_plot_error = []
-    file_list = os.listdir(data_dir_r2)
+    #file_list = os.listdir(data_dir_r2)
     of_flag = 0
     for run in os.listdir(archive5000):
-        print run
+        #print run
         for d_file in os.listdir(archive5000 + '/' + run):
-            # print d_file
+            print d_file
             data = numpy.load(archive5000 + '/' + run + '/' + d_file)
 
             train_accuracy = []
@@ -164,26 +164,26 @@ if run == 3:
                             of_flag = 1
                 iterat+=1
 
-            if of_flag == 1:
-                # print tup[2]
-                # print tup[0]
-                print d_file
-                print len(val_accuracy)
-                of_plot.append(val_accuracy)
-                of_plot_error.append(val_error)
-                net_name = nets_7[int(d_file.split('_')[3].split('.')[0])]
-                print net_name,
-
-                print str(max(val_accuracy))
-                print str(min(val_error))
-                print train_accuracy[-1]
-                of_flag = 0
+            # if of_flag == 1:
+            #     # print tup[2]
+            #     # print tup[0]
+            #     print d_file
+            #     print len(val_accuracy)
+            #     of_plot.append(val_accuracy)
+            #     of_plot_error.append(val_error)
+            #     net_name = nets_7[int(d_file.split('_')[3].split('.')[0])]
+            #     print net_name,
+            #
+            #     print str(max(val_accuracy))
+            #     print str(min(val_error))
+            #     print train_accuracy[-1]
+            #     of_flag = 0
 
             train_acc_plot.append(train_accuracy)
             train_err_plot.append(train_error)
             val_acc_plot.append(val_accuracy)
             val_err_plot.append(val_error)
-            fils_list.append(d_file)
+            # fils_list.append(d_file)
 
 
     pl.figure(1)

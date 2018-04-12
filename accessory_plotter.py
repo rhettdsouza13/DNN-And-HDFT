@@ -94,33 +94,51 @@ for run in [archive5000]:
             plotX_fc.append(full)
 
 
-N = 20
-bins, pos = binner(plotX_vc, plotY_er, N)
+
+plotX_vc_log = numpy.log2(plotX_vc)
+N = max(plotX_vc_log) - min(plotX_vc_log)
+bins, pos = binner(plotX_vc_log, plotY_er, N/2)
 print bins[len(bins) - 1]
+labels_pos = []
+for i in xrange(len(pos)):
+    if i == len(pos) - 1:
+        labels_pos.append(str(pos[i]) + ' - ')
+        continue
+    labels_pos.append(str(pos[i]) + ' - ' + str(pos[i+1]))
+
 pl.figure("VC_BOX")
-pl.boxplot(bins, labels=pos)
+pl.boxplot(bins, labels=labels_pos, sym='')
+fig = pl.gcf()
+fig.set_size_inches(11, 5)
+fig.savefig('test2png.png', dpi=300)
 print plotX_vc
 
 N=20
 bins, pos = binner(plotX_depth, plotY_er, N)
+labels_pos = []
+for i in xrange(len(pos)):
+    if i == len(pos) - 1:
+        labels_pos.append(str(pos[i]) + ' - ')
+        continue
+    labels_pos.append(str(pos[i]) + ' - ' + str(pos[i+1]))
 pl.figure("DEPTH_BOX")
-pl.boxplot(bins, labels=pos)
+pl.boxplot(bins, labels=labels_pos, sym='')
 
 N=max(plotX_conv) - min(plotX_conv)
 bins, pos = binner(plotX_conv, plotY_er, N)
 pl.figure("CONV_BOX")
-pl.boxplot(bins, labels=pos)
+pl.boxplot(bins, labels=pos, sym='')
 
 N=max(plotX_mp) - min(plotX_mp)
 bins, pos = binner(plotX_mp, plotY_er, N)
 pl.figure("MP_BOX")
-pl.boxplot(bins, labels=pos)
+pl.boxplot(bins, labels=pos, sym='')
 print plotX_mp
 
 N=max(plotX_fc) - min(plotX_fc)
 bins, pos = binner(plotX_fc, plotY_er, N)
 pl.figure("FC_BOX")
-pl.boxplot(bins, labels=pos)
+pl.boxplot(bins, labels=pos, sym='')
 
 # pl.figure("Depth")
 # pl.scatter(plotX_depth, plotY_er)
