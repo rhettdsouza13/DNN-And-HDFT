@@ -1,10 +1,12 @@
 import os
 import numpy
 import matplotlib.pyplot as pl
+import matplotlib
+from PIL import Image
 from vc_calculator import *
 
 archive5000 = '/home/hdft/Documents/DNN-Complete/5000-CIFAR-Run/'
-
+plot_dir = '/home/hdft/Documents/DNN-Complete/DNN-PLOTS/Box_Plots/'
 SET = 'CIFAR'
 
 plotX_depth = []
@@ -98,7 +100,7 @@ for run in [archive5000]:
 plotX_vc_log = numpy.log2(plotX_vc)
 N = max(plotX_vc_log) - min(plotX_vc_log)
 bins, pos = binner(plotX_vc_log, plotY_er, N/2)
-print bins[len(bins) - 1]
+#print bins[len(bins) - 1]
 labels_pos = []
 for i in xrange(len(pos)):
     if i == len(pos) - 1:
@@ -106,12 +108,19 @@ for i in xrange(len(pos)):
         continue
     labels_pos.append(str(pos[i]) + ' - ' + str(pos[i+1]))
 
+matplotlib.rcParams.update({'font.size': 5})
+
 pl.figure("VC_BOX")
 pl.boxplot(bins, labels=labels_pos, sym='')
 fig = pl.gcf()
-fig.set_size_inches(11, 5)
-fig.savefig('test2png.png', dpi=300)
-print plotX_vc
+fig.suptitle('Validation Accuracy v/s VC-Dimension', fontsize=7)
+pl.xlabel('Range Of VC-Dimension', fontsize=5)
+pl.ylabel('Accuracy', fontsize=5)
+fig.set_size_inches(3.5, 2.75)
+fig.savefig(plot_dir + 'vc_box.png', dpi=300)
+img = Image.open(plot_dir + 'vc_box.png').convert('L')
+img.save(plot_dir + 'vc_box_gs.png')
+#print plotX_vc
 
 N=20
 bins, pos = binner(plotX_depth, plotY_er, N)
@@ -133,7 +142,7 @@ N=max(plotX_mp) - min(plotX_mp)
 bins, pos = binner(plotX_mp, plotY_er, N)
 pl.figure("MP_BOX")
 pl.boxplot(bins, labels=pos, sym='')
-print plotX_mp
+#print plotX_mp
 
 N=max(plotX_fc) - min(plotX_fc)
 bins, pos = binner(plotX_fc, plotY_er, N)

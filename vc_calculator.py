@@ -73,13 +73,13 @@ def calc_vc(network):
 
 def binner(X,Y,N):
     ranger = max(X) - min(X)
-    print min(X)
+    #print min(X)
     bins = numpy.array([i for i in range(int(math.floor(min(X))), int(math.ceil(max(X))), int(math.ceil(ranger/N)))])
     bins = numpy.append(bins, [int(math.ceil(max(X)))])
-    print bins
+    #print bins
     inds = numpy.digitize(X, bins)
     binned_Y = [[] for i in xrange(len(bins))]
-    print max(inds)
+    #print max(inds)
     for i in xrange(len(Y)):
         binned_Y[inds[i]-1].append(Y[i])
     # for i in binned_Y:
