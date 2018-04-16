@@ -2,12 +2,12 @@ import os
 import numpy
 import matplotlib.pyplot as pl
 
-opt = 5
-archive5000 = '/home/hdft/Documents/DNN-Complete/1111-PATH-Run/'
+opt = 6
+archive5000 = '/home/hdft/Documents/DNN-Complete/5000-CIFAR-Run/'
 # archive100 = '/home/hdft/Documents/DNN-Complete/100Run/'
 # archive1000 = '/home/hdft/Documents/DNN-Complete/1000run/'
 
-nets_list7 = open("nets_list_PATH_10.txt", 'r')
+nets_list7 = open("nets_list_CIFAR_7.txt", 'r')
 nets = nets_list7.readlines()
 
 for run in [archive5000]:
