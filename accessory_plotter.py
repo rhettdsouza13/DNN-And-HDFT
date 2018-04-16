@@ -5,7 +5,9 @@ import matplotlib
 from PIL import Image
 from vc_calculator import *
 
-archive5000 = '/home/hdft/Documents/DNN-Complete/5000-CIFAR-Run/'
+archive5000_CIFAR = '/home/hdft/Documents/DNN-Complete/5000-CIFAR-Run/'
+archive1000_MNIST = '/home/hdft/Documents/DNN-Complete/1000run/'
+archive2000_MIT = '/home/hdft/Documents/DNN-Complete/11800-MIT-Run/'
 plot_dir = '/home/hdft/Documents/DNN-Complete/DNN-PLOTS/Box_Plots/'
 SET = 'CIFAR'
 
@@ -19,10 +21,22 @@ plotX_mp = []
 plotX_vc = []
 plotY_er = []
 plotY_acc = []
+CIFAR_f_c = 0
+MNIST_f_c = 0
+MIT_f_c = 0
+for run in [archive5000_CIFAR, archive1000_MNIST, archive2000_MIT]:
+    print "On: " + run
+    print CIFAR_f_c, MNIST_f_c, MIT_f_c
+    if run == archive5000_CIFAR:
+        SET = 'CIFAR'
+    elif run == archive1000_MNIST:
+        SET = 'MNIST'
+    elif run == archive2000_MIT:
+        SET = 'MIT'
 
-for run in [archive5000]:
     for file_list in os.listdir(run):
         data_dic = {}
+
         #opening network list
         if SET == 'CIFAR':
             if file_list.split('-')[4] == '10':
@@ -44,11 +58,28 @@ for run in [archive5000]:
             elif file_list.split('-')[4] == '80':
                 nets_file = 'nets_list80_7.txt'
 
+        if SET == 'MIT' :
+            if file_list.split('-')[4] == '10':
+                nets_file = 'nets_list_MIT_10.txt'
+            elif file_list.split('-')[4] == '20':
+                nets_file = 'nets_list_MIT_20.txt'
+            elif file_list.split('-')[4] == '40':
+                nets_file = 'nets_list_MIT_40.txt'
+            elif file_list.split('-')[4] == '80':
+                nets_file = 'nets_list_MIT_80.txt'
+
         nets_foo = open(nets_file, 'r')
         nets_list = nets_foo.readlines()
 
         #continuing with data analysis
         for d_file in os.listdir(run + file_list + '/'):
+
+            if run == archive5000_CIFAR:
+                CIFAR_f_c += 1
+            elif run == archive1000_MNIST:
+                MNIST_f_c += 1
+            elif run == archive2000_MIT:
+                MIT_f_c += 1
 
             data = numpy.load(run + file_list + '/' + d_file)
             train_accuracy = []
@@ -95,59 +126,110 @@ for run in [archive5000]:
             plotX_conv.append(conv)
             plotX_fc.append(full)
 
+medianprops = {'color': 'black'}
+boxprops = {'color': 'black', 'linestyle': '-'}
+whiskerprops = {'color': 'black', 'linestyle': '-'}
+capprops = {'color': 'black', 'linestyle': '-'}
 
 
 plotX_vc_log = numpy.log2(plotX_vc)
-N = max(plotX_vc_log) - min(plotX_vc_log)
-bins, pos = binner(plotX_vc_log, plotY_er, N/2)
-#print bins[len(bins) - 1]
-labels_pos = []
-for i in xrange(len(pos)):
-    if i == len(pos) - 1:
-        labels_pos.append(str(pos[i]) + ' - ')
-        continue
-    labels_pos.append(str(pos[i]) + ' - ' + str(pos[i+1]))
 
+#basic figure subplot division and param setting
 matplotlib.rcParams.update({'font.size': 5})
+fig, (c,mn,mi) = pl.subplots(1,3)
+fig.set_size_inches(11, 2.75)
 
-pl.figure("VC_BOX")
-pl.boxplot(bins, labels=labels_pos, sym='')
-fig = pl.gcf()
-fig.suptitle('Validation Accuracy v/s VC-Dimension', fontsize=7)
-pl.xlabel('Range Of VC-Dimension', fontsize=5)
-pl.ylabel('Accuracy', fontsize=5)
-fig.set_size_inches(3.5, 2.75)
-fig.savefig(plot_dir + 'vc_box.png', dpi=300)
-img = Image.open(plot_dir + 'vc_box.png').convert('L')
-img.save(plot_dir + 'vc_box_gs.png')
-#print plotX_vc
 
-N=20
-bins, pos = binner(plotX_depth, plotY_er, N)
+#cifar subplotVC
+N = max(plotX_vc_log[:CIFAR_f_c]) - min(plotX_vc_log[:CIFAR_f_c])
+bins, pos = binner(plotX_vc_log[:CIFAR_f_c], plotY_er[:CIFAR_f_c], N/2)
 labels_pos = []
 for i in xrange(len(pos)):
     if i == len(pos) - 1:
         labels_pos.append(str(pos[i]) + ' - ')
         continue
     labels_pos.append(str(pos[i]) + ' - ' + str(pos[i+1]))
-pl.figure("DEPTH_BOX")
-pl.boxplot(bins, labels=labels_pos, sym='')
 
-N=max(plotX_conv) - min(plotX_conv)
-bins, pos = binner(plotX_conv, plotY_er, N)
-pl.figure("CONV_BOX")
-pl.boxplot(bins, labels=pos, sym='')
+c.boxplot(bins, labels=labels_pos,  medianprops=medianprops, sym='',
+           boxprops=boxprops,
+           whiskerprops=whiskerprops,
+           capprops=capprops)
 
-N=max(plotX_mp) - min(plotX_mp)
-bins, pos = binner(plotX_mp, plotY_er, N)
-pl.figure("MP_BOX")
-pl.boxplot(bins, labels=pos, sym='')
-#print plotX_mp
+c.set_title('CIFAR_Validation Accuracy v/s VC-Dimension', fontsize=7)
+c.set_xlabel('Range Of VC-Dimension', fontsize=5)
+c.set_ylabel('Accuracy', fontsize=5)
 
-N=max(plotX_fc) - min(plotX_fc)
-bins, pos = binner(plotX_fc, plotY_er, N)
-pl.figure("FC_BOX")
-pl.boxplot(bins, labels=pos, sym='')
+#MNIST subplotVC
+MNIST_f_c += CIFAR_f_c
+N = max(plotX_vc_log[CIFAR_f_c:MNIST_f_c]) - min(plotX_vc_log[CIFAR_f_c:MNIST_f_c])
+
+print "VALUE OF N : " + str(N)
+print min(plotX_vc_log[CIFAR_f_c:MNIST_f_c])
+print max(plotX_vc_log[CIFAR_f_c:MNIST_f_c])
+bins, pos = binner(plotX_vc_log[CIFAR_f_c:MNIST_f_c], plotY_er[CIFAR_f_c:MNIST_f_c], N/2)
+labels_pos = []
+for i in xrange(len(pos)):
+    if i == len(pos) - 1:
+        labels_pos.append(str(pos[i]) + ' - ')
+        continue
+    labels_pos.append(str(pos[i]) + ' - ' + str(pos[i+1]))
+mn.boxplot(bins, labels=labels_pos,  medianprops=medianprops, sym='',
+           boxprops=boxprops,
+           whiskerprops=whiskerprops,
+           capprops=capprops)
+
+mn.set_title('MNIST_Validation Accuracy v/s VC-Dimension', fontsize=7)
+mn.set_xlabel('Range Of VC-Dimension', fontsize=5)
+mn.set_ylabel('Accuracy', fontsize=5)
+
+#MIT subplotVC
+MIT_f_c += MNIST_f_c
+N = max(plotX_vc_log[MNIST_f_c:MIT_f_c]) - min(plotX_vc_log[MNIST_f_c:MIT_f_c])
+print "VALUE OF N : " + str(N)
+bins, pos = binner(plotX_vc_log[CIFAR_f_c:MNIST_f_c], plotY_er[MNIST_f_c:MIT_f_c], N/2)
+labels_pos = []
+for i in xrange(len(pos)):
+    if i == len(pos) - 1:
+        labels_pos.append(str(pos[i]) + ' - ')
+        continue
+    labels_pos.append(str(pos[i]) + ' - ' + str(pos[i+1]))
+mi.boxplot(bins, labels=labels_pos,  medianprops=medianprops, sym='',
+           boxprops=boxprops,
+           whiskerprops=whiskerprops,
+           capprops=capprops)
+
+mi.set_title('MIT_Validation Accuracy v/s VC-Dimension', fontsize=7)
+mi.set_xlabel('Range Of VC-Dimension', fontsize=5)
+mi.set_ylabel('Accuracy', fontsize=5)
+
+fig.savefig(plot_dir + 'vc_box.png', dpi=300)
+
+# N=20
+# bins, pos = binner(plotX_depth, plotY_er, N)
+# labels_pos = []
+# for i in xrange(len(pos)):
+#     if i == len(pos) - 1:
+#         labels_pos.append(str(pos[i]) + ' - ')
+#         continue
+#     labels_pos.append(str(pos[i]) + ' - ' + str(pos[i+1]))
+# pl.figure("DEPTH_BOX")
+# pl.boxplot(bins, labels=labels_pos, sym='')
+#
+# N=max(plotX_conv) - min(plotX_conv)
+# bins, pos = binner(plotX_conv, plotY_er, N)
+# pl.figure("CONV_BOX")
+# pl.boxplot(bins, labels=pos, sym='')
+#
+# N=max(plotX_mp) - min(plotX_mp)
+# bins, pos = binner(plotX_mp, plotY_er, N)
+# pl.figure("MP_BOX")
+# pl.boxplot(bins, labels=pos, sym='')
+# #print plotX_mp
+#
+# N=max(plotX_fc) - min(plotX_fc)
+# bins, pos = binner(plotX_fc, plotY_er, N)
+# pl.figure("FC_BOX")
+# pl.boxplot(bins, labels=pos, sym='')
 
 # pl.figure("Depth")
 # pl.scatter(plotX_depth, plotY_er)

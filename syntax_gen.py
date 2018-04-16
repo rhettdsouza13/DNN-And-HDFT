@@ -121,15 +121,15 @@ def param_iter(net):
 
 # param_iter("32,32,3|conv,relu,5|32,32,10|max_pooling,identity,4|8,8,10|full,relu|1,1,10|full,relu|1,1,10|full,relu|1,1,10|full,relu|1,1,10|full,relu|1,1,10|full,relu|1,1,10")
 
-with open("opt_list_1111-PATH-Run.txt", 'r') as opt_file:
-    nets_list_opt = opt_file.readlines()
-    print nets_list_opt
-    for net in nets_list_opt:
-        counter = 0
-        p_tree = Tree()
-        p_tree.create_node("Root", 'r')
-        print net
-        param_iter(net)
+# with open("opt_list_1111-PATH-Run.txt", 'r') as opt_file:
+#     nets_list_opt = opt_file.readlines()
+#     print nets_list_opt
+#     for net in nets_list_opt:
+#         counter = 0
+#         p_tree = Tree()
+#         p_tree.create_node("Root", 'r')
+#         print net
+#         param_iter(net)
 
 def replace(net):
 
@@ -165,7 +165,7 @@ def replace(net):
         sec[2] = str(3)
         cur[2] = ','.join(sec)
     for ind in func_ind:
-        dim = 80
+        dim = 10
         sec = cur[ind].split(',')
         sec[2] = str(dim)
         cur[ind] = ','.join(sec)
@@ -180,10 +180,10 @@ def replace(net):
     return cur
 
 # #
-# with open("nets_list_PATH.txt", "r") as n_file, open("nets_list_PATH_80.txt", "w+") as out_file:
-#     for prop in n_file.readlines():
-#         out_net = replace(prop)
-#         out_file.write(str(out_net))
+with open("nets_list_MIT_20.txt", "r") as n_file, open("nets_list_MIT_10.txt", "w+") as out_file:
+    for prop in n_file.readlines():
+        out_net = replace(prop)
+        out_file.write(str(out_net))
 
 #replace("32,32,1|max_pooling,identity,2|16,16,1|conv,relu,7|16,16,10|conv,relu,5|16,16,10|full,relu|1,1,10|full,relu|1,1,10")
 # 32,32,1|max_pooling,identity,2|16,16,1|conv,relu,7|16,16,10|conv,relu,5|16,16,10|full,relu|1,1,10|full,relu|1,1,10
