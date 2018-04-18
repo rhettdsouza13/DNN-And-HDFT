@@ -136,8 +136,8 @@ plotX_vc_log = numpy.log2(plotX_vc)
 
 #basic figure subplot division and param setting
 matplotlib.rcParams.update({'font.size': 5})
-fig, (c,mn,mi) = pl.subplots(1,3)
-fig.set_size_inches(11, 2.75)
+fig, axes = pl.subplots(3,3)
+fig.set_size_inches(12, 9.0)
 
 
 #cifar subplotVC
@@ -150,14 +150,14 @@ for i in xrange(len(pos)):
         continue
     labels_pos.append(str(pos[i]) + ' - ' + str(pos[i+1]))
 
-c.boxplot(bins, labels=labels_pos,  medianprops=medianprops, sym='',
+axes[0,0].boxplot(bins, labels=labels_pos,  medianprops=medianprops, sym='',
            boxprops=boxprops,
            whiskerprops=whiskerprops,
            capprops=capprops)
 
-c.set_title('CIFAR_Validation Accuracy v/s VC-Dimension', fontsize=7)
-c.set_xlabel('Range Of VC-Dimension', fontsize=5)
-c.set_ylabel('Accuracy', fontsize=5)
+axes[0,0].set_title('CIFAR10', fontsize=7)
+axes[0,0].set_xlabel('Range Of ' + r'$\mathregular{log_2(VC-Dimension)}$', fontsize=5)
+axes[0,0].set_ylabel('Cross Entropy', fontsize=5)
 
 #MNIST subplotVC
 MNIST_f_c += CIFAR_f_c
@@ -173,14 +173,14 @@ for i in xrange(len(pos)):
         labels_pos.append(str(pos[i]) + ' - ')
         continue
     labels_pos.append(str(pos[i]) + ' - ' + str(pos[i+1]))
-mn.boxplot(bins, labels=labels_pos,  medianprops=medianprops, sym='',
+axes[0,1].boxplot(bins, labels=labels_pos,  medianprops=medianprops, sym='',
            boxprops=boxprops,
            whiskerprops=whiskerprops,
            capprops=capprops)
 
-mn.set_title('MNIST_Validation Accuracy v/s VC-Dimension', fontsize=7)
-mn.set_xlabel('Range Of VC-Dimension', fontsize=5)
-mn.set_ylabel('Accuracy', fontsize=5)
+axes[0,1].set_title('MNIST', fontsize=7)
+axes[0,1].set_xlabel('Range Of ' + r'$\mathregular{log_2(VC-Dimension)}$', fontsize=5)
+axes[0,1].set_ylabel('Cross Entropy', fontsize=5)
 
 #MIT subplotVC
 MIT_f_c += MNIST_f_c
@@ -193,27 +193,100 @@ for i in xrange(len(pos)):
         labels_pos.append(str(pos[i]) + ' - ')
         continue
     labels_pos.append(str(pos[i]) + ' - ' + str(pos[i+1]))
-mi.boxplot(bins, labels=labels_pos,  medianprops=medianprops, sym='',
+axes[0,2].boxplot(bins, labels=labels_pos,  medianprops=medianprops, sym='',
            boxprops=boxprops,
            whiskerprops=whiskerprops,
            capprops=capprops)
 
-mi.set_title('MIT_Validation Accuracy v/s VC-Dimension', fontsize=7)
-mi.set_xlabel('Range Of VC-Dimension', fontsize=5)
-mi.set_ylabel('Accuracy', fontsize=5)
+axes[0,2].set_title('Mitosis', fontsize=7)
+axes[0,2].set_xlabel('Range Of ' + r'$\mathregular{log_2(VC-Dimension)}$', fontsize=5)
+axes[0,2].set_ylabel('Cross Entropy', fontsize=5)
 
-fig.savefig(plot_dir + 'vc_box.png', dpi=300)
+#depth plotting
+#CIFAR DEPTH SUBPLOT
+N=10
+bins, pos = binner(plotX_depth[:CIFAR_f_c], plotY_er[:CIFAR_f_c], N)
+labels_pos = []
+for i in xrange(len(pos)):
+    if i == len(pos) - 1:
+        labels_pos.append(str(pos[i]) + ' - ')
+        continue
+    labels_pos.append(str(pos[i]) + ' - ' + str(pos[i+1]))
 
-# N=20
-# bins, pos = binner(plotX_depth, plotY_er, N)
-# labels_pos = []
-# for i in xrange(len(pos)):
-#     if i == len(pos) - 1:
-#         labels_pos.append(str(pos[i]) + ' - ')
-#         continue
-#     labels_pos.append(str(pos[i]) + ' - ' + str(pos[i+1]))
-# pl.figure("DEPTH_BOX")
-# pl.boxplot(bins, labels=labels_pos, sym='')
+axes[1,0].boxplot(bins, labels=labels_pos,  medianprops=medianprops, sym='',
+           boxprops=boxprops,
+           whiskerprops=whiskerprops,
+           capprops=capprops)
+axes[1,0].set_xlabel('Range Of Depth', fontsize=5)
+axes[1,0].set_ylabel('Cross Entropy', fontsize=5)
+
+#MNIST DEPTH SUBPLOT
+N=10
+bins, pos = binner(plotX_depth[CIFAR_f_c:MNIST_f_c], plotY_er[CIFAR_f_c:MNIST_f_c], N)
+labels_pos = []
+for i in xrange(len(pos)):
+    if i == len(pos) - 1:
+        labels_pos.append(str(pos[i]) + ' - ')
+        continue
+    labels_pos.append(str(pos[i]) + ' - ' + str(pos[i+1]))
+
+axes[1,1].boxplot(bins, labels=labels_pos,  medianprops=medianprops, sym='',
+           boxprops=boxprops,
+           whiskerprops=whiskerprops,
+           capprops=capprops)
+axes[1,1].set_xlabel('Range Of Depth', fontsize=5)
+axes[1,1].set_ylabel('Cross Entropy', fontsize=5)
+
+#MITOSIS DEPTH SUBPLOT
+N=10
+bins, pos = binner(plotX_depth[MNIST_f_c:MIT_f_c], plotY_er[MNIST_f_c:MIT_f_c], N)
+labels_pos = []
+for i in xrange(len(pos)):
+    if i == len(pos) - 1:
+        labels_pos.append(str(pos[i]) + ' - ')
+        continue
+    labels_pos.append(str(pos[i]) + ' - ' + str(pos[i+1]))
+
+axes[1,2].boxplot(bins, labels=labels_pos,  medianprops=medianprops, sym='',
+           boxprops=boxprops,
+           whiskerprops=whiskerprops,
+           capprops=capprops)
+axes[1,2].set_xlabel('Range Of Depth', fontsize=5)
+axes[1,2].set_ylabel('Cross Entropy', fontsize=5)
+
+#conv plotting
+#CIFAR conv SUBPLOT
+N = max(plotX_conv[:CIFAR_f_c]) - min(plotX_conv[:CIFAR_f_c])
+bins, pos = binner(plotX_conv[:CIFAR_f_c], plotY_er[:CIFAR_f_c], N)
+
+axes[2,0].boxplot(bins, labels=pos,  medianprops=medianprops, sym='',
+           boxprops=boxprops,
+           whiskerprops=whiskerprops,
+           capprops=capprops)
+axes[2,0].set_xlabel('Number Of Convolutional Layers', fontsize=5)
+axes[2,0].set_ylabel('Cross Entropy', fontsize=5)
+
+#MNIST CONV SUBPLOT
+N = max(plotX_conv[CIFAR_f_c:MNIST_f_c]) - min(plotX_conv[CIFAR_f_c:MNIST_f_c])
+bins, pos = binner(plotX_conv[CIFAR_f_c:MNIST_f_c], plotY_er[CIFAR_f_c:MNIST_f_c], N)
+
+axes[2,1].boxplot(bins, labels=pos,  medianprops=medianprops, sym='',
+           boxprops=boxprops,
+           whiskerprops=whiskerprops,
+           capprops=capprops)
+axes[2,1].set_xlabel('Number Of Convolutional Layers', fontsize=5)
+axes[2,1].set_ylabel('Cross Entropy', fontsize=5)
+
+#MITOSIS CONV SUBPLOT
+N = max(plotX_conv[MNIST_f_c:MIT_f_c]) - min(plotX_conv[MNIST_f_c:MIT_f_c])
+bins, pos = binner(plotX_conv[MNIST_f_c:MIT_f_c], plotY_er[MNIST_f_c:MIT_f_c], N)
+
+axes[2,2].boxplot(bins, labels=pos,  medianprops=medianprops, sym='',
+           boxprops=boxprops,
+           whiskerprops=whiskerprops,
+           capprops=capprops)
+axes[2,2].set_xlabel('Number Of Convolutional Layers', fontsize=5)
+axes[2,2].set_ylabel('Cross Entropy', fontsize=5)
 #
 # N=max(plotX_conv) - min(plotX_conv)
 # bins, pos = binner(plotX_conv, plotY_er, N)
@@ -264,4 +337,5 @@ fig.savefig(plot_dir + 'vc_box.png', dpi=300)
 # pl.figure("VC_BOX")
 # pl.boxplot(plotX_vc, plotY_er)
 
+fig.savefig(plot_dir + 'boxplot.png', dpi=300)
 pl.show()
