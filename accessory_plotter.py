@@ -131,18 +131,18 @@ boxprops = {'color': 'black', 'linestyle': '-'}
 whiskerprops = {'color': 'black', 'linestyle': '-'}
 capprops = {'color': 'black', 'linestyle': '-'}
 
-
+plotY_error_rate = [1-x for x in plotY_acc]
 plotX_vc_log = numpy.log2(plotX_vc)
 
 #basic figure subplot division and param setting
-matplotlib.rcParams.update({'font.size': 5})
-fig, axes = pl.subplots(3,3)
-fig.set_size_inches(12, 9.0)
+matplotlib.rcParams.update({'font.size': 4.7})
+fig, axes = pl.subplots(5,3)
+fig.set_size_inches(11, 15.0)
 
 
 #cifar subplotVC
 N = max(plotX_vc_log[:CIFAR_f_c]) - min(plotX_vc_log[:CIFAR_f_c])
-bins, pos = binner(plotX_vc_log[:CIFAR_f_c], plotY_er[:CIFAR_f_c], N/2)
+bins, pos = binner(plotX_vc_log[:CIFAR_f_c], plotY_error_rate[:CIFAR_f_c], N/2)
 labels_pos = []
 for i in xrange(len(pos)):
     if i == len(pos) - 1:
@@ -156,8 +156,8 @@ axes[0,0].boxplot(bins, labels=labels_pos,  medianprops=medianprops, sym='',
            capprops=capprops)
 
 axes[0,0].set_title('CIFAR10', fontsize=7)
-axes[0,0].set_xlabel('Range Of ' + r'$\mathregular{log_2(VC-Dimension)}$', fontsize=5)
-axes[0,0].set_ylabel('Cross Entropy', fontsize=5)
+axes[0,0].set_xlabel('Range Of ' + r'$\mathregular{log_2(VC-Dimension)}$', fontsize=5.5)
+axes[0,0].set_ylabel('Validation Error Rate', fontsize=5.5)
 
 #MNIST subplotVC
 MNIST_f_c += CIFAR_f_c
@@ -166,7 +166,7 @@ N = max(plotX_vc_log[CIFAR_f_c:MNIST_f_c]) - min(plotX_vc_log[CIFAR_f_c:MNIST_f_
 print "VALUE OF N : " + str(N)
 print min(plotX_vc_log[CIFAR_f_c:MNIST_f_c])
 print max(plotX_vc_log[CIFAR_f_c:MNIST_f_c])
-bins, pos = binner(plotX_vc_log[CIFAR_f_c:MNIST_f_c], plotY_er[CIFAR_f_c:MNIST_f_c], N/2)
+bins, pos = binner(plotX_vc_log[CIFAR_f_c:MNIST_f_c], plotY_error_rate[CIFAR_f_c:MNIST_f_c], N/2)
 labels_pos = []
 for i in xrange(len(pos)):
     if i == len(pos) - 1:
@@ -179,14 +179,14 @@ axes[0,1].boxplot(bins, labels=labels_pos,  medianprops=medianprops, sym='',
            capprops=capprops)
 
 axes[0,1].set_title('MNIST', fontsize=7)
-axes[0,1].set_xlabel('Range Of ' + r'$\mathregular{log_2(VC-Dimension)}$', fontsize=5)
-axes[0,1].set_ylabel('Cross Entropy', fontsize=5)
+axes[0,1].set_xlabel('Range Of ' + r'$\mathregular{log_2(VC-Dimension)}$', fontsize=5.5)
+axes[0,1].set_ylabel('Validation Error Rate', fontsize=5.5)
 
 #MIT subplotVC
 MIT_f_c += MNIST_f_c
 N = max(plotX_vc_log[MNIST_f_c:MIT_f_c]) - min(plotX_vc_log[MNIST_f_c:MIT_f_c])
 print "VALUE OF N : " + str(N)
-bins, pos = binner(plotX_vc_log[CIFAR_f_c:MNIST_f_c], plotY_er[MNIST_f_c:MIT_f_c], N/2)
+bins, pos = binner(plotX_vc_log[CIFAR_f_c:MNIST_f_c], plotY_error_rate[MNIST_f_c:MIT_f_c], N/2)
 labels_pos = []
 for i in xrange(len(pos)):
     if i == len(pos) - 1:
@@ -199,13 +199,13 @@ axes[0,2].boxplot(bins, labels=labels_pos,  medianprops=medianprops, sym='',
            capprops=capprops)
 
 axes[0,2].set_title('Mitosis', fontsize=7)
-axes[0,2].set_xlabel('Range Of ' + r'$\mathregular{log_2(VC-Dimension)}$', fontsize=5)
-axes[0,2].set_ylabel('Cross Entropy', fontsize=5)
+axes[0,2].set_xlabel('Range Of ' + r'$\mathregular{log_2(VC-Dimension)}$', fontsize=5.5)
+axes[0,2].set_ylabel('Validation Error Rate', fontsize=5.5)
 
 #depth plotting
 #CIFAR DEPTH SUBPLOT
-N=10
-bins, pos = binner(plotX_depth[:CIFAR_f_c], plotY_er[:CIFAR_f_c], N)
+N=8
+bins, pos = binner(plotX_depth[:CIFAR_f_c], plotY_error_rate[:CIFAR_f_c], N)
 labels_pos = []
 for i in xrange(len(pos)):
     if i == len(pos) - 1:
@@ -217,12 +217,12 @@ axes[1,0].boxplot(bins, labels=labels_pos,  medianprops=medianprops, sym='',
            boxprops=boxprops,
            whiskerprops=whiskerprops,
            capprops=capprops)
-axes[1,0].set_xlabel('Range Of Depth', fontsize=5)
-axes[1,0].set_ylabel('Cross Entropy', fontsize=5)
+axes[1,0].set_xlabel('Range Of Depth', fontsize=5.5)
+axes[1,0].set_ylabel('Validation Error Rate', fontsize=5.5)
 
 #MNIST DEPTH SUBPLOT
-N=10
-bins, pos = binner(plotX_depth[CIFAR_f_c:MNIST_f_c], plotY_er[CIFAR_f_c:MNIST_f_c], N)
+N=8
+bins, pos = binner(plotX_depth[CIFAR_f_c:MNIST_f_c], plotY_error_rate[CIFAR_f_c:MNIST_f_c], N)
 labels_pos = []
 for i in xrange(len(pos)):
     if i == len(pos) - 1:
@@ -234,12 +234,12 @@ axes[1,1].boxplot(bins, labels=labels_pos,  medianprops=medianprops, sym='',
            boxprops=boxprops,
            whiskerprops=whiskerprops,
            capprops=capprops)
-axes[1,1].set_xlabel('Range Of Depth', fontsize=5)
-axes[1,1].set_ylabel('Cross Entropy', fontsize=5)
+axes[1,1].set_xlabel('Range Of Depth', fontsize=5.5)
+axes[1,1].set_ylabel('Validation Error Rate', fontsize=5.5)
 
 #MITOSIS DEPTH SUBPLOT
-N=10
-bins, pos = binner(plotX_depth[MNIST_f_c:MIT_f_c], plotY_er[MNIST_f_c:MIT_f_c], N)
+N=8
+bins, pos = binner(plotX_depth[MNIST_f_c:MIT_f_c], plotY_error_rate[MNIST_f_c:MIT_f_c], N)
 labels_pos = []
 for i in xrange(len(pos)):
     if i == len(pos) - 1:
@@ -251,45 +251,128 @@ axes[1,2].boxplot(bins, labels=labels_pos,  medianprops=medianprops, sym='',
            boxprops=boxprops,
            whiskerprops=whiskerprops,
            capprops=capprops)
-axes[1,2].set_xlabel('Range Of Depth', fontsize=5)
-axes[1,2].set_ylabel('Cross Entropy', fontsize=5)
+axes[1,2].set_xlabel('Range Of Depth', fontsize=5.5)
+axes[1,2].set_ylabel('Validation Error Rate', fontsize=5.5)
 
 #conv plotting
 #CIFAR conv SUBPLOT
 N = max(plotX_conv[:CIFAR_f_c]) - min(plotX_conv[:CIFAR_f_c])
-bins, pos = binner(plotX_conv[:CIFAR_f_c], plotY_er[:CIFAR_f_c], N)
+bins, pos = binner(plotX_conv[:CIFAR_f_c], plotY_error_rate[:CIFAR_f_c], N)
 
 axes[2,0].boxplot(bins, labels=pos,  medianprops=medianprops, sym='',
            boxprops=boxprops,
            whiskerprops=whiskerprops,
            capprops=capprops)
-axes[2,0].set_xlabel('Number Of Convolutional Layers', fontsize=5)
-axes[2,0].set_ylabel('Cross Entropy', fontsize=5)
+axes[2,0].set_xlabel('Number Of Convolutional Layers', fontsize=5.5)
+axes[2,0].set_ylabel('Validation Error Rate', fontsize=5.5)
 
 #MNIST CONV SUBPLOT
 N = max(plotX_conv[CIFAR_f_c:MNIST_f_c]) - min(plotX_conv[CIFAR_f_c:MNIST_f_c])
-bins, pos = binner(plotX_conv[CIFAR_f_c:MNIST_f_c], plotY_er[CIFAR_f_c:MNIST_f_c], N)
+bins, pos = binner(plotX_conv[CIFAR_f_c:MNIST_f_c], plotY_error_rate[CIFAR_f_c:MNIST_f_c], N)
 
 axes[2,1].boxplot(bins, labels=pos,  medianprops=medianprops, sym='',
            boxprops=boxprops,
            whiskerprops=whiskerprops,
            capprops=capprops)
-axes[2,1].set_xlabel('Number Of Convolutional Layers', fontsize=5)
-axes[2,1].set_ylabel('Cross Entropy', fontsize=5)
+axes[2,1].set_xlabel('Number Of Convolutional Layers', fontsize=5.5)
+axes[2,1].set_ylabel('Validation Error Rate', fontsize=5.5)
 
 #MITOSIS CONV SUBPLOT
 N = max(plotX_conv[MNIST_f_c:MIT_f_c]) - min(plotX_conv[MNIST_f_c:MIT_f_c])
-bins, pos = binner(plotX_conv[MNIST_f_c:MIT_f_c], plotY_er[MNIST_f_c:MIT_f_c], N)
+bins, pos = binner(plotX_conv[MNIST_f_c:MIT_f_c], plotY_error_rate[MNIST_f_c:MIT_f_c], N)
 
 axes[2,2].boxplot(bins, labels=pos,  medianprops=medianprops, sym='',
            boxprops=boxprops,
            whiskerprops=whiskerprops,
            capprops=capprops)
-axes[2,2].set_xlabel('Number Of Convolutional Layers', fontsize=5)
-axes[2,2].set_ylabel('Cross Entropy', fontsize=5)
+axes[2,2].set_xlabel('Number Of Convolutional Layers', fontsize=5.5)
+axes[2,2].set_ylabel('Validation Error Rate', fontsize=5.5)
+
+#FC plotting
+#CIFAR FC SUBPLOT
+N = 6
+bins, pos = binner(plotX_fc[:CIFAR_f_c], plotY_error_rate[:CIFAR_f_c], N)
+labels_pos = []
+for i in xrange(len(pos)):
+    if i == len(pos) - 1:
+        labels_pos.append(str(pos[i]) + ' - ')
+        continue
+    labels_pos.append(str(pos[i]) + ' - ' + str(pos[i+1]))
+axes[3,0].boxplot(bins, labels=labels_pos,  medianprops=medianprops, sym='',
+           boxprops=boxprops,
+           whiskerprops=whiskerprops,
+           capprops=capprops)
+axes[3,0].set_xlabel('Range Of Number Of Fully Connected Layers', fontsize=5.5)
+axes[3,0].set_ylabel('Validation Error Rate', fontsize=5.5)
+
+#MNIST FC SUBPLOT
+N = 6
+bins, pos = binner(plotX_fc[CIFAR_f_c:MNIST_f_c], plotY_error_rate[CIFAR_f_c:MNIST_f_c], N)
+labels_pos = []
+for i in xrange(len(pos)):
+    if i == len(pos) - 1:
+        labels_pos.append(str(pos[i]) + ' - ')
+        continue
+    labels_pos.append(str(pos[i]) + ' - ' + str(pos[i+1]))
+axes[3,1].boxplot(bins, labels=labels_pos,  medianprops=medianprops, sym='',
+           boxprops=boxprops,
+           whiskerprops=whiskerprops,
+           capprops=capprops)
+axes[3,1].set_xlabel('Range Of Number Of Fully Connected Layers', fontsize=5.5)
+axes[3,1].set_ylabel('Validation Error Rate', fontsize=5.5)
+
+#MITOSIS FC SUBPLOT
+N = 6
+bins, pos = binner(plotX_fc[MNIST_f_c:MIT_f_c], plotY_error_rate[MNIST_f_c:MIT_f_c], N)
+labels_pos = []
+for i in xrange(len(pos)):
+    if i == len(pos) - 1:
+        labels_pos.append(str(pos[i]) + ' - ')
+        continue
+    labels_pos.append(str(pos[i]) + ' - ' + str(pos[i+1]))
+axes[3,2].boxplot(bins, labels=labels_pos,  medianprops=medianprops, sym='',
+           boxprops=boxprops,
+           whiskerprops=whiskerprops,
+           capprops=capprops)
+axes[3,2].set_xlabel('Range Of Number Of Fully Connected Layers', fontsize=5.5)
+axes[3,2].set_ylabel('Validation Error Rate', fontsize=5.5)
+
+#MP plotting
+#CIFAR MP SUBPLOT
+N = max(plotX_mp[:CIFAR_f_c]) - min(plotX_mp[:CIFAR_f_c])
+bins, pos = binner(plotX_mp[:CIFAR_f_c], plotY_error_rate[:CIFAR_f_c], N)
+
+axes[4,0].boxplot(bins, labels=pos,  medianprops=medianprops, sym='',
+           boxprops=boxprops,
+           whiskerprops=whiskerprops,
+           capprops=capprops)
+axes[4,0].set_xlabel('Number Of Max-Pooling Layers', fontsize=4)
+axes[4,0].set_ylabel('Validation Error Rate', fontsize=4)
+
+#MNIST MP SUBPLOT
+N = max(plotX_mp[CIFAR_f_c:MNIST_f_c]) - min(plotX_mp[CIFAR_f_c:MNIST_f_c])
+bins, pos = binner(plotX_mp[CIFAR_f_c:MNIST_f_c], plotY_error_rate[CIFAR_f_c:MNIST_f_c], N)
+
+axes[4,1].boxplot(bins, labels=pos,  medianprops=medianprops, sym='',
+           boxprops=boxprops,
+           whiskerprops=whiskerprops,
+           capprops=capprops)
+axes[4,1].set_xlabel('Number Of Max-Pooling Layers', fontsize=4)
+axes[4,1].set_ylabel('Validation Error Rate', fontsize=4)
+
+#MITOSIS MP SUBPLOT
+N = max(plotX_mp[MNIST_f_c:MIT_f_c]) - min(plotX_mp[MNIST_f_c:MIT_f_c])
+bins, pos = binner(plotX_mp[MNIST_f_c:MIT_f_c], plotY_error_rate[MNIST_f_c:MIT_f_c], N)
+
+axes[4,2].boxplot(bins, labels=pos,  medianprops=medianprops, sym='',
+           boxprops=boxprops,
+           whiskerprops=whiskerprops,
+           capprops=capprops)
+axes[4,2].set_xlabel('Number Of Max-Pooling Layers', fontsize=4)
+axes[4,2].set_ylabel('Validation Error Rate', fontsize=4)
 #
 # N=max(plotX_conv) - min(plotX_conv)
-# bins, pos = binner(plotX_conv, plotY_er, N)
+# bins, pos = binner(plotX_conv, plotY_error_rate, N)
 # pl.figure("CONV_BOX")
 # pl.boxplot(bins, labels=pos, sym='')
 #
