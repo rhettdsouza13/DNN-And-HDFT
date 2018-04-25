@@ -3,11 +3,11 @@ import numpy
 import matplotlib.pyplot as pl
 
 opt = 6
-archive5000 = '/home/hdft/Documents/DNN-Complete/5000-CIFAR-Run/'
+archive5000 = '/home/hdft/Documents/DNN-Complete/11800-MIT-Run/'
 # archive100 = '/home/hdft/Documents/DNN-Complete/100Run/'
 # archive1000 = '/home/hdft/Documents/DNN-Complete/1000run/'
 
-nets_list7 = open("nets_list_CIFAR_7.txt", 'r')
+nets_list7 = open("nets_list_MIT_10.txt", 'r')
 nets = nets_list7.readlines()
 
 for run in [archive5000]:
@@ -36,8 +36,8 @@ for run in [archive5000]:
                 data_dic[min(val_error)] = [file_list + "+" + d_file.split('_')[3].split('.')[0] , val_error, val_accuracy]
                 global_dic[min(val_error)] = [file_list + "+" + d_file.split('_')[3].split('.')[0] , val_error, val_accuracy]
 
-    n_bins = [i/100.0 for i in range(0,800,2)]
-    acc_bins = [i/100.0 for i in range(0,100, 2)]
+    n_bins = [i/100.0 for i in range(0,300,2)]
+    acc_bins = [i/100.0 for i in range(70,100, 2)]
     pl.figure("Accuracy Hist")
     pl.xlabel("Accuracy Range")
     pl.ylabel("Number Of Networks")

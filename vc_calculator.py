@@ -71,11 +71,30 @@ def calc_vc(network):
 #print calc_vc("32,32,1|conv,relu,5|32,32,20|max_pooling,identity,2|16,16,20|conv,relu,5|16,16,20|conv,relu,7|16,16,20|max_pooling,identity,2|8,8,20|conv,relu,5|8,8,20|conv,relu,5|8,8,20|conv,relu,5|8,8,20|conv,relu,5|8,8,20|full,relu|1,1,10")
 
 
-def binner(X,Y,N):
+def binner(X,Y,N,fl_flag=0, vc_flag=0):
+
+    if fl_flag == 1:
+        bins = []
+        c_jumper = 1
+        i = int(math.floor(min(X)))
+        while i<int(math.ceil(max(X))):
+            bins.append(i)
+            i+=c_jumper
+            c_jumper+=1
+        bins = numpy.array(bins)
+        inds = numpy.digitize(X, bins)
+        binned_Y = [[] for i in xrange(len(bins))]
+        #print max(inds)
+        for i in xrange(len(Y)):
+            binned_Y[inds[i]-1].append(Y[i])
+
+        return binned_Y, bins
+
     ranger = max(X) - min(X)
     #print min(X)
     bins = numpy.array([i for i in range(int(math.floor(min(X))), int(math.ceil(max(X))), int(math.ceil(ranger/N)))])
-    bins = numpy.append(bins, [int(math.ceil(max(X)))])
+    if vc_flag == 0:
+        bins = numpy.append(bins, [int(math.ceil(max(X)))])
     #print bins
     inds = numpy.digitize(X, bins)
     binned_Y = [[] for i in xrange(len(bins))]
