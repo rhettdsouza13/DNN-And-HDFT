@@ -103,7 +103,7 @@ for run in [archive5000_CIFAR, archive1000_MNIST, archive2000_MIT]:
             network = nets_list[int(key.split('+')[1])]
             net_parts = network.split('|')
             depth = 0
-            depth = len(net_parts) - 2
+            # depth = len(net_parts) - 2
             vc = 0
             vc = calc_vc(network)
             conv = 0
@@ -116,10 +116,14 @@ for run in [archive5000_CIFAR, archive1000_MNIST, archive2000_MIT]:
                     full += 1
                 if 'max_pooling' in part:
                     mp += 1
-
+            depth = conv+mp+full
+            # if int(key.split('+')[1]) == 1451:
+            #     print network
+            #     print depth
             plotY_er.append(min(data_dic[key][0]))
             plotY_acc.append(max(data_dic[key][1]))
-
+            # if depth == 1:
+            #     print depth
             plotX_vc.append(vc)
             plotX_mp.append(mp)
             plotX_depth.append(depth)
@@ -146,10 +150,13 @@ N = max(plotX_vc_log[:CIFAR_f_c]) - min(plotX_vc_log[:CIFAR_f_c])
 bins, pos = binner(plotX_vc_log[:CIFAR_f_c], plotY_error_rate[:CIFAR_f_c], N/2, vc_flag = 1)
 labels_pos = []
 for i in xrange(len(pos)):
+    if i == 0:
+        labels_pos.append(str(pos[i]) + ' - ' + str(pos[i+1]))
+        continue
     if i == len(pos) - 1:
         labels_pos.append(str(pos[i]) + ' - ')
         continue
-    labels_pos.append(str(pos[i]) + ' - ' + str(pos[i+1]))
+    labels_pos.append(str(pos[i]+1) + ' - ' + str(pos[i+1]))
 
 axes[0,0].set_ylim([0,95])
 axes[0,0].boxplot(bins, labels=labels_pos,  medianprops=medianprops, sym='',
@@ -171,10 +178,13 @@ print max(plotX_vc_log[CIFAR_f_c:MNIST_f_c])
 bins, pos = binner(plotX_vc_log[CIFAR_f_c:MNIST_f_c], plotY_error_rate[CIFAR_f_c:MNIST_f_c], N/2, vc_flag = 1)
 labels_pos = []
 for i in xrange(len(pos)):
+    if i == 0:
+        labels_pos.append(str(pos[i]) + ' - ' + str(pos[i+1]))
+        continue
     if i == len(pos) - 1:
         labels_pos.append(str(pos[i]) + ' - ')
         continue
-    labels_pos.append(str(pos[i]) + ' - ' + str(pos[i+1]))
+    labels_pos.append(str(pos[i]+1) + ' - ' + str(pos[i+1]))
 
 axes[0,1].set_ylim([0,95])
 axes[0,1].boxplot(bins, labels=labels_pos,  medianprops=medianprops, sym='',
@@ -193,10 +203,13 @@ print "VALUE OF N : " + str(N)
 bins, pos = binner(plotX_vc_log[CIFAR_f_c:MNIST_f_c], plotY_error_rate[MNIST_f_c:MIT_f_c], N/2, vc_flag = 1)
 labels_pos = []
 for i in xrange(len(pos)):
+    if i == 0:
+        labels_pos.append(str(pos[i]) + ' - ' + str(pos[i+1]))
+        continue
     if i == len(pos) - 1:
         labels_pos.append(str(pos[i]) + ' - ')
         continue
-    labels_pos.append(str(pos[i]) + ' - ' + str(pos[i+1]))
+    labels_pos.append(str(pos[i]+1) + ' - ' + str(pos[i+1]))
 
 axes[0,2].set_ylim([0,95])
 axes[0,2].boxplot(bins, labels=labels_pos,  medianprops=medianprops, sym='',
@@ -211,13 +224,19 @@ axes[0,2].set_ylabel('Classification Error %', fontsize=5.5)
 #depth plotting
 #CIFAR DEPTH SUBPLOT
 N=8
-bins, pos = binner(plotX_depth[:CIFAR_f_c], plotY_error_rate[:CIFAR_f_c], N)
+bins, pos = binner(plotX_depth[:CIFAR_f_c], plotY_error_rate[:CIFAR_f_c], N, fl_flag=1)
 labels_pos = []
 for i in xrange(len(pos)):
-    if i == len(pos) - 1:
-        labels_pos.append(str(pos[i]) + ' - ')
+    if i == 0:
+        labels_pos.append(str(pos[i+1]))
         continue
-    labels_pos.append(str(pos[i]) + ' - ' + str(pos[i+1]))
+    if i == 1:
+        labels_pos.append(str(pos[i+1]))
+        continue
+    if i == len(pos) - 1:
+        labels_pos.append(str(pos[i]+1) + ' - ')
+        continue
+    labels_pos.append(str(pos[i]+1) + ' - ' + str(pos[i+1]))
 
 axes[1,0].set_ylim([0,100])
 axes[1,0].boxplot(bins, labels=labels_pos,  medianprops=medianprops, sym='',
@@ -229,14 +248,19 @@ axes[1,0].set_ylabel('Classification Error %', fontsize=5.5)
 
 #MNIST DEPTH SUBPLOT
 N=8
-bins, pos = binner(plotX_depth[CIFAR_f_c:MNIST_f_c], plotY_error_rate[CIFAR_f_c:MNIST_f_c], N)
+bins, pos = binner(plotX_depth[CIFAR_f_c:MNIST_f_c], plotY_error_rate[CIFAR_f_c:MNIST_f_c], N, fl_flag=1)
 labels_pos = []
 for i in xrange(len(pos)):
-    if i == len(pos) - 1:
-        labels_pos.append(str(pos[i]) + ' - ')
+    if i == 0:
+        labels_pos.append(str(pos[i+1]))
         continue
-    labels_pos.append(str(pos[i]) + ' - ' + str(pos[i+1]))
-
+    if i == 1:
+        labels_pos.append(str(pos[i+1]))
+        continue
+    if i == len(pos) - 1:
+        labels_pos.append(str(pos[i]+1) + ' - ')
+        continue
+    labels_pos.append(str(pos[i]+1) + ' - ' + str(pos[i+1]))
 axes[1,1].set_ylim([0,100])
 axes[1,1].boxplot(bins, labels=labels_pos,  medianprops=medianprops, sym='',
            boxprops=boxprops,
@@ -247,13 +271,19 @@ axes[1,1].set_ylabel('Classification Error %', fontsize=5.5)
 
 #MITOSIS DEPTH SUBPLOT
 N=8
-bins, pos = binner(plotX_depth[MNIST_f_c:MIT_f_c], plotY_error_rate[MNIST_f_c:MIT_f_c], N)
+bins, pos = binner(plotX_depth[MNIST_f_c:MIT_f_c], plotY_error_rate[MNIST_f_c:MIT_f_c], N, fl_flag=1)
 labels_pos = []
 for i in xrange(len(pos)):
-    if i == len(pos) - 1:
-        labels_pos.append(str(pos[i]) + ' - ')
+    if i == 0:
+        labels_pos.append(str(pos[i+1]))
         continue
-    labels_pos.append(str(pos[i]) + ' - ' + str(pos[i+1]))
+    if i == 1:
+        labels_pos.append(str(pos[i+1]))
+        continue
+    if i == len(pos) - 1:
+        labels_pos.append(str(pos[i]+1) + ' - ')
+        continue
+    labels_pos.append(str(pos[i]+1) + ' - ' + str(pos[i+1]))
 
 axes[1,2].set_ylim([0,100])
 axes[1,2].boxplot(bins, labels=labels_pos,  medianprops=medianprops, sym='',
@@ -302,12 +332,19 @@ axes[2,2].set_ylabel('Classification Error %', fontsize=5.5)
 #CIFAR FC SUBPLOT
 N = 6
 bins, pos = binner(plotX_fc[:CIFAR_f_c], plotY_error_rate[:CIFAR_f_c], N, fl_flag=1)
+print pos
 labels_pos = []
 for i in xrange(len(pos)):
-    if i == len(pos) - 1:
-        labels_pos.append(str(pos[i]) + ' - ')
+    if i == 0:
+        labels_pos.append(str(pos[i+1]))
         continue
-    labels_pos.append(str(pos[i]) + ' - ' + str(pos[i+1]))
+    if i == 1:
+        labels_pos.append(str(pos[i+1]))
+        continue
+    if i == len(pos) - 1:
+        labels_pos.append(str(pos[i]+1) + ' - ')
+        continue
+    labels_pos.append(str(pos[i]+1) + ' - ' + str(pos[i+1]))
 axes[3,0].set_ylim([0,100])
 axes[3,0].boxplot(bins, labels=labels_pos,  medianprops=medianprops, sym='',
            boxprops=boxprops,
@@ -321,10 +358,16 @@ N = 6
 bins, pos = binner(plotX_fc[CIFAR_f_c:MNIST_f_c], plotY_error_rate[CIFAR_f_c:MNIST_f_c], N, fl_flag=1)
 labels_pos = []
 for i in xrange(len(pos)):
-    if i == len(pos) - 1:
-        labels_pos.append(str(pos[i]) + ' - ')
+    if i == 0:
+        labels_pos.append(str(pos[i+1]))
         continue
-    labels_pos.append(str(pos[i]) + ' - ' + str(pos[i+1]))
+    if i == 1:
+        labels_pos.append(str(pos[i+1]))
+        continue
+    if i == len(pos) - 1:
+        labels_pos.append(str(pos[i]+1) + ' - ')
+        continue
+    labels_pos.append(str(pos[i]+1) + ' - ' + str(pos[i+1]))
 axes[3,1].set_ylim([0,100])
 axes[3,1].boxplot(bins, labels=labels_pos,  medianprops=medianprops, sym='',
            boxprops=boxprops,
@@ -338,10 +381,16 @@ N = 6
 bins, pos = binner(plotX_fc[MNIST_f_c:MIT_f_c], plotY_error_rate[MNIST_f_c:MIT_f_c], N, fl_flag=1)
 labels_pos = []
 for i in xrange(len(pos)):
-    if i == len(pos) - 1:
-        labels_pos.append(str(pos[i]) + ' - ')
+    if i == 0:
+        labels_pos.append(str(pos[i+1]))
         continue
-    labels_pos.append(str(pos[i]) + ' - ' + str(pos[i+1]))
+    if i == 1:
+        labels_pos.append(str(pos[i+1]))
+        continue
+    if i == len(pos) - 1:
+        labels_pos.append(str(pos[i]+1) + ' - ')
+        continue
+    labels_pos.append(str(pos[i]+1) + ' - ' + str(pos[i+1]))
 axes[3,2].set_ylim([0,100])
 axes[3,2].boxplot(bins, labels=labels_pos,  medianprops=medianprops, sym='',
            boxprops=boxprops,
@@ -433,5 +482,5 @@ axes[4,2].set_ylabel('Classification Error %', fontsize=5.5)
 # pl.figure("VC_BOX")
 # pl.boxplot(plotX_vc, plotY_er)
 
-fig.savefig(plot_dir + 'boxplot.png', dpi=300)
+fig.savefig(plot_dir + 'boxplot2.png', dpi=300)
 pl.show()

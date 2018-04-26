@@ -75,14 +75,16 @@ def binner(X,Y,N,fl_flag=0, vc_flag=0):
 
     if fl_flag == 1:
         bins = []
-        c_jumper = 1
+
         i = int(math.floor(min(X)))
+        bins.append(i-1)
         while i<int(math.ceil(max(X))):
             bins.append(i)
-            i+=c_jumper
-            c_jumper+=1
+            i *= 2
+
         bins = numpy.array(bins)
-        inds = numpy.digitize(X, bins)
+        inds = numpy.digitize(X, bins, right = True)
+        print inds
         binned_Y = [[] for i in xrange(len(bins))]
         #print max(inds)
         for i in xrange(len(Y)):
@@ -96,10 +98,16 @@ def binner(X,Y,N,fl_flag=0, vc_flag=0):
     if vc_flag == 0:
         bins = numpy.append(bins, [int(math.ceil(max(X)))])
     #print bins
-    inds = numpy.digitize(X, bins)
+    if vc_flag == 1 or fl_flag == 1:
+        inds = numpy.digitize(X, bins, right=True)
+    else:
+        inds = numpy.digitize(X, bins)
+
     binned_Y = [[] for i in xrange(len(bins))]
     #print max(inds)
     for i in xrange(len(Y)):
+        if inds[i] == 0:
+            print inds[i]
         binned_Y[inds[i]-1].append(Y[i])
     # for i in binned_Y:
     #     print i
