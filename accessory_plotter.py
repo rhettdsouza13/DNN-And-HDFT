@@ -200,7 +200,7 @@ axes[0,1].set_ylabel('Classification Error %', fontsize=5.5)
 MIT_f_c += MNIST_f_c
 N = max(plotX_vc_log[MNIST_f_c:MIT_f_c]) - min(plotX_vc_log[MNIST_f_c:MIT_f_c])
 print "VALUE OF N : " + str(N)
-bins, pos = binner(plotX_vc_log[CIFAR_f_c:MNIST_f_c], plotY_error_rate[MNIST_f_c:MIT_f_c], N/2, vc_flag = 1)
+bins, pos = binner(plotX_vc_log[MNIST_f_c:MIT_f_c], plotY_error_rate[MNIST_f_c:MIT_f_c], N/2, vc_flag = 1)
 labels_pos = []
 for i in xrange(len(pos)):
     if i == 0:
@@ -482,5 +482,7 @@ axes[4,2].set_ylabel('Classification Error %', fontsize=5.5)
 # pl.figure("VC_BOX")
 # pl.boxplot(plotX_vc, plotY_er)
 
-fig.savefig(plot_dir + 'boxplot2.png', dpi=300)
+fig.savefig(plot_dir + 'boxplot2.png', dpi=300, format='png')
+png2 = Image.open(plot_dir + 'boxplot2.png')
+png2.save(plot_dir + 'boxplot2_cmmi.tiff', compression='lzw')
 pl.show()
