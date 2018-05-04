@@ -7,6 +7,7 @@ opt = 5
 archive5000 = '/home/hdft/Documents/DNN-Complete/5000-CIFAR-Run/'
 archive1000 = '/home/hdft/Documents/DNN-Complete/1000run/'
 archive11800 = '/home/hdft/Documents/DNN-Complete/11800-MIT-Run/'
+plot_dir = '/home/hdft/Documents/DNN-Complete/DNN-PLOTS/Box_Plots/'
 
 nets_list7 = open("nets_list_MIT_10.txt", 'r')
 nets = nets_list7.readlines()
@@ -64,6 +65,7 @@ fig.set_size_inches(11, 15.0)
 #cifar histogram
 # n_bins = [i/100.0 for i in range(0,300,2)]
 acc_bins = [i/100.0 for i in range(0,100, 2)]
+axes[0,0].set_ylim([0,8500])
 axes[0,0].set_title("CIFAR-10")
 axes[0,0].set_xlabel("Accuracy")
 axes[0,0].set_ylabel("Number Of Networks")
@@ -76,6 +78,7 @@ axes[0,0].hist([max(val[2]) for val in dicts[0].values()], bins = acc_bins, colo
 #mnist histogram
 # n_bins = [i/100.0 for i in range(0,300,2)]
 acc_bins = [i/100.0 for i in range(0,100, 2)]
+axes[0,1].set_ylim([0,8500])
 axes[0,1].set_title("MNIST")
 axes[0,1].set_xlabel("Accuracy")
 axes[0,1].set_ylabel("Number Of Networks")
@@ -84,11 +87,29 @@ axes[0,1].hist([max(val[2]) for val in dicts[1].values()], bins = acc_bins, colo
 #mitosis histogram
 # n_bins = [i/100.0 for i in range(0,300,2)]
 acc_bins = [i/100.0 for i in range(70,100, 2)]
+axes[0,2].set_ylim([0,8500])
 axes[0,2].set_title("MITOSIS")
 axes[0,2].set_xlabel("Accuracy")
 axes[0,2].set_ylabel("Number Of Networks")
 axes[0,2].hist([max(val[2]) for val in dicts[2].values()], bins = acc_bins, color=['grey'])
 
+#cifar error rate plot
+for nets in dicts[0].values():
+    axes[1,0].plot([100*(1-x) for x in nets[2]])
+axes[1,0].set_xlabel("Epoch Number")
+axes[1,0].set_ylabel("Classification Error %")
+
+#mnist error rate plot
+for nets in dicts[1].values():
+    axes[1,1].plot([100*(1-x) for x in nets[2]])
+axes[1,1].set_xlabel("Epoch Number")
+axes[1,1].set_ylabel("Classification Error %")
+
+#mitosis error rate plot
+for nets in dicts[2].values():
+    axes[1,2].plot([100*(1-x) for x in nets[2]])
+axes[1,2].set_xlabel("Epoch Number")
+axes[1,2].set_ylabel("Classification Error %")
 
 # global_sorted_list = []
 #
@@ -115,5 +136,7 @@ axes[0,2].hist([max(val[2]) for val in dicts[2].values()], bins = acc_bins, colo
 #
 #         pam_file.write(nets[int(ind[0][0].split('+')[1])])
 # print opt
-
+fig.savefig(plot_dir + 'boxplot_hists.png', dpi=300, format='png')
+# png2 = Image.open(plot_dir + 'boxplot_hists.png')
+# png2.save(plot_dir + 'boxplot_hists.tiff', compression='lzw')
 pl.show()
