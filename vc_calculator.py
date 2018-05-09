@@ -117,3 +117,39 @@ def binner(X,Y,N,fl_flag=0, vc_flag=0):
     #         print i
     #print binned_Y[18]
     return binned_Y, bins
+
+def averager_unequal(arr, n):
+    av = []
+    for col in xrange(n):
+        col_vals = []
+        for row in xrange(len(arr)):
+            if arr[row][col] == -1:
+                continue
+            else:
+                col_vals.append(arr[row][col])
+
+        av.append(numpy.mean(col_vals))
+    return av
+
+# a = [[1,2,4,-1], [1,2,-1,-1], [5,3,5,6], [-1,-1,2,4],[1,-1,-1,-1]]
+# print a
+# print averager_unequal(a,4)
+
+def dict_averager(dicter):
+    dict_values = dicter.values()
+    to_bin_x = []
+    vc_bin = []
+    for net_props in dict_values:
+        vc = calc_vc(net_props[3])
+        vc_bin.append(vc)
+        to_bin_x.append([100*(1-x) for x in net_props[2]])
+    bins, pos = binner(vc_bin, to_bin_x, 50, vc_flag=1)
+    plots = []
+    for err_bin in bins:
+        N = len(max(err_bin, key=len))
+        to_aver = []
+        for err in err_bin:
+            padded = err + [-1] * (N - len(err))
+            to_aver.append(padded)
+        plots.append(averager_unequal(to_aver,N))
+    return plots

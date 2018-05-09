@@ -2,6 +2,8 @@ import os
 import numpy
 import matplotlib.pyplot as pl
 import matplotlib
+from sklearn.kernel_ridge import KernelRidge
+from vc_calculator import dict_averager
 
 opt = 5
 archive5000 = '/home/hdft/Documents/DNN-Complete/5000-CIFAR-Run/'
@@ -11,7 +13,7 @@ plot_dir = '/home/hdft/Documents/DNN-Complete/DNN-PLOTS/Box_Plots/'
 
 nets_list7 = open("nets_list_MIT_10.txt", 'r')
 nets = nets_list7.readlines()
-
+SET = ''
 
 dicts = [{},{},{}]
 
@@ -20,7 +22,47 @@ for run, dic in zip([archive5000, archive1000, archive11800], xrange(len(dicts))
     global_plotters = {}
     counter = 0
     print run
+    if run == archive5000:
+        SET = 'CIFAR'
+    elif run == archive1000:
+        SET = 'MNIST'
+    elif run == archive11800:
+        SET = 'MIT'
+
     for file_list in os.listdir(run):
+        if SET == 'CIFAR':
+            if file_list.split('-')[4] == '10':
+                nets_file = 'nets_list_CIFAR_7.txt'
+            elif file_list.split('-')[4] == '20':
+                nets_file = 'nets_list_CIFAR_20_7.txt'
+            elif file_list.split('-')[4] == '40':
+                nets_file = 'nets_list_CIFAR_40_7.txt'
+            elif file_list.split('-')[4] == '80':
+                nets_file = 'nets_list_CIFAR_80_7.txt'
+
+        if SET == 'MNIST' :
+            if file_list.split('-')[4] == '10':
+                nets_file = 'nets_list7.txt'
+            elif file_list.split('-')[4] == '20':
+                nets_file = 'nets_list20_7.txt'
+            elif file_list.split('-')[4] == '40':
+                nets_file = 'nets_list40_7.txt'
+            elif file_list.split('-')[4] == '80':
+                nets_file = 'nets_list80_7.txt'
+
+        if SET == 'MIT' :
+            if file_list.split('-')[4] == '10':
+                nets_file = 'nets_list_MIT_10.txt'
+            elif file_list.split('-')[4] == '20':
+                nets_file = 'nets_list_MIT_20.txt'
+            elif file_list.split('-')[4] == '40':
+                nets_file = 'nets_list_MIT_40.txt'
+            elif file_list.split('-')[4] == '80':
+                nets_file = 'nets_list_MIT_80.txt'
+
+        nets_foo = open(nets_file, 'r')
+        nets_list = nets_foo.readlines()
+
         print file_list
         data_dic = {}
         print len(os.listdir(run + file_list + '/'))
@@ -48,7 +90,7 @@ for run, dic in zip([archive5000, archive1000, archive11800], xrange(len(dicts))
                     else:
                         print "error"
 
-            dicts[dic][str(min(val_error)) + "+" + str(counter)] = [file_list + "+" + d_file.split('_')[3].split('.')[0] , val_error, val_accuracy]
+            dicts[dic][str(min(val_error)) + "+" + str(counter)] = [file_list + "+" + d_file.split('_')[3].split('.')[0] , val_error, val_accuracy, nets_list[int(d_file.split('_')[3].split('.')[0])]]
             global_dic[str(min(val_error)) + "+" + str(counter)] = [file_list + "+" + d_file.split('_')[3].split('.')[0] , val_error, val_accuracy]
         print len(global_dic)
 
@@ -94,20 +136,23 @@ axes[0,2].set_ylabel("Number Of Networks")
 axes[0,2].hist([max(val[2]) for val in dicts[2].values()], bins = acc_bins, color=['grey'])
 
 #cifar error rate plot
-for nets in dicts[0].values():
-    axes[1,0].plot([100*(1-x) for x in nets[2]])
+plots = dict_averager(dicts[0])
+for nets in plots:
+    axes[1,0].plot(nets)
 axes[1,0].set_xlabel("Epoch Number")
 axes[1,0].set_ylabel("Classification Error %")
 
 #mnist error rate plot
-for nets in dicts[1].values():
-    axes[1,1].plot([100*(1-x) for x in nets[2]])
+plots = dict_averager(dicts[1])
+for nets in plots:
+    axes[1,1].plot(nets)
 axes[1,1].set_xlabel("Epoch Number")
 axes[1,1].set_ylabel("Classification Error %")
 
 #mitosis error rate plot
-for nets in dicts[2].values():
-    axes[1,2].plot([100*(1-x) for x in nets[2]])
+plots = dict_averager(dicts[2])
+for nets in plots:
+    axes[1,2].plot(nets)
 axes[1,2].set_xlabel("Epoch Number")
 axes[1,2].set_ylabel("Classification Error %")
 
