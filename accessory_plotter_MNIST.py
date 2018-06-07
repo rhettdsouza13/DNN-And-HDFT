@@ -292,7 +292,7 @@ axes[1,2].set_ylabel('Classification Error %', fontsize=5.5)
 N = max(plotX_conv[:c_100]) - min(plotX_conv[:c_100])
 bins, pos = binner(plotX_conv[:c_100], plotY_error_rate[:c_100], N)
 
-axes[2,0].set_ylim([-100,100])
+axes[2,0].set_ylim([0,100])
 axes[2,0].boxplot(bins, labels=pos,  medianprops=medianprops, sym='',
            boxprops=boxprops,
            whiskerprops=whiskerprops,
@@ -476,7 +476,7 @@ axes[4,2].set_ylabel('Classification Error %', fontsize=5.5)
 # pl.figure("VC_BOX")
 # pl.boxplot(plotX_vc, plotY_er)
 #
-# fig.savefig(plot_dir + 'boxplot3.png', dpi=300, format='png')
-# png2 = Image.open(plot_dir + 'boxplot3.png')
-# png2.save(plot_dir + 'boxplot3_MNIST.tiff', compression='lzw')
+fig.savefig(plot_dir + 'boxplot3_new.png', dpi=300, format='png', bbox_inches='tight')
+png2 = Image.open(plot_dir + 'boxplot3_new.png')
+png2.save(plot_dir + 'boxplot3_MNIST_new.tiff', compression='lzw')
 pl.show()

@@ -4,11 +4,13 @@ import matplotlib.pyplot as pl
 import matplotlib
 from sklearn.kernel_ridge import KernelRidge
 from vc_calculator import dict_averager
+from fitter import *
+from PIL import Image
 
 opt = 5
-archive5000 = '/home/hdft/Documents/DNN-Complete/5000-CIFAR-Run/'
-archive1000 = '/home/hdft/Documents/DNN-Complete/1000run/'
-archive11800 = '/home/hdft/Documents/DNN-Complete/11800-MIT-Run/'
+archive5000 = '/home/hdft/Documents/DNN-Complete/100-Param-Run/'
+archive1000 = '/home/hdft/Documents/DNN-Complete/500-Param-Run/'
+archive11800 = '/home/hdft/Documents/DNN-Complete/1000-Param-Run/'
 plot_dir = '/home/hdft/Documents/DNN-Complete/DNN-PLOTS/Box_Plots/'
 
 nets_list7 = open("nets_list_MIT_10.txt", 'r')
@@ -31,6 +33,7 @@ for run, dic in zip([archive5000, archive1000, archive11800], xrange(len(dicts))
 
     for file_list in os.listdir(run):
         if SET == 'CIFAR':
+            nets_file = 'param_list_MIT_11800.txt'
             if file_list.split('-')[4] == '10':
                 nets_file = 'nets_list_CIFAR_7.txt'
             elif file_list.split('-')[4] == '20':
@@ -41,6 +44,7 @@ for run, dic in zip([archive5000, archive1000, archive11800], xrange(len(dicts))
                 nets_file = 'nets_list_CIFAR_80_7.txt'
 
         if SET == 'MNIST' :
+            nets_file = 'param_list_MIT_11800.txt'
             if file_list.split('-')[4] == '10':
                 nets_file = 'nets_list7.txt'
             elif file_list.split('-')[4] == '20':
@@ -51,6 +55,7 @@ for run, dic in zip([archive5000, archive1000, archive11800], xrange(len(dicts))
                 nets_file = 'nets_list80_7.txt'
 
         if SET == 'MIT' :
+            nets_file = 'param_list_MIT_11800.txt'
             if file_list.split('-')[4] == '10':
                 nets_file = 'nets_list_MIT_10.txt'
             elif file_list.split('-')[4] == '20':
@@ -100,18 +105,20 @@ whiskerprops = {'color': 'black', 'linestyle': '-'}
 capprops = {'color': 'black', 'linestyle': '-'}
 
 matplotlib.rcParams.update({'font.size': 4.7})
-fig, axes = pl.subplots(2,3)
-fig.set_size_inches(11, 15.0)
+fig, axes = pl.subplots(1,3)
+fig.set_size_inches(11, 5.0)
 
 #subplot for accruacy histogram
 #cifar histogram
 # n_bins = [i/100.0 for i in range(0,300,2)]
-acc_bins = [i/100.0 for i in range(0,100, 2)]
-axes[0,0].set_ylim([0,8500])
-axes[0,0].set_title("CIFAR-10")
-axes[0,0].set_xlabel("Accuracy")
-axes[0,0].set_ylabel("Number Of Networks")
-axes[0,0].hist([max(val[2]) for val in dicts[0].values()], bins = acc_bins, color=['grey'])
+acc_bins = [i for i in range(0,100, 2)]
+axes[0].set_ylim([0,5000])
+axes[0].set_title("MNIST-100")
+axes[0].set_xlabel("Classification Error %")
+axes[0].set_ylabel("Number Of Networks")
+axes[0].hist([100*(1.0-max(val[2])) for val in dicts[0].values()], bins = acc_bins, color=['grey'])
+errors = [100*(1.0-max(val[2])) for val in dicts[0].values()]
+print "CIFAR" + str(float(sum(errors))/len(errors))
 # pl.figure("Error Hist")
 # pl.xlabel("Error Range")
 # pl.ylabel("Number Of Networks")
@@ -119,69 +126,74 @@ axes[0,0].hist([max(val[2]) for val in dicts[0].values()], bins = acc_bins, colo
 
 #mnist histogram
 # n_bins = [i/100.0 for i in range(0,300,2)]
-acc_bins = [i/100.0 for i in range(0,100, 2)]
-axes[0,1].set_ylim([0,8500])
-axes[0,1].set_title("MNIST")
-axes[0,1].set_xlabel("Accuracy")
-axes[0,1].set_ylabel("Number Of Networks")
-axes[0,1].hist([max(val[2]) for val in dicts[1].values()], bins = acc_bins, color=['grey'])
-
+acc_bins = [i for i in range(0,100, 2)]
+axes[1].set_ylim([0,5000])
+axes[1].set_title("MNIST-500")
+axes[1].set_xlabel("Classification Error %")
+axes[1].set_ylabel("Number Of Networks")
+axes[1].hist([100*(1.0-max(val[2])) for val in dicts[1].values()], bins = acc_bins, color=['grey'])
+errors = [100*(1.0-max(val[2])) for val in dicts[1].values()]
+print "MNIST" + str(float(sum(errors))/len(errors))
 #mitosis histogram
 # n_bins = [i/100.0 for i in range(0,300,2)]
-acc_bins = [i/100.0 for i in range(70,100, 2)]
-axes[0,2].set_ylim([0,8500])
-axes[0,2].set_title("MITOSIS")
-axes[0,2].set_xlabel("Accuracy")
-axes[0,2].set_ylabel("Number Of Networks")
-axes[0,2].hist([max(val[2]) for val in dicts[2].values()], bins = acc_bins, color=['grey'])
-
-#cifar error rate plot
-plots = dict_averager(dicts[0])
-for nets in plots:
-    axes[1,0].plot(nets)
-axes[1,0].set_xlabel("Epoch Number")
-axes[1,0].set_ylabel("Classification Error %")
-
-#mnist error rate plot
-plots = dict_averager(dicts[1])
-for nets in plots:
-    axes[1,1].plot(nets)
-axes[1,1].set_xlabel("Epoch Number")
-axes[1,1].set_ylabel("Classification Error %")
-
-#mitosis error rate plot
-plots = dict_averager(dicts[2])
-for nets in plots:
-    axes[1,2].plot(nets)
-axes[1,2].set_xlabel("Epoch Number")
-axes[1,2].set_ylabel("Classification Error %")
+acc_bins = [i for i in range(0,100, 2)]
+axes[2].set_ylim([0,5000])
+axes[2].set_title("MNIST-1000")
+axes[2].set_xlabel("Classification Error %")
+axes[2].set_ylabel("Number Of Networks")
+axes[2].hist([100*(1.0-max(val[2])) for val in dicts[2].values()], bins = acc_bins, color=['grey'])
+errors = [100*(1.0-max(val[2])) for val in dicts[2].values()]
+print "MITOSIS" + str(float(sum(errors))/len(errors))
+# #cifar error rate plot
+# plots = dict_averager(dicts[0])
+# for nets in plots:
+#     axes[1,0].plot(nets)
+# axes[1,0].set_xlabel("Epoch Number")
+# axes[1,0].set_ylabel("Classification Error %")
+#
+# #mnist error rate plot
+# plots = dict_averager(dicts[1])
+# for nets in plots:
+#     axes[1,1].plot(nets)
+# axes[1,1].set_xlabel("Epoch Number")
+# axes[1,1].set_ylabel("Classification Error %")
+#
+# #mitosis error rate plot
+# plots = dict_averager(dicts[2])
+# for nets in plots:
+#     axes[1,2].plot(nets)
+# axes[1,2].set_xlabel("Epoch Number")
+# axes[1,2].set_ylabel("Classification Error %")
 
 # global_sorted_list = []
 #
 # sorter_list = []
-# for key in global_dic.keys():
+# for key in dicts[2].keys():
 #     sorter_list.append([float(key.split('+')[0]), key])
 #
 # for key in sorted(sorter_list, key= lambda x: x[0]):
-#     global_sorted_list.append([global_dic[key[1]], key[0]])
+#     global_sorted_list.append([dicts[2][key[1]], key[0]])
 #
 # print global_sorted_list[0]
-
-# list_file_name = "opt_list_" + run.split('/')[-2] + ".txt"
+#
+# nets = open("nets_list_MIT_10.txt", 'r').readlines()
+#
+# list_file_name = "DUMP" + run.split('/')[-2] + ".txt"
 # pl.figure(run)
 # pl.xlabel("Epoch Number")
 # pl.ylabel("Validation Accuracy")
 # with open(list_file_name, 'w+') as pam_file:
 #     for ind in global_sorted_list[:opt]:
-#         pl.plot(ind[0][1])
+#         #pl.plot(ind[0][1])
 #         print max(ind[0][2])
 #         print ind[0][0]
 #         print nets[int(ind[0][0].split('+')[1])]
 #         print ind[1]
 #
-#         pam_file.write(nets[int(ind[0][0].split('+')[1])])
+#         # pam_file.write(nets[int(ind[0][0].split('+')[1])])
 # print opt
-fig.savefig(plot_dir + 'boxplot_hists.png', dpi=300, format='png')
-# png2 = Image.open(plot_dir + 'boxplot_hists.png')
-# png2.save(plot_dir + 'boxplot_hists.tiff', compression='lzw')
+#
+# fig.savefig(plot_dir + 'boxplot_MNIST_PARAM_hists_new.png', dpi=300, format='png', bbox_inches='tight')
+# png2 = Image.open(plot_dir + 'boxplot_MNIST_PARAM_hists_new.png')
+# png2.save(plot_dir + 'boxplot_MNIST_PARAM_hists_new.tiff', compression='lzw')
 pl.show()

@@ -1,5 +1,33 @@
+MNIST
+
 100 : 32,32,1|conv,relu,5|32,32,64|max_pooling,identity,4|8,8,64|conv,relu,5|8,8,128|conv,relu,5|8,8,64|conv,relu,5|8,8,64|conv,relu,7|8,8,32|conv,relu,5|8,8,128|full,relu|1,1,32|full,relu|1,1,32|full,relu|1,1,10 = 68.33%
 
 500 : 32,32,1|conv,relu,7|32,32,64|max_pooling,identity,4|8,8,64|conv,relu,7|8,8,128|conv,relu,5|8,8,64|full,relu|1,1,128|full,relu|1,1,128|full,relu|1,1,128|full,relu|1,1,32|full,relu|1,1,10 = 91.13%
 
 1000 : 32,32,1|conv,relu,5|32,32,32|max_pooling,identity,2|16,16,32|conv,relu,5|16,16,32|max_pooling,identity,2|8,8,32|conv,relu,5|8,8,128|conv,relu,7|8,8,32|full,relu|1,1,64|full,relu|1,1,64|full,relu|1,1,32|full,relu|1,1,10 = 93.66%
+
+CIFAR-10
+
+5000 : 32,32,3|conv,relu,5|32,32,128|max_pooling,identity,4|8,8,128|full,relu|1,1,256|full,relu|1,1,32|full,relu|1,1,64|full,relu|1,1,64|full,relu|1,1,32|full,relu|1,1,10 - 52.27%
+
+MITOSIS
+
+64,64,3|conv,relu,5|64,64,32|max_pooling,identity,2|32,32,32|conv,relu,5|32,32,64|max_pooling,identity,4|8,8,64|conv,relu,5|8,8,64|full,relu|1,1,32|full,relu|1,1,64|full,relu|1,1,32|full,relu|1,1,32|full,relu|1,1,64|full,relu|1,1,32|full,relu|1,1,64|full,relu|1,1,32|full,relu|1,1,32|full,relu|1,1,64|full,relu|1,1,32|full,relu|1,1,2 - 93.9394%
+
+
+
+
+
+CIFAR AV = 66.768%
+MNIST-100 AV = 27.989%
+MNIST-500 AV = 23.4398%
+MNIST-1000 AV = 20.106%
+MITOSIS AV = 11.589%
+
+PARAM:
+CIFAR AV = 54.597%
+MNIST-100 AV = 33.659%
+MNIST-500 AV = 17.713%
+MNIST-1000 AV = 16.577%
+MITOSIS AV = 7.295%
+
