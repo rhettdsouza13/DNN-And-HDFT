@@ -3,12 +3,12 @@ from math import *
 from syntax_gen import *
 import numpy
 #MNIST PARAMETERS:::::
-# #cost_br = 722610
+# 
 # vc_max = 3500000
 # max_layer = 500
-# # vc_max = 30852000
-# #vc_max = 32*32*100
-# # cost_br = 181000
+# 
+# 
+# 
 # inp_dim = 1024
 # inp_dimx = 32
 # inp_dimy = 32
@@ -21,13 +21,12 @@ import numpy
 #MNIST PARAMETERS END::::
 
 #PATHOLOGY PARAMETERS:::::
-#cost_br = 722610
-# vc_max = 2630000
+#
+#
 vc_max = 2960000
 max_layer = 500
-# vc_max = 30852000
-#vc_max = 32*32*100
-# cost_br = 181000
+#
+#
 inp_dim = 4096
 inp_dimx = 64
 inp_dimy = 64
@@ -80,7 +79,7 @@ def tree_creater(parent, prev_dim, x, y, fc_dim, fl_flag, mp_flag, layer_num, we
                 new_weights = weights + k*k*output_ch*prev_dim + output_ch
                 vc_weights = weights + k*k*output_ch*prev_dim + x*y*out_dim*output_ch + output_ch + out_dim
                 vc = vc_weights*(layer_num+2)*numpy.log2(vc_weights)
-                # vc = new_weights*(layer_num+2)*numpy.log2(new_weights)
+                
 
                 if vc <= vc_max and layer_num < max_layer:
                     m_tree.create_node(name, iD, parent=c_p, data=[k,k,prev_dim,output_ch,x,y])
