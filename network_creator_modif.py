@@ -119,7 +119,7 @@ def tree_creater(parent, prev_dim, x, y, fc_dim, fl_flag, mp_flag, layer_num, we
 
     out_vc_weights = weights + fc_dim*out_dim + out_dim
     out_vc = out_vc_weights*(layer_num+1)*numpy.log2(out_vc_weights)
-    # if out_vc<=vc_max and layer_num<=max_layer:
+    
     counter+=1
     iD = 'out' + '_' + str(fc_dim) + "*" + str(out_dim)+'_n_' + str(counter)
     name = 'Out' + '_' + str(fc_dim) + "*" + str(out_dim)+ '_n_' + str(counter)
