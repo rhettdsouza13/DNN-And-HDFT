@@ -9,7 +9,7 @@ def power_gen(start,end):
 def syntax_generator(tree, x, y):
     paths = tree.paths_to_leaves()
     vcs = []
-    with open('nets_list_PATH.txt', 'w+') as netfile:
+    with open('nets_list_MIT_new_DUMB.txt', 'w+') as netfile:
 
         for path in paths:
 
@@ -96,7 +96,7 @@ def param_iter(net):
     combos = p_tree.paths_to_leaves()
     # print combos
 
-    with open("param_list_MIT_11800.txt", 'a+') as p_file:
+    with open("param_list_MIT_NEW.txt", 'a+') as p_file:
         for path in combos:
             pos = 1
             cur = parts
@@ -120,8 +120,8 @@ def param_iter(net):
     print func_ind
 
 # param_iter("32,32,3|conv,relu,5|32,32,10|max_pooling,identity,4|8,8,10|full,relu|1,1,10|full,relu|1,1,10|full,relu|1,1,10|full,relu|1,1,10|full,relu|1,1,10|full,relu|1,1,10")
-
-with open("opt_list_11800-MIT-Run.txt", 'r') as opt_file:
+#
+with open("opt_list_MIT_New.txt", 'r') as opt_file:
     nets_list_opt = opt_file.readlines()
     print nets_list_opt
     for net in nets_list_opt:
@@ -165,7 +165,7 @@ def replace(net):
         sec[2] = str(3)
         cur[2] = ','.join(sec)
     for ind in func_ind:
-        dim = 10
+        dim = 80
         sec = cur[ind].split(',')
         sec[2] = str(dim)
         cur[ind] = ','.join(sec)
@@ -180,7 +180,7 @@ def replace(net):
     return cur
 
 # #
-# with open("nets_list_MIT_20.txt", "r") as n_file, open("nets_list_MIT_10.txt", "w+") as out_file:
+# with open("nets_list_MIT_new_10.txt", "r") as n_file, open("nets_list_MIT_new_80.txt", "w+") as out_file:
 #     for prop in n_file.readlines():
 #         out_net = replace(prop)
 #         out_file.write(str(out_net))

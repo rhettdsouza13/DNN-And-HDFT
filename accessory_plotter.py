@@ -5,9 +5,9 @@ import matplotlib
 from PIL import Image
 from vc_calculator import *
 
-archive5000_CIFAR = '/home/hdft/Documents/DNN-Complete/5000-CIFAR-Run/'
+archive5000_CIFAR = '/home/hdft/Documents/DNN-Complete/CIFAR_New/'
 archive1000_MNIST = '/home/hdft/Documents/DNN-Complete/1000run/'
-archive2000_MIT = '/home/hdft/Documents/DNN-Complete/11800-MIT-Run/'
+archive2000_MIT = '/home/hdft/Documents/DNN-Complete/MIT_New/'
 plot_dir = '/home/hdft/Documents/DNN-Complete/DNN-PLOTS/Box_Plots/'
 SET = 'CIFAR'
 
@@ -40,13 +40,13 @@ for run in [archive5000_CIFAR, archive1000_MNIST, archive2000_MIT]:
         #opening network list
         if SET == 'CIFAR':
             if file_list.split('-')[4] == '10':
-                nets_file = 'nets_list_CIFAR_7.txt'
+                nets_file = 'nets_list_CIFAR_new_10.txt'
             elif file_list.split('-')[4] == '20':
-                nets_file = 'nets_list_CIFAR_20_7.txt'
+                nets_file = 'nets_list_CIFAR_new_20.txt'
             elif file_list.split('-')[4] == '40':
-                nets_file = 'nets_list_CIFAR_40_7.txt'
+                nets_file = 'nets_list_CIFAR_new_40.txt'
             elif file_list.split('-')[4] == '80':
-                nets_file = 'nets_list_CIFAR_80_7.txt'
+                nets_file = 'nets_list_CIFAR_new_80.txt'
 
         if SET == 'MNIST' :
             if file_list.split('-')[4] == '10':
@@ -60,13 +60,13 @@ for run in [archive5000_CIFAR, archive1000_MNIST, archive2000_MIT]:
 
         if SET == 'MIT' :
             if file_list.split('-')[4] == '10':
-                nets_file = 'nets_list_MIT_10.txt'
+                nets_file = 'nets_list_MIT_new_10.txt'
             elif file_list.split('-')[4] == '20':
-                nets_file = 'nets_list_MIT_20.txt'
+                nets_file = 'nets_list_MIT_new_20.txt'
             elif file_list.split('-')[4] == '40':
-                nets_file = 'nets_list_MIT_40.txt'
+                nets_file = 'nets_list_MIT_new_40.txt'
             elif file_list.split('-')[4] == '80':
-                nets_file = 'nets_list_MIT_80.txt'
+                nets_file = 'nets_list_MIT_new_80.txt'
 
         nets_foo = open(nets_file, 'r')
         nets_list = nets_foo.readlines()
@@ -164,7 +164,7 @@ axes[0,0].boxplot(bins, labels=labels_pos,  medianprops=medianprops, sym='',
            whiskerprops=whiskerprops,
            capprops=capprops)
 
-axes[0,0].set_title('CIFAR10', fontsize=7)
+axes[0,0].set_title('CIFAR-10', fontsize=7)
 axes[0,0].set_xlabel(r'$\mathregular{VC-Dimension(log_2 Scale)}$', fontsize=5.5)
 axes[0,0].set_ylabel('Classification Error %', fontsize=5.5)
 
@@ -482,7 +482,7 @@ axes[4,2].set_ylabel('Classification Error %', fontsize=5.5)
 # pl.figure("VC_BOX")
 # pl.boxplot(plotX_vc, plotY_er)
 
-fig.savefig(plot_dir + 'boxplot2_new.png', dpi=300, format='png', bbox_inches='tight')
-png2 = Image.open(plot_dir + 'boxplot2_new.png')
-png2.save(plot_dir + 'boxplot2_new_cmmi.tiff', compression='lzw')
+fig.savefig(plot_dir + 'boxplot5_new_RUNS.png', dpi=300, format='png', bbox_inches='tight')
+png2 = Image.open(plot_dir + 'boxplot5_new_RUNS.png')
+png2.save(plot_dir + 'boxplot5_new_RUNS.tiff', compression='lzw')
 pl.show()

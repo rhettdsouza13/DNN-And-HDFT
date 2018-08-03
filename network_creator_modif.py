@@ -3,7 +3,7 @@ from math import *
 from syntax_gen import *
 import numpy
 #MNIST PARAMETERS:::::
-# #cost_br = 722610
+#cost_br = 722610
 # vc_max = 3500000
 # max_layer = 500
 # # vc_max = 30852000
@@ -21,9 +21,9 @@ import numpy
 #MNIST PARAMETERS END::::
 
 #PATHOLOGY PARAMETERS:::::
-#cost_br = 722610
+cost_br = 722610
 # vc_max = 2630000
-vc_max = 2960000
+vc_max = 2725000
 max_layer = 500
 # vc_max = 30852000
 #vc_max = 32*32*100

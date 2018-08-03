@@ -12,7 +12,7 @@ from net_read_and_run import *
 # from set_downsizer import *
 # print "here"
 
-
+numpy.set_printoptions(threshold=numpy.nan)
 net_syn = sys.argv[1]
 net_num = sys.argv[2]
 run_num = int(sys.argv[3])
@@ -21,8 +21,8 @@ dim_size = int(sys.argv[4])
 x = tf.placeholder(tf.float32, shape=[None, 12288], name='x_input')
 y_ = tf.placeholder(tf.float32, shape=[None, 2], name='labels')
 # x_im = tf.reshape(x, [-1, 32, 32, 1])
-
-H = {'h0': tf.reshape(x, [-1, 64, 64, 3]),}
+reshaper = tf.reshape(x, [-1, 3, 64, 64])
+H = {'h0': tf.transpose(reshaper,[0,2,3,1]),}
 
 #H['h0'] = max_pool_kxk(x_im, 2)
 
@@ -115,10 +115,12 @@ with tf.Session() as sess:
     # writer = tf.summary.FileWriter('output', graph=tf.get_default_graph())
 
     sess.run(tf.global_variables_initializer())
+    # print inputs[0:1]
+    # print sess.run([reshaper, H['h0']], feed_dict={x:inputs[0:1]})
+    # print reshaper.get_shape()
+    # filname = '/home/hdft/Documents/DNN-DataNEW-Run-224-param-MIT/DATA_NETS_2018_' + str(net_num) + '.npy'
 
-    filname = '/home/hdft/Documents/DNN-Data-Run-' + str(run_num) + '-' + str(dim_size) + '-MIT-7500-2400-1939/DATA_NETS_2018_' + str(net_num) + '.npy'
-
-    #filname = '/home/hdft/Documents/DNN-Data-Run-201-CIFAR-8000-2000/DATA_NETS_2017_' + str(net_num) + '.npy'
+    # filname = '/home/hdft/Documents/DNN-DataNEW-Run-' + str(run_num) + '-' + str(dim_size) + '-MIT/DATA_NETS_2018_' + str(net_num) + '.npy'
 
     data = numpy.array([[1,2,3,4]])
 
@@ -146,7 +148,7 @@ with tf.Session() as sess:
 
         print step_cnt
 
-        if step_cnt == 5:
+        if step_cnt == 5 or val_accuracy == 1:
             break
 
 
@@ -192,6 +194,6 @@ with tf.Session() as sess:
     data = numpy.concatenate((data, [[test_accuracy, test_error, 0, 0]]), axis=0)
     data = numpy.concatenate((data, val_data), axis=0)
 
-    numpy.save(filname, data)
+    # numpy.save(filname, data)
 
     #writer.close()

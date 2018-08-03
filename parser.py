@@ -120,6 +120,7 @@ if dat_set == 'CIFAR' :
             inputs_c = [pix_val for pix_val in inp]
 
             inputs_fin_c.append(inputs_c)
+        numpy.save('/home/hdft/Documents/Data_ML/CIFAR_NUM_inp.npy', [inputs_fin_c[:5000], labels_c[:5000]])
         print len(inputs_fin_c)
 
     with open("/home/hdft/Documents/Data_ML/2017_07_03 CNN_BIN/CIFAR.test.bin", "rb") as bfile:
@@ -159,6 +160,7 @@ if dat_set == 'CIFAR' :
             inputs_c = [pix_val for pix_val in inp]
 
             inputsTst_fin_c.append(inputs_c)
+        numpy.save('/home/hdft/Documents/Data_ML/CIFAR_NUM_tst.npy', [inputsTst_fin_c, labelsTst_c])
 
 if dat_set == 'PATH':
     with open("/home/hdft/Documents/Data_ML/PATH_DATA.bin", "rb") as bfile:
@@ -294,12 +296,15 @@ def input_inject():
 def test_inject():
     return inputsTst, labelsTst
 
+
 def input_inject_CIFAR():
     print "We're good to go"
-    return inputs_fin_c, labels_c
+    inputs_new_c, labels_new_c = numpy.load('/home/hdft/Documents/Data_ML/CIFAR_NUM_inp.npy')
+    return [i for i in inputs_new_c], [i for i in labels_new_c]
 
 def test_inject_CIFAR():
-    return inputsTst_fin_c, labelsTst_c
+    inputsTst_fin_c, labelsTst_c = numpy.load('/home/hdft/Documents/Data_ML/CIFAR_NUM_tst.npy')
+    return [i for i in inputsTst_fin_c], [i for i in labelsTst_c]
 
 
 
