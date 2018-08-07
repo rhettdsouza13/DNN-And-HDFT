@@ -6,6 +6,7 @@ def power_gen(start,end):
     l_2_exp = [2**x for x in xrange(start,end)]
     return l_2_exp
 
+# generate a textual syntax for a network given a tree structure
 def syntax_generator(tree, x, y):
     paths = tree.paths_to_leaves()
     vcs = []
@@ -40,7 +41,7 @@ def syntax_generator(tree, x, y):
 
             print net
             netfile.write(net + '\n')
-#        print vcs
+
         vcs.sort()
         pl.scatter(range(len(vcs)), vcs)
         numpy.save("VCS", vcs)
@@ -64,11 +65,11 @@ def create_param_tree(parent, net_len):
             p_tree.create_node(name, iD, parent=c_p, data=[output_ch,1])
             create_param_tree(iD, net_len-1)
 
-
+#generate the layer dimension permutations for appropriate layers
 def param_iter(net):
     parts = net.split('|')
     print parts
-    # xrange(((len(parts)-1)/2) - 1)
+
     iter=0
     func_ind = []
     m_flag = 0
@@ -131,6 +132,7 @@ with open("opt_list_MIT_New.txt", 'r') as opt_file:
         print net
         param_iter(net)
 
+# replace dimension for all appropriate layers
 def replace(net):
 
     parts = net.split('|')
@@ -184,6 +186,3 @@ def replace(net):
 #     for prop in n_file.readlines():
 #         out_net = replace(prop)
 #         out_file.write(str(out_net))
-
-#replace("32,32,1|max_pooling,identity,2|16,16,1|conv,relu,7|16,16,10|conv,relu,5|16,16,10|full,relu|1,1,10|full,relu|1,1,10")
-# 32,32,1|max_pooling,identity,2|16,16,1|conv,relu,7|16,16,10|conv,relu,5|16,16,10|full,relu|1,1,10|full,relu|1,1,10

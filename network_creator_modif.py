@@ -6,9 +6,9 @@ import numpy
 #cost_br = 722610
 # vc_max = 3500000
 # max_layer = 500
-# # vc_max = 30852000
-# #vc_max = 32*32*100
-# # cost_br = 181000
+#
+#
+#
 # inp_dim = 1024
 # inp_dimx = 32
 # inp_dimy = 32
@@ -21,13 +21,12 @@ import numpy
 #MNIST PARAMETERS END::::
 
 #PATHOLOGY PARAMETERS:::::
-cost_br = 722610
+# cost_br = 722610
 # vc_max = 2630000
 vc_max = 2725000
 max_layer = 500
-# vc_max = 30852000
-#vc_max = 32*32*100
-# cost_br = 181000
+#
+#
 inp_dim = 4096
 inp_dimx = 64
 inp_dimy = 64
@@ -80,7 +79,7 @@ def tree_creater(parent, prev_dim, x, y, fc_dim, fl_flag, mp_flag, layer_num, we
                 new_weights = weights + k*k*output_ch*prev_dim + output_ch
                 vc_weights = weights + k*k*output_ch*prev_dim + x*y*out_dim*output_ch + output_ch + out_dim
                 vc = vc_weights*(layer_num+2)*numpy.log2(vc_weights)
-                # vc = new_weights*(layer_num+2)*numpy.log2(new_weights)
+
 
                 if vc <= vc_max and layer_num < max_layer:
                     m_tree.create_node(name, iD, parent=c_p, data=[k,k,prev_dim,output_ch,x,y])
@@ -120,7 +119,7 @@ def tree_creater(parent, prev_dim, x, y, fc_dim, fl_flag, mp_flag, layer_num, we
 
     out_vc_weights = weights + fc_dim*out_dim + out_dim
     out_vc = out_vc_weights*(layer_num+1)*numpy.log2(out_vc_weights)
-    # if out_vc<=vc_max and layer_num<=max_layer:
+
     counter+=1
     iD = 'out' + '_' + str(fc_dim) + "*" + str(out_dim)+'_n_' + str(counter)
     name = 'Out' + '_' + str(fc_dim) + "*" + str(out_dim)+ '_n_' + str(counter)
