@@ -1,5 +1,9 @@
 from PIL import Image
 import numpy
+import matplotlib.pyplot as pl
+import os
+import matplotlib
+from parser import input_inject_MIT
 
 def view1x32(data):                                                             #visulize 1x32 convolve filters
     new_im = Image.new('F', (40,40))
@@ -53,7 +57,7 @@ def view32x64(data):                                                            
             else:
                 pastex+=5
     new_im.show()
-# 
+#
 # def view32x32Im(data):
 #     data = [[numpy.reshape(data, (32,32)), 1]                                         #visualize 32x32 Image Data
 #     im = Image.new('RGB', (32,32))
@@ -88,6 +92,51 @@ def view16x16Im(data):                                                          
             else:
                 pixel[i,j]=0
     im.show()
+
+
+def plotter_wv(path, im_list):
+    fig, axes = pl.subplots(1,6)
+    fig.set_size_inches(11, 3)
+    matplotlib.rcParams.update({'font.size': 4.7})
+    inputs, labels = input_inject_MIT()
+    im = numpy.transpose(numpy.reshape(inputs[1], (3,64,64)),(1,2,0))
+    im = ((im + 1) * 127.5).astype(numpy.uint8)
+    im = Image.fromarray(im, mode='RGB')
+    im = im.resize((350,350))
+    im = numpy.asarray(im)
+    axes[0].imshow(im)
+    axes[0].set_title('Image')
+    axes[0].get_xaxis().set_visible(False)
+    axes[0].get_yaxis().set_visible(False)
+
+    print im_list
+    for i,ims in enumerate(im_list):
+        im = Image.open(path + ims)
+        im = im.resize((350,350)).convert(mode='L')
+        im = numpy.asarray(im)
+        axes[i+1].imshow(im, cmap='gray')
+        axes[i+1].set_title('Convolutional Layer ' + str(i+1))
+        axes[i+1].get_xaxis().set_visible(False)
+        axes[i+1].get_yaxis().set_visible(False)
+
+    fig.savefig(base_path + 'together.png', dpi=300, format='png', bbox_inches='tight')
+    png2 = Image.open(base_path + 'together.png')
+    png2.save(base_path + 'together.tiff', compression='lzw')
+    pl.show()
+
+base_path = '/home/hdft/Documents/DNN-Complete/DNN-PLOTS/Box_Plots/wvs/'
+plotter_wv(base_path, sorted(os.listdir(base_path)))
+
+
+
+
+
+
+
+
+
+
+
 
 # def image_resizer(lin_im, k):
 #     lin_im_np = numpy.array(lin_im)
