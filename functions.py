@@ -25,5 +25,3 @@ def weight_initializer(shape):
 def bias_initializer(shape):
   initial = tf.constant(0.1, shape=shape)
   return tf.Variable(initial)
-
-# print weight_initializer([1024,601])

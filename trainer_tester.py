@@ -99,7 +99,8 @@ cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(labels=y_
 #train_step = tf.train.MomentumOptimizer(learning_rate=lR, momentum=0.99).minimize(cross_entropy)
 
 train_step = tf.train.AdamOptimizer(learning_rate=lR).minimize(cross_entropy)
-#
+# train_step = tf.train.MomentumOptimizer(learning_rate=lR, momentum=0.9).minimize(cross_entropy)
+
 #GradientDescentOptimizer(0.001)
 prediction = tf.argmax(y,1)
 correct_prediction = tf.equal(tf.argmax(y,1), tf.argmax(y_,1))
@@ -168,7 +169,7 @@ with tf.Session() as sess:
 
         print step_cnt
 
-        if step_cnt == 50 or val_accuracy == 1 or j>50:
+        if step_cnt == 50 or val_accuracy == 1 or j>100:
             break
 
 
@@ -215,104 +216,140 @@ with tf.Session() as sess:
 
     # numpy.save(filname, data)
     # print labels
-    matplotlib.rcParams.update({'font.size': 4.7})
-    ROWS = 4
-    COLS = 2
-    UPSCALE_FACTOR_COL = 4.5
-    UPSCALE_FACTOR_ROW = 1
-    P.figure(figsize=(ROWS * UPSCALE_FACTOR_ROW, COLS * UPSCALE_FACTOR_COL))
-
-    prediction_class = sess.run(prediction, feed_dict={x:inputs[1:2]})[0]
-    print labels[1:2]
-    print prediction_class
-    #Construct the saliency object. This doesn't yet compute the saliency mask, it just sets up the necessary ops.
-    integrated_gradients = saliency.IntegratedGradients(tf.get_default_graph(), sess, y_neur, H['h0'])
-    im = sess.run(H['h0'], feed_dict={x:inputs[1:2]})[0]
-    # Baseline is a black image.
-    baseline = numpy.zeros(im.shape)
-    baseline.fill(-1)
-    # Compute the vanilla mask and the smoothed mask.
-    # vanilla_integrated_gradients_mask_3d = integrated_gradients.GetMask(
+    # matplotlib.rcParams.update({'font.size': 4.7})
+    # ROWS = 4
+    # COLS = 2
+    # UPSCALE_FACTOR_COL = 4.5
+    # UPSCALE_FACTOR_ROW = 1
+    # P.figure(figsize=(ROWS * UPSCALE_FACTOR_ROW, COLS * UPSCALE_FACTOR_COL))
+    #
+    # prediction_class = sess.run(prediction, feed_dict={x:inputs[1:2]})[0]
+    # print labels[1:2]
+    # print prediction_class
+    # #Construct the saliency object. This doesn't yet compute the saliency mask, it just sets up the necessary ops.
+    # integrated_gradients = saliency.IntegratedGradients(tf.get_default_graph(), sess, y_neur, H['h0'])
+    # im = sess.run(H['h0'], feed_dict={x:inputs[1:2]})[0]
+    # # Baseline is a black image.
+    # baseline = numpy.zeros(im.shape)
+    # baseline.fill(-1)
+    # # Compute the vanilla mask and the smoothed mask.
+    # # vanilla_integrated_gradients_mask_3d = integrated_gradients.GetMask(
+    # #     im, feed_dict = {neuron_selector: prediction_class}, x_steps=25, x_baseline=baseline)
+    # smoothgrad_integrated_gradients_mask_3d = integrated_gradients.GetSmoothedMask(
     #     im, feed_dict = {neuron_selector: prediction_class}, x_steps=25, x_baseline=baseline)
-    smoothgrad_integrated_gradients_mask_3d = integrated_gradients.GetSmoothedMask(
-        im, feed_dict = {neuron_selector: prediction_class}, x_steps=25, x_baseline=baseline)
-
-    # Call the visualization methods to convert the 3D tensors to 2D grayscale.
-    # vanilla_mask_grayscale = saliency.VisualizeImageGrayscale(vanilla_integrated_gradients_mask_3d)
-    smoothgrad_mask_grayscale = saliency.VisualizeImageGrayscale(smoothgrad_integrated_gradients_mask_3d)
-    ShowImage(im,ax=P.subplot(ROWS, COLS, 1))
-    ShowGrayscaleImage(smoothgrad_mask_grayscale, title='Saliency Map', ax=P.subplot(ROWS, COLS, 2))
-    # Render the saliency masks.
-    # ShowGrayscaleImage(vanilla_mask_grayscale, title='Vanilla Integrated Gradients', ax=P.subplot(ROWS, COLS, 2))
-
-    prediction_class = sess.run(prediction, feed_dict={x:inputs[4:5]})[0]
-    print labels[4:5]
-    print prediction_class
-    #Construct the saliency object. This doesn't yet compute the saliency mask, it just sets up the necessary ops.
-    integrated_gradients = saliency.IntegratedGradients(tf.get_default_graph(), sess, y_neur, H['h0'])
-    im = sess.run(H['h0'], feed_dict={x:inputs[4:5]})[0]
-    # Baseline is a black image.
-    baseline = numpy.zeros(im.shape)
-    baseline.fill(-1)
-    # Compute the vanilla mask and the smoothed mask.
-    # vanilla_integrated_gradients_mask_3d = integrated_gradients.GetMask(
+    #
+    # # Call the visualization methods to convert the 3D tensors to 2D grayscale.
+    # # vanilla_mask_grayscale = saliency.VisualizeImageGrayscale(vanilla_integrated_gradients_mask_3d)
+    # smoothgrad_mask_grayscale = saliency.VisualizeImageGrayscale(smoothgrad_integrated_gradients_mask_3d)
+    # ShowImage(im,ax=P.subplot(ROWS, COLS, 1))
+    # ShowGrayscaleImage(smoothgrad_mask_grayscale, title='Saliency Map', ax=P.subplot(ROWS, COLS, 2))
+    # # Render the saliency masks.
+    # # ShowGrayscaleImage(vanilla_mask_grayscale, title='Vanilla Integrated Gradients', ax=P.subplot(ROWS, COLS, 2))
+    #
+    # prediction_class = sess.run(prediction, feed_dict={x:inputs[4:5]})[0]
+    # print labels[4:5]
+    # print prediction_class
+    # #Construct the saliency object. This doesn't yet compute the saliency mask, it just sets up the necessary ops.
+    # integrated_gradients = saliency.IntegratedGradients(tf.get_default_graph(), sess, y_neur, H['h0'])
+    # im = sess.run(H['h0'], feed_dict={x:inputs[4:5]})[0]
+    # # Baseline is a black image.
+    # baseline = numpy.zeros(im.shape)
+    # baseline.fill(-1)
+    # # Compute the vanilla mask and the smoothed mask.
+    # # vanilla_integrated_gradients_mask_3d = integrated_gradients.GetMask(
+    # #     im, feed_dict = {neuron_selector: prediction_class}, x_steps=25, x_baseline=baseline)
+    # smoothgrad_integrated_gradients_mask_3d = integrated_gradients.GetSmoothedMask(
     #     im, feed_dict = {neuron_selector: prediction_class}, x_steps=25, x_baseline=baseline)
-    smoothgrad_integrated_gradients_mask_3d = integrated_gradients.GetSmoothedMask(
-        im, feed_dict = {neuron_selector: prediction_class}, x_steps=25, x_baseline=baseline)
-
-    # Call the visualization methods to convert the 3D tensors to 2D grayscale.
-    # vanilla_mask_grayscale = saliency.VisualizeImageGrayscale(vanilla_integrated_gradients_mask_3d)
-    smoothgrad_mask_grayscale = saliency.VisualizeImageGrayscale(smoothgrad_integrated_gradients_mask_3d)
-    ShowImage(im,ax=P.subplot(ROWS, COLS, 3))
-    ShowGrayscaleImage(smoothgrad_mask_grayscale, title='Saliency Map', ax=P.subplot(ROWS, COLS, 4))
-
-
-    prediction_class = sess.run(prediction, feed_dict={x:inputs[5:6]})[0]
-    print labels[5:6]
-    print prediction_class
-    #Construct the saliency object. This doesn't yet compute the saliency mask, it just sets up the necessary ops.
-    integrated_gradients = saliency.IntegratedGradients(tf.get_default_graph(), sess, y_neur, H['h0'])
-    im = sess.run(H['h0'], feed_dict={x:inputs[5:6]})[0]
-    # Baseline is a black image.
-    baseline = numpy.zeros(im.shape)
-    baseline.fill(-1)
-    # Compute the vanilla mask and the smoothed mask.
-    # vanilla_integrated_gradients_mask_3d = integrated_gradients.GetMask(
+    #
+    # # Call the visualization methods to convert the 3D tensors to 2D grayscale.
+    # # vanilla_mask_grayscale = saliency.VisualizeImageGrayscale(vanilla_integrated_gradients_mask_3d)
+    # smoothgrad_mask_grayscale = saliency.VisualizeImageGrayscale(smoothgrad_integrated_gradients_mask_3d)
+    # ShowImage(im,ax=P.subplot(ROWS, COLS, 3))
+    # ShowGrayscaleImage(smoothgrad_mask_grayscale, title='Saliency Map', ax=P.subplot(ROWS, COLS, 4))
+    #
+    #
+    # prediction_class = sess.run(prediction, feed_dict={x:inputs[5:6]})[0]
+    # print labels[5:6]
+    # print prediction_class
+    # #Construct the saliency object. This doesn't yet compute the saliency mask, it just sets up the necessary ops.
+    # integrated_gradients = saliency.IntegratedGradients(tf.get_default_graph(), sess, y_neur, H['h0'])
+    # im = sess.run(H['h0'], feed_dict={x:inputs[5:6]})[0]
+    # # Baseline is a black image.
+    # baseline = numpy.zeros(im.shape)
+    # baseline.fill(-1)
+    # # Compute the vanilla mask and the smoothed mask.
+    # # vanilla_integrated_gradients_mask_3d = integrated_gradients.GetMask(
+    # #     im, feed_dict = {neuron_selector: prediction_class}, x_steps=25, x_baseline=baseline)
+    # smoothgrad_integrated_gradients_mask_3d = integrated_gradients.GetSmoothedMask(
     #     im, feed_dict = {neuron_selector: prediction_class}, x_steps=25, x_baseline=baseline)
-    smoothgrad_integrated_gradients_mask_3d = integrated_gradients.GetSmoothedMask(
-        im, feed_dict = {neuron_selector: prediction_class}, x_steps=25, x_baseline=baseline)
-
-    # Call the visualization methods to convert the 3D tensors to 2D grayscale.
-    # vanilla_mask_grayscale = saliency.VisualizeImageGrayscale(vanilla_integrated_gradients_mask_3d)
-    smoothgrad_mask_grayscale = saliency.VisualizeImageGrayscale(smoothgrad_integrated_gradients_mask_3d)
-    ShowImage(im,ax=P.subplot(ROWS, COLS, 5))
-    ShowGrayscaleImage(smoothgrad_mask_grayscale, title='Saliency Map', ax=P.subplot(ROWS, COLS, 6))
-
-    prediction_class = sess.run(prediction, feed_dict={x:inputs[2:3]})[0]
-    print labels[2:3]
-    print prediction_class
-    #Construct the saliency object. This doesn't yet compute the saliency mask, it just sets up the necessary ops.
-    integrated_gradients = saliency.IntegratedGradients(tf.get_default_graph(), sess, y_neur, H['h0'])
-    im = sess.run(H['h0'], feed_dict={x:inputs[2:3]})[0]
-    # Baseline is a black image.
-    baseline = numpy.zeros(im.shape)
-    baseline.fill(-1)
-    # Compute the vanilla mask and the smoothed mask.
-    # vanilla_integrated_gradients_mask_3d = integrated_gradients.GetMask(
+    #
+    # # Call the visualization methods to convert the 3D tensors to 2D grayscale.
+    # # vanilla_mask_grayscale = saliency.VisualizeImageGrayscale(vanilla_integrated_gradients_mask_3d)
+    # smoothgrad_mask_grayscale = saliency.VisualizeImageGrayscale(smoothgrad_integrated_gradients_mask_3d)
+    # ShowImage(im,ax=P.subplot(ROWS, COLS, 5))
+    # ShowGrayscaleImage(smoothgrad_mask_grayscale, title='Saliency Map', ax=P.subplot(ROWS, COLS, 6))
+    #
+    # prediction_class = sess.run(prediction, feed_dict={x:inputs[2:3]})[0]
+    # print labels[2:3]
+    # print prediction_class
+    # #Construct the saliency object. This doesn't yet compute the saliency mask, it just sets up the necessary ops.
+    # integrated_gradients = saliency.IntegratedGradients(tf.get_default_graph(), sess, y_neur, H['h0'])
+    # im = sess.run(H['h0'], feed_dict={x:inputs[2:3]})[0]
+    # # Baseline is a black image.
+    # baseline = numpy.zeros(im.shape)
+    # baseline.fill(-1)
+    # # Compute the vanilla mask and the smoothed mask.
+    # # vanilla_integrated_gradients_mask_3d = integrated_gradients.GetMask(
+    # #     im, feed_dict = {neuron_selector: prediction_class}, x_steps=25, x_baseline=baseline)
+    # smoothgrad_integrated_gradients_mask_3d = integrated_gradients.GetSmoothedMask(
     #     im, feed_dict = {neuron_selector: prediction_class}, x_steps=25, x_baseline=baseline)
-    smoothgrad_integrated_gradients_mask_3d = integrated_gradients.GetSmoothedMask(
-        im, feed_dict = {neuron_selector: prediction_class}, x_steps=25, x_baseline=baseline)
-
-    # Call the visualization methods to convert the 3D tensors to 2D grayscale.
-    # vanilla_mask_grayscale = saliency.VisualizeImageGrayscale(vanilla_integrated_gradients_mask_3d)
-    smoothgrad_mask_grayscale = saliency.VisualizeImageGrayscale(smoothgrad_integrated_gradients_mask_3d)
-    ShowImage(im,ax=P.subplot(ROWS, COLS, 7))
-    ShowGrayscaleImage(smoothgrad_mask_grayscale, title='Saliency Map', ax=P.subplot(ROWS, COLS, 8))
-
-    #save figure
-    P.savefig(plot_dir + 'Mit_saliency.png', dpi=300, format='png', bbox_inches='tight')
-    png2 = Image.open(plot_dir + 'Mit_saliency.png')
-    png2.save(plot_dir + 'Mit_saliency.tiff', compression='lzw')
-    tf_cnnvis.activation_visualization(sess, {x:inputs[1:2]}, input_tensor=None, layers=['c'], path_logdir='./Log', path_outdir='./Output')
+    #
+    # # Call the visualization methods to convert the 3D tensors to 2D grayscale.
+    # # vanilla_mask_grayscale = saliency.VisualizeImageGrayscale(vanilla_integrated_gradients_mask_3d)
+    # smoothgrad_mask_grayscale = saliency.VisualizeImageGrayscale(smoothgrad_integrated_gradients_mask_3d)
+    # ShowImage(im,ax=P.subplot(ROWS, COLS, 7))
+    # ShowGrayscaleImage(smoothgrad_mask_grayscale, title='Saliency Map', ax=P.subplot(ROWS, COLS, 8))
+    #
+    # #save figure
+    # P.savefig(plot_dir + 'Mit_saliency.png', dpi=300, format='png', bbox_inches='tight')
+    # png2 = Image.open(plot_dir + 'Mit_saliency.png')
+    # png2.save(plot_dir + 'Mit_saliency.tiff', compression='lzw')
+    # tf_cnnvis.activation_visualization(sess, {x:inputs[1:2]}, input_tensor=None, layers=['c'], path_logdir='./Log', path_outdir='./Output')
 
     # P.show()
+
+    for i,we in enumerate(Weights.values()):
+        print we
+        if i == 5:
+            fils = sess.run(tf.transpose(we,(2,3,1,0)))
+            # print fils
+            # print sess.run(we)
+            fig, axes = pl.subplots(3,32)
+            fig.set_size_inches(11,2)
+            matplotlib.rcParams.update({'font.size': 4.7})
+
+            row=0
+            col=0
+            while row!=3 and col!=32:
+                # print labels[i]
+                im = fils[row][col]
+                im = ((im + 1) * 127.5).astype(numpy.uint8)
+                im = Image.fromarray(im, mode='L')
+                im = im.resize((25,25))
+                im = numpy.asarray(im)
+                axes[row,col].imshow(im, cmap='gray')
+                # axes[0].set_title('Image')
+                axes[row,col].get_xaxis().set_visible(False)
+                axes[row,col].get_yaxis().set_visible(False)
+                # print row, col
+                if col == 31:
+                    row += 1
+                    col=0
+                else:
+                    col += 1
+            base_path = '/home/hdft/Documents/DNN-Complete/DNN-PLOTS/Box_Plots/'
+
+            fig.savefig(base_path + 'filters.png', dpi=300, format='png', bbox_inches='tight')
+            png2 = Image.open(base_path + 'filters.png')
+            png2.save(base_path + 'filters.tiff', compression='lzw')
+            pl.show()
